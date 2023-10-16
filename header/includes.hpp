@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   includes.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lcompieg <lcompieg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vgonnot <vgonnot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 13:00:21 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 13:10:25 by lcompieg         ###   ########.fr       */
+/*   Updated: 2023/10/16 16:55:57 by vgonnot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <sys/types.h>
 #include <unistd.h>
-#include <sys/types.h> 
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <netdb.h>
 #include <arpa/inet.h>
+#include <string.h>
+#include <string>
+ 
+using namespace std;
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
