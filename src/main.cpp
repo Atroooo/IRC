@@ -6,7 +6,7 @@
 /*   By: vgonnot <vgonnot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:47:12 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 16:56:18 by vgonnot          ###   ########.fr       */
+/*   Updated: 2023/10/16 17:41:40 by vgonnot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int createSocket(){
     if (listening == -1)
     {
         cerr << "Can't create a socket! Quitting" << endl;
-        exit(-1);
+        _exit(-1);
     }
 	return listening;
 }
@@ -30,7 +30,7 @@ void	bindToSocket(int listening){
  
     if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1){
 		std::cerr << "Can't bind to IP/port" << std::endl;
-        exit (-1);
+        _exit (-1);
 	}
 }
 
@@ -95,9 +95,7 @@ int main()
 	bindToSocket(listening);
     // Tell Winsock the socket is for listening
     listen(listening, SOMAXCONN);
-    // Wait for a connection
  	int clientSocket = waitClientConnection(listening);
-    // Close listening socket
     close(listening);
     // While loop: accept and echo message back to client
     serverLoop(clientSocket);
