@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: vgonnot <vgonnot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:47:12 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 18:10:21 by jlaisne          ###   ########.fr       */
+/*   Updated: 2023/10/16 18:13:07 by vgonnot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,18 @@ void serverLoop(int clientSocket){
     }
 }
 
-int main(int argc, char *argv[])
-{
-    // Create a socket
+int argumentError(int argc){
     if (argc != 3)
     {
         cerr << "Usage: ./ircserv <port> <password>" << endl;
         _exit(-1);
     }
+}
+
+int main(int argc, char *argv[])
+{
+    argumentError(argc);
+    // Create a socket
 	int listening = createSocket();
  
     // Bind the ip address and port to a socket
