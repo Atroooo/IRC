@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vgonnot <vgonnot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:47:12 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 16:56:18 by vgonnot          ###   ########.fr       */
+/*   Updated: 2023/10/16 18:05:18 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@ int createSocket(){
     if (listening == -1)
     {
         cerr << "Can't create a socket! Quitting" << endl;
-        exit(-1);
+        _exit(-1);
     }
 	return listening;
 }
 
-void	bindToSocket(int listening){
+void	bindToSocket(int listening, int port){
 	sockaddr_in hint;
     hint.sin_family = AF_INET;
-    hint.sin_port = htons(54000);
+    hint.sin_port = htons(port);
     inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
  
     if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1){
 		std::cerr << "Can't bind to IP/port" << std::endl;
-        exit (-1);
+        _exit(-1);
 	}
 }
 
@@ -86,13 +86,18 @@ void serverLoop(int clientSocket){
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     // Create a socket
+    if (argc != 3)
+    {
+        cerr << "Usage: ./ircserv <port> <password>" << endl;
+        _exit(-1);
+    }
 	int listening = createSocket();
  
     // Bind the ip address and port to a socket
-	bindToSocket(listening);
+	bindToSocket(listening, atoi(argv[1]));
     // Tell Winsock the socket is for listening
     listen(listening, SOMAXCONN);
     // Wait for a connection
