@@ -6,11 +6,7 @@
 /*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:47:12 by lcompieg          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/10/16 18:05:18 by jlaisne          ###   ########.fr       */
-=======
-/*   Updated: 2023/10/16 17:41:40 by vgonnot          ###   ########.fr       */
->>>>>>> 37d487ca627c1203ead7b63ea477123c0e868a86
+/*   Updated: 2023/10/16 18:10:21 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +30,7 @@ void	bindToSocket(int listening, int port){
  
     if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1){
 		std::cerr << "Can't bind to IP/port" << std::endl;
-<<<<<<< HEAD
         _exit(-1);
-=======
-        _exit (-1);
->>>>>>> 37d487ca627c1203ead7b63ea477123c0e868a86
 	}
 }
 
