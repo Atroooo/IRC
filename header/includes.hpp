@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   includes.hpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 13:00:21 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 18:07:14 by jlaisne          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
 #include <iostream>
@@ -21,5 +9,7 @@
 #include <string.h>
 #include <string>
 #include <cstdlib>
- 
+
+#include "Exception.hpp"
+
 using namespace std;
