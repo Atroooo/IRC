@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vgonnot <vgonnot@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:47:12 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 18:13:07 by vgonnot          ###   ########.fr       */
+/*   Updated: 2023/10/18 16:22:33 by jlaisne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/includes.hpp"
+#include "../header/typedef.hpp"
 
 int createSocket(){
 	int listening = socket(AF_INET, SOCK_STREAM, 0);
@@ -32,6 +33,14 @@ void	bindToSocket(int listening, int port){
 		std::cerr << "Can't bind to IP/port" << std::endl;
         _exit(-1);
 	}
+}
+
+void listenSocket(int listening){
+    if (listen(listening, SOMAXCONN) == -1)
+    {
+        cerr << "Can't listen! Quitting" << endl;
+        _exit(-1);
+    }
 }
 
 int waitClientConnection(int listening){
@@ -58,58 +67,83 @@ int waitClientConnection(int listening){
 	return clientSocket;
 }
 
-void serverLoop(int clientSocket){
+int serverLoop(int clientSocket){
 	char buf[4096];
- 
-    while (true)
+
+    memset(buf, 0, 4096);
+
+    // Wait for client to send data
+    int bytesReceived = recv(clientSocket, buf, 4095, 0);
+    if (bytesReceived == -1)
     {
-        memset(buf, 0, 4096);
- 
-        // Wait for client to send data
-        int bytesReceived = recv(clientSocket, buf, 4096, 0);
-        if (bytesReceived == -1)
-        {
-            cerr << "Error in recv(). Quitting" << endl;
-            break;
-        }
- 
-        if (bytesReceived == 0)
-        {
-            cout << "Client disconnected " << endl;
-            break;
-        }
- 
-        cout << string(buf, 0, bytesReceived) << endl;
- 
-        // Echo message back to client
-        send(clientSocket, buf, bytesReceived + 1, 0);
+        cerr << "Error in recv(). Quitting" << endl;
     }
+    if (bytesReceived == 0)
+    {
+        cout << "Client disconnected " << endl;
+        return (FALSE);
+    }
+    buf[bytesReceived] = '\0';
+    cout << string(buf, 0, bytesReceived) << endl;
+    // Echo message back to client
+    int x = send(clientSocket, buf, bytesReceived + 1, 0);
+    if (x < 0) {
+        cerr << "Error in send(). Quitting" << endl;
+    }
+    return (TRUE);
 }
 
 int argumentError(int argc){
+
     if (argc != 3)
     {
         cerr << "Usage: ./ircserv <port> <password>" << endl;
         _exit(-1);
     }
+    return (0);
 }
 
 int main(int argc, char *argv[])
 {
+    // Check the command line arguments
     argumentError(argc);
     // Create a socket
 	int listening = createSocket();
- 
     // Bind the ip address and port to a socket
 	bindToSocket(listening, atoi(argv[1]));
     // Tell Winsock the socket is for listening
-    listen(listening, SOMAXCONN);
- 	int clientSocket = waitClientConnection(listening);
-    close(listening);
-    // While loop: accept and echo message back to client
-    serverLoop(clientSocket);
-    // Close the socket
-    close(clientSocket);
- 
+    listenSocket(listening);
+    // poll
+    vector<struct pollfd> fds;
+    struct pollfd listenerFd, newFd;
+    listenerFd.fd = listening;
+    listenerFd.events = POLLIN;
+    listenerFd.revents = 1;
+    fds.push_back(listenerFd);
+    while (true) {
+        int opt = poll(fds.data(), (nfds_t) fds.size(), TIMEOUT);
+        if (opt < 0) {
+            herror("poll");
+            _exit(-1);
+        }
+        for (size_t i = 0; i < 1; i++) {
+            if (fds[0].revents == POLLIN) {
+                int clientSocket = waitClientConnection(fds[i].fd);
+                newFd.fd = clientSocket;
+                newFd.events = POLLIN;
+                fds.push_back(newFd);
+            }
+        }
+        for (size_t i = 1; i < fds.size(); i++) {
+            if (fds[i].revents == POLLIN) {
+                std::cout << "New message from client " << i << std::endl;
+                if (serverLoop(fds[i].fd) == FALSE) {
+                    close(fds[i].fd);
+                    fds.erase(fds.begin() + i);
+                    i--;
+                }
+            }
+        }
+    }
     return 0;
 }
