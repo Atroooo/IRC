@@ -9,9 +9,10 @@ class Channel;
 class Client {
 
     private:
-        std::string _name;
-        int _fd;
-        std::map<Channel, int> _channelsConnected;
+        std::string                 _name;
+        int                         _fd;
+        std::map<string, Channel>   _channelsConnected;
+        std::map<string, int>       _privileges;
 
     public:
         Client();
@@ -25,4 +26,6 @@ class Client {
 
         void setChannel(Channel channel);
         Channel getChannel(void);
+
+        //Gerer tous les privileges quand on cree user
 };

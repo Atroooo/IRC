@@ -1,88 +1,82 @@
 #include "../header/Commands.hpp"
 
-// Channel::Channel(std::string name, std::string password) {
+Channel::Channel(string name, string password) {
+    this->_name = name;
+    this->_password = password;
+    this->_topic = "No topic";
+    if (!password.empty())
+        this->_mode.push_back('k');
+    this->_maxUsers = 10;
+}
+
+// Channel(string name, string password, string topic) {
+//     this->_name = name;
+//     this->_password = password;
+//     this->_topic = topic;
+//     this->_mode = 't';
+// }
+
+// Channel(string name, string password, char mode) {
 //     this->_name = name;
 //     this->_password = password;
 //     this->_topic = "No topic";
-//     if (!password.empty())
-//         this->_mode.push_back('k');
-//     this->_maxUsers = 10;
+//     this->_mode = mode;
 // }
 
-// // Channel(std::string name, std::string password, std::string topic) {
-// //     this->_name = name;
-// //     this->_password = password;
-// //     this->_topic = topic;
-// //     this->_mode = 't';
-// // }
-
-// // Channel(std::string name, std::string password, char mode) {
-// //     this->_name = name;
-// //     this->_password = password;
-// //     this->_topic = "No topic";
-// //     this->_mode = mode;
-// // }
-
-// // Channel(std::string name, std::string password, std::string topic, char mode) {
-// //     this->_name = name;
-// //     this->_password = password;
-// //     this->_topic = topic;
-// //     this->_mode = mode;
-// // }
-
-// Channel::~Channel() { }
-
-// std::string Channel::getName() { 
-//     return this->_name; 
+// Channel(string name, string password, string topic, char mode) {
+//     this->_name = name;
+//     this->_password = password;
+//     this->_topic = topic;
+//     this->_mode = mode;
 // }
 
-// std::string Channel::getPassword() { 
-//     return this->_password; 
-// }
+Channel::~Channel() { }
 
-// std::string Channel::getTopic() { 
-//     return this->_topic; 
-// }
+string Channel::getName() { 
+    return this->_name; 
+}
 
-// std::list<char> Channel::getMode() { 
-//     return this->_mode; 
-// }
+string Channel::getPassword() { 
+    return this->_password; 
+}
 
-// std::vector<Client> Channel::getUsers() { 
-//     return this->_users; 
-// }
+string Channel::getTopic() { 
+    return this->_topic; 
+}
 
-// std::vector<Client> Channel::getOperators() { 
-//     return this->_operators; 
-// }
+list<char> Channel::getMode() { 
+    return this->_mode; 
+}
 
-// int Channel::getMaxUsers() { 
-//     return this->_maxUsers; 
-// }
+map<string, Client> Channel::getUsers() { 
+    return this->_clients; 
+}
 
-// int Channel::getFd() { 
-//     return this->fd; 
-// }
+int Channel::getMaxUsers() { 
+    return this->_maxUsers; 
+}
 
-// void Channel::setTopic(std::string topic) { 
-//     this->_topic = topic; 
-// }
+int Channel::getFd() { 
+    return this->fd; 
+}
 
-// void Channel::setMode(char mode) { 
-//     this->_mode.push_back(mode); 
-// }
+void Channel::setTopic(string topic) { 
+    this->_topic = topic; 
+}
 
-// void Channel::setPassword(std::string password) { 
-//     this->_password = password; 
-// }
+void Channel::setMode(char mode) { 
+    this->_mode.push_back(mode); 
+}
 
-// void Channel::addUser(Client client) { 
-//     this->_users.push_back(client); 
-// }
+void Channel::setPassword(string password) { 
+    this->_password = password; 
+}
 
-// void Channel::addOperator(Client client) { 
-//     this->_operators.push_back(client); 
-// }
+void Channel::addUser(Client client, int privilege) {
+    this->_clients[client.getName()] = client;
+    //add privilege to client
+    (void)privilege;
+}
 
 // void Channel::removeUser(Client client) {
 //     vector<Client>::iterator i = find(this->_users.begin(), this->_users.end(), client);

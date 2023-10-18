@@ -36,3 +36,13 @@ class channelFull : std::exception {
     public:
         const char *what() const throw() { return "Channel is full"; };
 };
+
+class unknownCommand : std::exception {
+    public:
+        const char *what() const throw() { return "Unknown command"; };
+};
+
+class invalidPrivilege : std::exception {
+    public:
+        const char *what() const throw() { return "Invalid privilege"; };
+};
