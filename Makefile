@@ -8,12 +8,11 @@ RM              =   rm -rf
 BUILD_DIR       =   build/
 
 HEADER_DIR      =   header
-HEADER_FILE     =	includes typedef
+HEADER_FILE     =	includes typedef Channel Commands Client Server Exception
 INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)))
 
 SRC_DIR         =   src
-SRC_FILE        =   main \
-					parsingArgument/parsingArgument
+SRC_FILE        =   main Channel Commands parsingArgument/parsingArgument
 SRC             =   $(addsuffix .cpp, $(addprefix $(SRC_DIR)/, $(SRC_FILE)))
 
 OBJS            =   $(SRC:%.cpp=$(BUILD_DIR)%.o)

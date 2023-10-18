@@ -12,8 +12,9 @@
 #include <cstdlib>
 #include <algorithm>
 #include <poll.h>
-
-
+#include <map>
+#include <list>
+#include <vector>
 
 struct ServerArgument {
 public:
@@ -23,5 +24,7 @@ public:
 
 //parsing
 ServerArgument parsingArgument(int argc, char *argv[]);
+
+#include "Exception.hpp"
 
 using namespace std;
