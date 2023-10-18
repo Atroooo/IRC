@@ -18,3 +18,4 @@ bool sendMessage(std::string message, Channel Channel);
 bool sendPrivateMessage(Client client, std::string message, Channel Channel);
 
 bool promoteClient(Client Sender, Client Receiver, Channel Channel);
+bool demoteClient(Client Sender, Client Receiver, Channel Channel);
