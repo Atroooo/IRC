@@ -12,7 +12,7 @@ HEADER_FILE     =	includes typedef Channel Commands Client Server Exception
 INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)))
 
 SRC_DIR         =   src
-SRC_FILE        =   main Channel Commands \
+SRC_FILE        =   main Channel Commands Client \
 					parsingArgument/parsingArgument \
 					setUpSocket/setUpSocket \
 					serverLoop/serverLoop \

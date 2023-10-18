@@ -3,41 +3,40 @@
 #include "includes.hpp"
 #include "Client.hpp"
 
+class Client;
+
 class Channel {
     
     private:
 
-        std::string             _name;
-        std::string             _password;
-        std::string             _topic;
-        std::list<char>         _mode;
-        std::vector<Client>     _users;
-        std::vector<Client>     _operators;
-        int                     _maxUsers;
-        int                     fd;
+        string             _name;
+        string             _password;
+        string             _topic;
+        list<char>         _mode;
+        map<string, Client>   _clients;
+        int                _maxUsers;
+        int                fd;
 
     public:
 
-        Channel(std::string name, std::string password);
-        // Channel(std::string name, std::string password, std::string topic);
-        // Channel(std::string name, std::string password, char mode);
-        // Channel(std::string name, std::string password, std::string topic, char mode);
+        Channel(string name, string password);
+        // Channel(string name, string password, string topic);
+        // Channel(string name, string password, char mode);
+        // Channel(string name, string password, string topic, char mode);
         ~Channel();
 
-        std::string             getName();
-        std::string             getPassword();
-        std::string             getTopic();
-        std::list<char>         getMode();
-        std::vector<Client>     getUsers();
-        std::vector<Client>     getOperators();
+        string                  getName();
+        string                  getPassword();
+        string                  getTopic();
+        list<char>              getMode();
+        map<string, Client>     getUsers();
         int                     getMaxUsers();
         int                     getFd();
 
-        void                    setTopic(std::string topic);
+        void                    setTopic(string topic);
         void                    setMode(char mode);
-        void                    setPassword(std::string password);
-        void                    addUser(Client client);
-        void                    addOperator(Client client);
+        void                    setPassword(string password);
+        void                    addUser(Client client, int privilege);
         void                    removeUser(Client client);
         void                    removeOperator(Client client);
         void                    setMaxUsers(int maxUsers);

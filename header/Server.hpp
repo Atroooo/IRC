@@ -6,28 +6,28 @@
 class Server {
 
     private:
-        std::map<std::string, int> _fds;
-        std::map<Channel, int> _channels;
-        std::vector<Client> _clients;
-        std::string _password;
-        int         _port;
+        std::map<std::string, int>  _fds;
+        std::map<int, Channel>      _channels;
+        std::vector<Client>         _clients;
+        std::string                 _password;
+        int                         _port;
     
     public:
         Server();
         ~Server();
 
-        setFd(std::string name, int fd);
-        getFd(std::string name);
+        void setFd(std::string name, int fd);
+        int  getFd(std::string name);
 
-        setChannel(Channel channel);
-        getChannel(Channel channel);
+        void setChannel(Channel channel);
+        map<int, Channel> getChannels(void);
 
-        setUser(Client client);
-        getUser(Client client);
+        void setUser(Client client);
+        vector<Client> getUser(void);
 
-        setPassword(std::string password);
-        getPassword(std::string password);
+        void setPassword(std::string password);
+        string getPassword(void);
 
-        setPort(int port);
-        getPort(int port);
+        void setPort(int port);
+        int getPort(void);
 };
