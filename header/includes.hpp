@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   includes.hpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jlaisne <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 13:00:21 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 18:07:14 by jlaisne          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #pragma once
 
@@ -21,5 +11,17 @@
 #include <string.h>
 #include <string>
 #include <cstdlib>
- 
+#include <algorithm>
+
+
+
+struct ServerArgument {
+public:
+    int port;
+	char *password;
+};
+
+//parsing
+ServerArgument parsingArgument(int argc, char *argv[]);
+
 using namespace std;

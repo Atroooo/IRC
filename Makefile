@@ -1,4 +1,4 @@
-.PHONY:        fclean, all, clear, re
+.PHONY:        fclean all clear re
 
 NAME            =	ircserv
 
@@ -8,11 +8,12 @@ RM              =   rm -rf
 BUILD_DIR       =   build/
 
 HEADER_DIR      =   header
-HEADER_FILE     =	includes	typedef
+HEADER_FILE     =	includes typedef
 INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)))
 
 SRC_DIR         =   src
-SRC_FILE        =   main 
+SRC_FILE        =   main \
+					parsingArgument/parsingArgument
 SRC             =   $(addsuffix .cpp, $(addprefix $(SRC_DIR)/, $(SRC_FILE)))
 
 OBJS            =   $(SRC:%.cpp=$(BUILD_DIR)%.o)

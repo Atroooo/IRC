@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vgonnot <vgonnot@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/16 12:47:12 by lcompieg          #+#    #+#             */
-/*   Updated: 2023/10/16 18:13:07 by vgonnot          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../header/includes.hpp"
 
@@ -27,7 +16,6 @@ void	bindToSocket(int listening, int port){
     hint.sin_family = AF_INET;
     hint.sin_port = htons(port);
     inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
- 
     if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1){
 		std::cerr << "Can't bind to IP/port" << std::endl;
         _exit(-1);
@@ -49,6 +37,7 @@ int waitClientConnection(int listening){
     if (getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, service, NI_MAXSERV, 0) == 0)
     {
         cout << host << " connected on port " << service << endl;
+        cout << client.sin_port << endl;
     }
     else
     {
@@ -86,29 +75,15 @@ void serverLoop(int clientSocket){
     }
 }
 
-int argumentError(int argc){
-    if (argc != 3)
-    {
-        cerr << "Usage: ./ircserv <port> <password>" << endl;
-        _exit(-1);
-    }
-}
-
 int main(int argc, char *argv[])
 {
-    argumentError(argc);
-    // Create a socket
+    ServerArgument serverArgument = parsingArgument(argc, argv);
 	int listening = createSocket();
- 
-    // Bind the ip address and port to a socket
-	bindToSocket(listening, atoi(argv[1]));
-    // Tell Winsock the socket is for listening
+	bindToSocket(listening, serverArgument.port);
     listen(listening, SOMAXCONN);
  	int clientSocket = waitClientConnection(listening);
     close(listening);
-    // While loop: accept and echo message back to client
     serverLoop(clientSocket);
-    // Close the socket
     close(clientSocket);
  
     return 0;
