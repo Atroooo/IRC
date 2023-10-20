@@ -24,14 +24,13 @@ public:
 	char *password;
 };
 
+#include "Server.hpp"
 //parsing
 ServerArgument parsingArgument(int argc, char *argv[]);
 //SERVER
 int setUpSocket(int port);
 void serverLoop(vector<struct pollfd> fds, char *serverPassword);
-void checkServer(pollfd newFd, vector<struct pollfd> & fds);
-void checkClient(vector<struct pollfd> & fds, char *serverPassword);
+void checkServer(pollfd newFd, Server server);
+void checkClient(Server server, char *serverPassword);
 bool checkPassword(char *buf, char *serverPassword);
-
-
 

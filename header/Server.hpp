@@ -2,32 +2,33 @@
 
 #include "Channel.hpp"
 #include "typedef.hpp"
+#include "Client.hpp"
 
 class Server {
 
     private:
-        std::map<std::string, int>  _fds;
-        std::map<int, Channel>      _channels;
+        std::vector<struct pollfd>&  _fds;
+        size_t                       _serverFdsCount;
+
         std::vector<Client>         _clients;
-        std::string                 _password;
-        int                         _port;
+        std::vector<Channel>        _channels;
     
     public:
-        Server();
+        Server(vector<struct pollfd> & fds);
         ~Server();
 
-        void setFd(std::string name, int fd);
-        int  getFd(std::string name);
+        vector<struct pollfd>& getFdsVec() { return this->_fds; };
+        void addToFds(struct pollfd fd) { this->_fds.push_back(fd); };
 
-        void setChannel(Channel channel);
-        map<int, Channel> getChannels(void);
+        struct pollfd & getFd(size_t index) { return this->_fds[index]; };
 
-        void setUser(Client client);
-        vector<Client> getUser(void);
+        void setServChanCount(size_t count) { this->_serverFdsCount = count; };
+        size_t getServChanCount() { return this->_serverFdsCount; };
 
-        void setPassword(std::string password);
-        string getPassword(void);
+        // void addClient(Client client);
+        // Client getClient(std::string name);
 
-        void setPort(int port);
-        int getPort(void);
+        // void addChannel(Channel channel);
+        // Channel getChannel(std::string name);
+
 };
