@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 {
     ServerArgument serverArgument = parsingArgument(argc, argv);
     vector<struct pollfd> fds = setUpFds(serverArgument.port);
-    serverLoop(fds);
+    serverLoop(fds, serverArgument.password);
 
     return 0;
 }

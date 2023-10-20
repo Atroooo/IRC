@@ -17,6 +17,7 @@
 #include <vector>
 
 using namespace std;
+
 struct ServerArgument {
 public:
     int port;
@@ -25,10 +26,13 @@ public:
 
 //parsing
 ServerArgument parsingArgument(int argc, char *argv[]);
+//SERVER
 int setUpSocket(int port);
-void serverLoop(vector<struct pollfd> fds);
+void serverLoop(vector<struct pollfd> fds, char *serverPassword);
 void checkServer(pollfd & newFd, vector<struct pollfd> & fds);
-void checkClient(vector<struct pollfd> & fds);
+void checkClient(vector<struct pollfd> & fds, char *serverPassword);
+bool checkPassword(char *buf, char *serverPassword);
 
 #include "Exception.hpp"
+
 

@@ -3,7 +3,7 @@
 NAME            =	ircserv
 
 CMP             =   c++
-FLAG            =   -Wall -Wextra -Werror -std=c++98
+FLAG            =   -Wall -Wextra -Werror -std=c++98 -g3
 RM              =   rm -rf
 BUILD_DIR       =   build/
 
