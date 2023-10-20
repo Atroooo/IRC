@@ -28,10 +28,12 @@ int clientAction(int clientSocket){
 }
 
 void checkClient(vector<struct pollfd> & fds){
-	for (size_t i = 1; i < fds.size(); i++) {
+    if (fds.size() == 1)
+        return;
+	
+    for (size_t i = 1; i < fds.size(); i++) {
 		if (fds[i].revents == POLLIN) {
-			std::cout << "New message from client " << i << std::endl;
-			if (clientAction(fds[i].fd) == FALSE) {
+			if (fds[i].fd && clientAction(fds[i].fd) == FALSE) {
 				close(fds[i].fd);
 				fds.erase(fds.begin() + i);
 				i--;

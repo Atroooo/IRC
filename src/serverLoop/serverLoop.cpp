@@ -2,7 +2,7 @@
 #include "../../header/typedef.hpp"
 
 void serverLoop(vector<struct pollfd> fds){
-    struct pollfd newFd;
+    struct pollfd newFd = {0, POLLIN, 0};
     while (true) {
         int opt = poll(fds.data(), (nfds_t) fds.size(), TIMEOUT);
         if (opt < 0) {

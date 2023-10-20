@@ -27,7 +27,7 @@ int waitClientConnection(int listening){
 	return clientSocket;
 }
 
-void checkServer(pollfd & newFd, vector<struct pollfd> & fds){
+void checkServer(pollfd newFd, vector<struct pollfd> & fds){
 	for (size_t i = 0; i < 1; i++) {
 		if (fds[0].revents == POLLIN) {
 			int clientSocket = waitClientConnection(fds[i].fd);
