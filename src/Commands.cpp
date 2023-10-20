@@ -141,13 +141,3 @@ bool sendPrivateMessage(Client client, std::string message, Channel Channel) {
     //Send message to client
     return true;
 }
-
-// bool promoteClient(Client Sender, Client Receiver, Channel Channel) {
-//     // if (!Channel.isUser(Sender) || !Channel.isUser(Receiver))
-//     //     throw notInChannel();
-//     // if (!Channel.isOperator(Sender))
-//     //     throw opRightRequired();
-//     // Channel.addOperator(Receiver); TODO
-//     (void) Sender, (void) Receiver, (void) Channel;
-//     return true;
-// }
