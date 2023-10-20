@@ -25,6 +25,5 @@ public:
 //parsing
 ServerArgument parsingArgument(int argc, char *argv[]);
 
-#include "Exception.hpp"
 
 using namespace std;

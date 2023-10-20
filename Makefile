@@ -8,7 +8,7 @@ RM              =   rm -rf
 BUILD_DIR       =   build/
 
 HEADER_DIR      =   header
-HEADER_FILE     =	includes typedef Channel Commands Client Server Exception
+HEADER_FILE     =	includes typedef Channel Commands Client Server
 INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)))
 
 SRC_DIR         =   src
