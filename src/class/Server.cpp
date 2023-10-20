@@ -24,7 +24,7 @@ struct pollfd & Server::getFd(size_t index) {
             return *i;
         }
     }
-    return *this->_fds.end();
+    return *this->_fds.end(); //a fix
 }
 
 void Server::addClient(Client & client) {
