@@ -12,8 +12,6 @@ vector<struct pollfd> setUpFds(int port){
     return fds;
 }
 
-
-
 int main(int argc, char *argv[])
 {
     ServerArgument serverArgument = parsingArgument(argc, argv);

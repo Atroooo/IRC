@@ -1,9 +1,6 @@
 #include "../../header/includes.hpp"
 #include "../../header/typedef.hpp"
 
-
-
-
 void serverLoop(vector<struct pollfd> fds){
     struct pollfd newFd;
     while (true) {
