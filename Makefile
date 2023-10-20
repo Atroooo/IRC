@@ -3,7 +3,7 @@
 NAME            =	ircserv
 
 CMP             =   c++
-FLAG            =   -Wall -Wextra -Werror -std=c++98
+FLAG            =   -Wall -Wextra -Werror -std=c++98 -g3
 RM              =   rm -rf
 BUILD_DIR       =   build/
 
@@ -12,12 +12,13 @@ HEADER_FILE     =	includes typedef Channel Commands Client Server
 INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)))
 
 SRC_DIR         =   src
-SRC_FILE        =   main Channel Commands Client \
+SRC_FILE        =   main Channel Commands Client Server\
 					parsingArgument/parsingArgument \
 					setUpSocket/setUpSocket \
 					serverLoop/serverLoop \
 					serverLoop/checkClient \
 					serverLoop/checkServer \
+					serverLoop/checkPassword \
 
 SRC             =   $(addsuffix .cpp, $(addprefix $(SRC_DIR)/, $(SRC_FILE)))
 
