@@ -24,10 +24,10 @@ class Server {
         void setServChanCount(size_t count) { this->_serverFdsCount = count; };
         size_t getServChanCount() { return this->_serverFdsCount; };
 
-        // void addClient(Client client);
-        // Client getClient(std::string name);
+        void addClient(Client client);
+        vector<Client> getClient(void);
 
-        // void addChannel(Channel channel);
-        // Channel getChannel(std::string name);
+        void addChannel(Channel channel);
+        vector<Channel> getChannel(void);
 
 };

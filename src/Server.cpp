@@ -18,30 +18,18 @@ Server::~Server() {
     // }
 }
 
-// void Server::addClient(Client client) {
-//     this->_clients.push_back(client);
-// }
+void Server::addClient(Client client) {
+    this->_clients.push_back(client);
+}
 
-// vector<Client> Server::getClient(std::string name) {
-//     vector<Client>::iterator it = _clients.begin();
-//     for (; it != _clients.end(); it++) {
-//         if (it->getName() == name) {
-//             return it;
-//         }
-//     }
-//     return NULL;
-// }
+vector<Client> Server::getClient(void) {
+    return this->_clients;
+}
 
-// void    Server::addChannel(Channel channel) {
-//     this->_channels.push_back(channel);
-// }
+void    Server::addChannel(Channel channel) {
+    this->_channels.push_back(channel);
+}
 
-// vector<Channel> Server::getChannel(std::string name) {
-//     vector<Channel>::iterator it = _channels.begin();
-//     for (; it != _channels.end(); it++) {
-//         if (it->getName() == name) {
-//             return it;
-//         }
-//     }
-//     return NULL;
-// }
+vector<Channel> Server::getChannel(void) {
+    return this->_channels;
+}
