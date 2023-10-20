@@ -3,7 +3,7 @@
 NAME            =	ircserv
 
 CMP             =   c++
-FLAG            =   -Wall -Wextra -Werror -std=c++98
+FLAG            =   -Wall -Wextra -Werror -std=c++98 -g3
 RM              =   rm -rf
 BUILD_DIR       =   build/
 
@@ -18,6 +18,7 @@ SRC_FILE        =   main Channel Commands Client \
 					serverLoop/serverLoop \
 					serverLoop/checkClient \
 					serverLoop/checkServer \
+					serverLoop/checkPassword \
 
 SRC             =   $(addsuffix .cpp, $(addprefix $(SRC_DIR)/, $(SRC_FILE)))
 
