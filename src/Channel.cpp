@@ -36,10 +36,6 @@ int Channel::getMaxUsers() {
     return this->_maxUsers; 
 }
 
-int Channel::getFd() { 
-    return this->fd; 
-}
-
 void Channel::setTopic(string topic) { 
     this->_topic = topic; 
 }
@@ -69,7 +65,7 @@ void Channel::removeUser(Client client) {
 }
 
 void Channel::removeOperator(Client client) { 
-    for (vector<Client>::iterator i = this->_operators.begin(); i != this->_operators.end(); i++) {
+    for (list<Client>::iterator i = this->_operators.begin(); i != this->_operators.end(); i++) {
         if ((*i).getName() == client.getName()) {
             this->_operators.erase(i);
             return ;
@@ -85,7 +81,7 @@ bool Channel::isUser(Client client) {
 }
 
 bool Channel::isOperator(Client client) {
-    for (vector<Client>::iterator i = this->_operators.begin(); i != this->_operators.end(); i++) {
+    for (list<Client>::iterator i = this->_operators.begin(); i != this->_operators.end(); i++) {
         if ((*i).getName() == client.getName())
             return true;
     }
@@ -93,7 +89,7 @@ bool Channel::isOperator(Client client) {
 }
 
 bool Channel::isInvited(Client client) {
-    for (vector<Client>::iterator i = this->_isInvited.begin(); i != this->_isInvited.end(); i++) {
+    for (list<Client>::iterator i = this->_isInvited.begin(); i != this->_isInvited.end(); i++) {
         if ((*i).getName() == client.getName())
             return true;
     }
