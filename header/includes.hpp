@@ -30,5 +30,4 @@ void serverLoop(vector<struct pollfd> fds);
 void checkServer(pollfd newFd, vector<struct pollfd> & fds);
 void checkClient(vector<struct pollfd> & fds);
 
-#include "Exception.hpp"
 

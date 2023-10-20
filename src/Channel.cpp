@@ -1,5 +1,6 @@
 #include "../header/Commands.hpp"
 
+//Gerer les cas ou l utilisateur n existe pas
 Channel::Channel(string name, string password) {
     this->_name = name;
     this->_password = password;
@@ -8,27 +9,6 @@ Channel::Channel(string name, string password) {
         this->_mode.push_back('k');
     this->_maxUsers = 10;
 }
-
-// Channel(string name, string password, string topic) {
-//     this->_name = name;
-//     this->_password = password;
-//     this->_topic = topic;
-//     this->_mode = 't';
-// }
-
-// Channel(string name, string password, char mode) {
-//     this->_name = name;
-//     this->_password = password;
-//     this->_topic = "No topic";
-//     this->_mode = mode;
-// }
-
-// Channel(string name, string password, string topic, char mode) {
-//     this->_name = name;
-//     this->_password = password;
-//     this->_topic = topic;
-//     this->_mode = mode;
-// }
 
 Channel::~Channel() { }
 
@@ -72,32 +52,50 @@ void Channel::setPassword(string password) {
     this->_password = password; 
 }
 
-void Channel::addUser(Client client, int privilege) {
-    this->_clients[client.getName()] = client;
-    //add privilege to client
-    (void)privilege;
+void Channel::addUser(Client client) {
+    this->_clients.insert(pair<string, Client>(client.getName(), client));
 }
 
-// void Channel::removeUser(Client client) {
-//     vector<Client>::iterator i = find(this->_users.begin(), this->_users.end(), client);
-//     this->_users.erase(i);
-// }
+void Channel::addOperator(Client client) {
+    this->_operators.push_back(client);
+}
 
-// void Channel::removeOperator(Client client) { 
-//     vector<Client>::iterator i = find(this->_operators.begin(), this->_operators.end(), client);
-//     this->_operators.erase(i);
-// }
+void Channel::addInvited(Client client) {
+    this->_isInvited.push_back(client);
+}
 
-// bool Channel::isUser(Client client) {
-//     vector<Client>::iterator it = find(this->_users.begin(), this->_users.end(), client);
-//     // if (it != this->_users.end())
-//     //     return true;
-//     return false;
-// }
+void Channel::removeUser(Client client) {
+    this->_clients.erase(client.getName());
+}
 
-// bool Channel::isOperator(Client client) {
-//     vector<Client>::iterator it = find(this->_operators.begin(), this->_operators.end(), client);
-//     // if (it != this->_operators.end())
-//     //     return true;
-//     return false;
-// }
+void Channel::removeOperator(Client client) { 
+    for (vector<Client>::iterator i = this->_operators.begin(); i != this->_operators.end(); i++) {
+        if ((*i).getName() == client.getName()) {
+            this->_operators.erase(i);
+            return ;
+        }
+    }
+}
+
+bool Channel::isUser(Client client) {
+    map<string, Client>::iterator it = this->_clients.find(client.getName());
+    if (it != this->_clients.end())
+        return true;
+    return false;
+}
+
+bool Channel::isOperator(Client client) {
+    for (vector<Client>::iterator i = this->_operators.begin(); i != this->_operators.end(); i++) {
+        if ((*i).getName() == client.getName())
+            return true;
+    }
+    return false;
+}
+
+bool Channel::isInvited(Client client) {
+    for (vector<Client>::iterator i = this->_isInvited.begin(); i != this->_isInvited.end(); i++) {
+        if ((*i).getName() == client.getName())
+            return true;
+    }
+    return false;
+}

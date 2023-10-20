@@ -7,98 +7,137 @@ bool createChannel(Client Client, std::string name, std::string password) {
         return false;
     }
     Channel channel(name, password);
-    channel.addUser(Client, 1);
+    channel.addUser(Client);
     return true;
 }
 
 bool joinChannel(Client Client, Channel Channel, std::string password) {
-    //Gerer invite only mode apres => ajouter un is invited par Client dans une map, et idem pour admin?
     list<char> mode = Channel.getMode();
-    // if (Channel.isUser(Client))
-    //     throw alreadyInChannel();
-    if (find(mode.begin(), mode.end(), 'k') != mode.end() && Channel.getPassword() != password)
-        throw wrongPassword();
-    if (find(mode.begin(), mode.end(), 'i') != mode.end())
-        throw opRightRequired();
-    if (Channel.getUsers().size() >= (size_t)Channel.getMaxUsers())
-        throw channelFull();
-    Channel.addUser(Client, 1);
+    if (Channel.isUser(Client)) {
+        cout << "Already in channel" << endl;
+        return false;
+    }
+    if (find(mode.begin(), mode.end(), 'k') != mode.end() && Channel.getPassword() != password) {
+        cout << "Wrong password" << endl;
+        return false;
+    }
+    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !Channel.isInvited(Client)) {
+        cout << "Channel is invite only" << endl;
+        return false;
+    }
+    if (Channel.getUsers().size() >= (size_t)Channel.getMaxUsers()) {
+        cout << "Channel is full" << endl;
+        return false;
+    }
+    Channel.addUser(Client);
     return true;
 }
 
 bool leaveChannel(Client Client, Channel Channel) {
-    // if (!Channel.isUser(Client))
-    //     throw notInChannel();
-    // Channel.removeUser(Client);
-    (void) Client, (void) Channel;
+    if (!Channel.isUser(Client)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    Channel.removeUser(Client);
     return true;
 }
 
 bool changeTopic(Client Client, Channel Channel, std::string topic) {
-    // if (!Channel.isUser(Client))
-    //     throw notInChannel();
-    // if (!Channel.isOperator(Client))
-    //     throw opRightRequired();
-    (void) Client;
+    if (!Channel.isUser(Client)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (!Channel.isOperator(Client)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
     Channel.setTopic(topic);
     return true;
 }
 
 bool changeMode(Client Client, Channel Channel, char mode) {
-    // if (!Channel.isUser(Client))
-    //     throw notInChannel();
-    // if (!Channel.isOperator(Client))
-    //     throw opRightRequired();
-    (void) Client;
+    if (!Channel.isUser(Client)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (!Channel.isOperator(Client)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
+    if (mode != 'i' || mode != 'k' || mode != 'l' || mode != 't' || mode != 'o' ) {
+        cout << "Mode not supported by channel" << endl;
+        return false;
+    }
     Channel.setMode(mode);
     return true;
 }
 
 bool inviteClient(Client Sender, Client Receiver, Channel Channel) {
-    // if (!Channel.isUser(Sender) || !Channel.isUser(Receiver))
-    //     throw notInChannel();
-    // if (!Channel.isOperator(Sender))
-    //     throw opRightRequired();
-    (void) Sender, (void) Receiver, (void) Channel;
-    if (Channel.getUsers().size() >= (size_t)Channel.getMaxUsers())
-        throw channelFull();
-    Channel.addUser(Receiver, 0);
+    
+    if (!Channel.isUser(Sender)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (Channel.isUser(Receiver)) {
+        cout << "User already in channel" << endl;
+        return false;
+    }
+    list<char> mode = Channel.getMode();
+    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !Channel.isOperator(Sender)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
+    if (Channel.getUsers().size() >= (size_t)Channel.getMaxUsers()) {
+        cout << "Channel is full" << endl;
+        return false;
+    }
+    Channel.addUser(Receiver);
     return true;
 }
 
 bool kickClient(Client Sender, Client Receiver, Channel Channel) {
-    // if (!Channel.isUser(Sender) || !Channel.isUser(Receiver))
-    //     throw notInChannel();
-    // if (!Channel.isOperator(Sender))
-    //     throw opRightRequired();
-    // Channel.removeUser(Receiver);
-    (void) Sender, (void) Receiver, (void) Channel;
+    if (!Channel.isUser(Sender) || !Channel.isUser(Receiver)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (!Channel.isOperator(Sender)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
+    Channel.removeUser(Receiver);
+    return true;
+}
+
+bool promoteClient(Client Sender, Client Receiver, Channel Channel) {
+    if (!Channel.isUser(Sender) || !Channel.isUser(Receiver)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (!Channel.isOperator(Sender)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
+    Channel.addOperator(Receiver);
     return true;
 }
 
 bool sendMessage(std::string message, Channel Channel) {
-    if (message.empty())
-        throw std::exception();
+    if (message.empty()) {
+        cout << "Message is empty" << endl;
+        return false;
+    }
     (void)Channel;
     //Send message to all users in channel
     return true;
 }
 
 bool sendPrivateMessage(Client client, std::string message, Channel Channel) {
-    if (message.empty())
-        throw std::exception();
+    if (message.empty()) {
+        cout << "Message is empty" << endl;
+        return false;
+    }
     (void)Channel;
     (void)client;
     //Send message to client
-    return true;
-}
-
-bool promoteClient(Client Sender, Client Receiver, Channel Channel) {
-    // if (!Channel.isUser(Sender) || !Channel.isUser(Receiver))
-    //     throw notInChannel();
-    // if (!Channel.isOperator(Sender))
-    //     throw opRightRequired();
-    // Channel.addOperator(Receiver); TODO
-    (void) Sender, (void) Receiver, (void) Channel;
     return true;
 }
