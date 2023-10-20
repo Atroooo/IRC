@@ -27,17 +27,17 @@ int clientAction(int clientSocket){
     return (TRUE);
 }
 
-void checkClient(vector<struct pollfd> & fds){
-    if (fds.size() == 1)
+void checkClient(Server server){
+    if (server.getFdsVec().size() == 1) {
         return;
-	
-    for (size_t i = 1; i < fds.size(); i++) {
-		if (fds[i].revents == POLLIN) {
-			if (fds[i].fd && clientAction(fds[i].fd) == FALSE) {
-				close(fds[i].fd);
-				fds.erase(fds.begin() + i);
-				i--;
-			}
-		}
+    }
+    for (size_t i = server.getServChanCount(); i < server.getFdsVec().size(); i++) {
+        if (server.getFd(i).revents == POLLIN) {
+            if (clientAction(server.getFd(i).fd) == FALSE) {
+                close(server.getFd(i).fd);
+                server.getFdsVec().erase(server.getFdsVec().begin() + i);
+                i--;
+            }
+        }
 	}
 }

@@ -14,7 +14,7 @@ class Channel {
         string             _topic;
         list<char>         _mode;
         map<string, Client>   _clients;
-        int                _maxUsers;
+        int                     _maxUsers;
         int                fd;
 
     public:

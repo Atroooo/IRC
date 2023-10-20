@@ -2,6 +2,7 @@
 #include "../../header/typedef.hpp"
 
 
+
 int waitClientConnection(int listening){
 	sockaddr_in client;
     socklen_t clientSize = sizeof(client);
@@ -27,13 +28,13 @@ int waitClientConnection(int listening){
 	return clientSocket;
 }
 
-void checkServer(pollfd newFd, vector<struct pollfd> & fds){
-	for (size_t i = 0; i < 1; i++) {
-		if (fds[0].revents == POLLIN) {
-			int clientSocket = waitClientConnection(fds[i].fd);
-			newFd.fd = clientSocket;
-			newFd.events = POLLIN;
-			fds.push_back(newFd);
-		}
+void checkServer(pollfd newFd, Server server){
+	for (size_t i = 0; i < server.getServChanCount(); i++) {
+        if (server.getFd(i).revents == POLLIN){
+            int clientSocket = waitClientConnection(server.getFd(i).fd);
+            newFd.fd = clientSocket;
+            newFd.events = POLLIN;
+            server.addToFds(newFd);
+        }
 	}
 }
