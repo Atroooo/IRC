@@ -23,6 +23,7 @@ int clientAction(int clientSocket, char *serverPassword){
     }
     buf[bytesReceived] = '\0';
     // Echo message back to client
+    
     if (checkPassword(buf, serverPassword) == false){
         return FALSE;
     }

@@ -1,7 +1,53 @@
 #include "../header/Commands.hpp"
 
-bool createChannel(Client Client, std::string name, std::string password) {
-    //Gerer cas ou le channel existe deja mais a voir ou est ce qu on stock les channels ? class server ??
+vector<string> getCommand(char *commandInput) {
+    vector<string> command;
+    size_t pos = 0;
+    string cmd = commandInput;
+    string delimiter = " ";
+    string token;
+
+    while ((pos = cmd.find(delimiter)) != string::npos) {
+        token = cmd.substr(0, pos);
+        command.push_back(token);
+        cmd.erase(0, pos + delimiter.length());
+    }
+    return command;
+}
+
+Channel getChannel(Server server, string channelName) {
+    for (vector<Channel>::iterator i = server.getChannels().begin(); i != server.getChannels().end(); i++) {
+        if ((*i).getName() == channelName) {
+            return (*i);
+        }
+    }
+}
+
+void commandHub(char *commandInput, Client Client, Server server) {
+    vector<string> command = getCommand(commandInput);
+    if (command[0][0] == '/') {
+        if (command[0] == "join") {
+            if (command.size() < 1 || command.size() > 3) {
+                cout << "Invalid command. Usage : /join [name] [pass(opt)]" << endl;
+                return ;
+            }
+            if (!createChannel(Client, server, command[1], command[2])) {
+                cout << "Error creating channel" << endl;
+            }
+            if (!joinChannel(Client, server.getChannel(server, command[1]), command[2])) {
+                cout << "Error joining channel" << endl;
+            }
+        }
+    }
+}
+
+bool createChannel(Client Client, Server server, string name, string password) {
+    vector<Channel> channels = server.getChannels();
+    for (vector<Channel>::iterator i = channels.begin(); i != channels.end(); i++) {
+        if ((*i).getName() == name) {
+            return true;
+        }
+    }
     if (name.empty()) {
         cout << "Channel name is empty" << endl;
         return false;
@@ -11,12 +57,12 @@ bool createChannel(Client Client, std::string name, std::string password) {
     return true;
 }
 
-bool joinChannel(Client Client, Channel Channel, std::string password) {
-    list<char> mode = Channel.getMode();
+bool joinChannel(Client Client, Channel Channel, string password) {
     if (Channel.isUser(Client)) {
         cout << "Already in channel" << endl;
         return false;
     }
+    list<char> mode = Channel.getMode();
     if (find(mode.begin(), mode.end(), 'k') != mode.end() && Channel.getPassword() != password) {
         cout << "Wrong password" << endl;
         return false;
@@ -42,7 +88,7 @@ bool leaveChannel(Client Client, Channel Channel) {
     return true;
 }
 
-bool changeTopic(Client Client, Channel Channel, std::string topic) {
+bool changeTopic(Client Client, Channel Channel, string topic) {
     if (!Channel.isUser(Client)) {
         cout << "User not in channel" << endl;
         return false;
@@ -121,7 +167,7 @@ bool promoteClient(Client Sender, Client Receiver, Channel Channel) {
     return true;
 }
 
-bool sendMessage(std::string message, Channel Channel) {
+bool sendMessage(string message, Channel Channel) {
     if (message.empty()) {
         cout << "Message is empty" << endl;
         return false;
@@ -131,7 +177,7 @@ bool sendMessage(std::string message, Channel Channel) {
     return true;
 }
 
-bool sendPrivateMessage(Client client, std::string message, Channel Channel) {
+bool sendPrivateMessage(Client client, string message, Channel Channel) {
     if (message.empty()) {
         cout << "Message is empty" << endl;
         return false;

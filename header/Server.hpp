@@ -9,7 +9,6 @@ class Server {
     private:
         std::vector<struct pollfd>&  _fds;
         size_t                       _serverFdsCount;
-
         std::vector<Client>         _clients;
         std::vector<Channel>        _channels;
     
