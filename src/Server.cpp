@@ -18,7 +18,7 @@ Server::~Server() {
     // }
 }
 
-void Server::addClient(Client client) {
+void Server::addClient(Client & client) {
     this->_clients.push_back(client);
 }
 
@@ -26,7 +26,7 @@ vector<Client> Server::getClient(void) {
     return this->_clients;
 }
 
-void    Server::addChannel(Channel channel) {
+void    Server::addChannel(Channel & channel) {
     this->_channels.push_back(channel);
 }
 

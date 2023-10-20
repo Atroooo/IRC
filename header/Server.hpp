@@ -3,6 +3,7 @@
 #include "Channel.hpp"
 #include "typedef.hpp"
 #include "Client.hpp"
+#include <sstream>
 
 class Server {
 
@@ -25,10 +26,10 @@ class Server {
         void setServChanCount(size_t count) { this->_serverFdsCount = count; };
         size_t getServChanCount() { return this->_serverFdsCount; };
 
-        void addClient(Client client);
+        void addClient(Client & client);
         vector<Client> getClient(void);
 
-        void addChannel(Channel channel);
+        void addChannel(Channel & channel);
         vector<Channel> getChannel(void);
 
 };
