@@ -4,7 +4,7 @@
 vector<struct pollfd> setUpFds(int port){
     vector<struct pollfd> fds;
     int listening = setUpSocket(port);
-    struct pollfd listenerFd = {0, POLLIN, 0}};
+    struct pollfd listenerFd = {0, POLLIN, 0};
     listenerFd.fd = listening;
     listenerFd.events = POLLIN;
     listenerFd.revents = 1;
