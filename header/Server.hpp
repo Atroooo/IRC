@@ -8,11 +8,10 @@
 class Server {
 
     private:
-        std::vector<struct pollfd>&  _fds;
-        size_t                       _serverFdsCount;
-
-        std::vector<Client>         _clients;
-        std::vector<Channel>        _channels;
+        vector<struct pollfd>&  _fds;
+        size_t                  _serverFdsCount;
+        list<Client>            _clients;
+        list<Channel>           _channels;
     
     public:
         Server(vector<struct pollfd> & fds);
@@ -27,9 +26,9 @@ class Server {
         size_t getServChanCount() { return this->_serverFdsCount; };
 
         void addClient(Client & client);
-        vector<Client> getClient(void);
+        list<Client> getClient(void);
 
         void addChannel(Channel & channel);
-        vector<Channel> getChannel(void);
-
+        list<Channel> getChannel(void);
+        Channel *getChannel(string name);
 };

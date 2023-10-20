@@ -14,10 +14,9 @@ class Channel {
         string                  _topic;
         list<char>              _mode;
         map<string, Client>     _clients;
-        vector<Client>          _operators;
-        vector<Client>          _isInvited;
+        list<Client>          _operators;
+        list<Client>          _isInvited;
         int                     _maxUsers;
-        int                     fd;
 
     public:
 
@@ -30,7 +29,6 @@ class Channel {
         list<char>              getMode(void);
         map<string, Client>     getUsers(void);
         int                     getMaxUsers(void);
-        int                     getFd(void);
 
         void                    setTopic(string topic);
         void                    setMode(char mode);

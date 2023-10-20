@@ -8,11 +8,15 @@ RM              =   rm -rf
 BUILD_DIR       =   build/
 
 HEADER_DIR      =   header
-HEADER_FILE     =	includes typedef Channel Commands Client Server
+HEADER_FILE     =	includes typedef Channel Commands Client Server serverUtils
 INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)))
 
 SRC_DIR         =   src
-SRC_FILE        =   main Channel Commands Client Server\
+SRC_FILE        =   main \
+					class/Channel \
+					class/Client \
+					class/Server \
+					commands/Commands \
 					parsingArgument/parsingArgument \
 					setUpSocket/setUpSocket \
 					serverLoop/serverLoop \

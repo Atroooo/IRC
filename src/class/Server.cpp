@@ -22,7 +22,7 @@ void Server::addClient(Client & client) {
     this->_clients.push_back(client);
 }
 
-vector<Client> Server::getClient(void) {
+list<Client> Server::getClient(void) {
     return this->_clients;
 }
 
@@ -30,6 +30,15 @@ void    Server::addChannel(Channel & channel) {
     this->_channels.push_back(channel);
 }
 
-vector<Channel> Server::getChannel(void) {
+list<Channel> Server::getChannel(void) {
     return this->_channels;
+}
+
+Channel *Server::getChannel(string name) {
+    for (list<Channel>::iterator i = this->_channels.begin(); i != this->_channels.end(); i++) {
+        if (i->getName() == name) {
+            return &(*i);
+        }
+    }
+    return NULL;
 }

@@ -3,9 +3,11 @@
 #include "includes.hpp"
 #include "Channel.hpp"
 
-bool createChannel(Client Client, string name, string password);
+void commandHub(char *commandInput, Client client, Server server);
 
-bool joinChannel(Client Client, Channel Channel, string password);
+bool createChannel(Client client, Server server, string name, string password);
+
+bool joinChannel(Client Client, Channel *Channel, string password);
 bool leaveChannel(Client Client, Channel Channel);
 
 bool changeTopic(Client Client, Channel Channel, string topic);
