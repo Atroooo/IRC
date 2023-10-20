@@ -8,19 +8,19 @@
 class Server {
 
     private:
-        vector<struct pollfd>&  _fds;
+        list<struct pollfd>&  _fds;
         size_t                  _serverFdsCount;
         list<Client>            _clients;
         list<Channel>           _channels;
     
     public:
-        Server(vector<struct pollfd> & fds);
+        Server(list<struct pollfd> & fds);
         ~Server();
 
-        vector<struct pollfd>& getFdsVec() { return this->_fds; };
+        list<struct pollfd>& getFdsList() { return this->_fds; };
         void addToFds(struct pollfd fd) { this->_fds.push_back(fd); };
 
-        struct pollfd & getFd(size_t index) { return this->_fds[index]; };
+        struct pollfd & getFd(size_t index);
 
         void setServChanCount(size_t count) { this->_serverFdsCount = count; };
         size_t getServChanCount() { return this->_serverFdsCount; };

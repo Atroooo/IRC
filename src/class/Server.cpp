@@ -2,7 +2,7 @@
 #include "../header/Server.hpp"
 #include "../header/typedef.hpp"
 
-Server::Server(vector<struct pollfd> & fds) : _fds(fds) {
+Server::Server(list<struct pollfd> & fds) : _fds(fds) {
     _serverFdsCount = 1;
 }
 
@@ -16,6 +16,15 @@ Server::~Server() {
     // for (size_t i = 0; i < _channels.size(); i++) {
     //     this->_channels[i].~Channel();
     // }
+}
+
+struct pollfd & Server::getFd(size_t index) {
+    for (list<struct pollfd>::iterator i = this->_fds.begin(); i != this->_fds.end(); i++) {
+        if (i->fd == (int)index) {
+            return *i;
+        }
+    }
+    return *this->_fds.end();
 }
 
 void Server::addClient(Client & client) {

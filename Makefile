@@ -13,16 +13,23 @@ INC             =   $(addsuffix .hpp, $(addprefix $(HEADER_DIR)/, $(HEADER_FILE)
 
 SRC_DIR         =   src
 SRC_FILE        =   main \
-					class/Channel \
-					class/Client \
-					class/Server \
-					commands/Commands \
 					parsingArgument/parsingArgument \
 					setUpSocket/setUpSocket \
 					serverLoop/serverLoop \
 					serverLoop/checkClient \
 					serverLoop/checkServer \
 					serverLoop/checkPassword \
+					class/Channel \
+					class/Client \
+					class/Server \
+					commands/Commands \
+					commands/join \
+					commands/kick \
+					commands/leave \
+					commands/mode \
+					commands/topic \
+					commands/invite \
+					commands/channelRights \
 
 SRC             =   $(addsuffix .cpp, $(addprefix $(SRC_DIR)/, $(SRC_FILE)))
 

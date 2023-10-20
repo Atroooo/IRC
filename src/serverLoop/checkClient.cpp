@@ -23,6 +23,7 @@ int clientAction(int clientSocket, char *serverPassword, Server server){
     // if (checkPassword(buf, serverPassword) == false){
     //     return FALSE;
     // }
+    cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     if (buf[0] == '\0')
         return (TRUE);
     Client client("John", clientSocket);
@@ -36,14 +37,17 @@ int clientAction(int clientSocket, char *serverPassword, Server server){
 }
 
 void checkClient(Server server, char *serverPassword) {
-    if (server.getFdsVec().size() == 1) {
+    if (server.getFdsList().size() == 1) {
         return;
     }
-    for (size_t i = server.getServChanCount(); i < server.getFdsVec().size(); i++) {
+    for (size_t i = server.getServChanCount(); i < server.getFdsList().size(); i++) {
         if (server.getFd(i).revents == POLLIN) {
             if (clientAction(server.getFd(i).fd, serverPassword, server) == FALSE) {
                 close(server.getFd(i).fd);
-                server.getFdsVec().erase(server.getFdsVec().begin() + i);
+                list<pollfd>::iterator it = server.getFdsList().begin();
+                advance(it, i); // Move the iterator to the 'i'-th element
+                server.getFdsList().erase(it); // Erase the 'i'-th element
+                // server.getFdsList().erase(server.getFdsList().begin() + i);
                 i--;
             }
         }
