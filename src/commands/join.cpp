@@ -51,15 +51,17 @@ map<string, string> parseCommand(string Command) {
     return parsedCommand;
 }
 
-void joinCommand(string commandInput, Client client, Server server) {
+void joinCommand(string commandInput, Client client, Server *server) {
     map<string, string> command = parseCommand(commandInput);
     if (command.size() < 1) {
         cout << "Invalid command. Usage : /join <channel>{,<channel>} [<key>{,<key>}]" << endl;
         return ;
     }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        if (joinChannel(client, server.getChannel(it->first), it->second)) 
+        if (joinChannel(client, server->getChannel(it->first), it->second)) {
             cout << "Joined channel" << endl;
+            continue;
+        }
         else if (!createChannel(client, server, it->first, it->second)) {
             cout << "Error creating channel" << endl;
             return ;
@@ -67,8 +69,8 @@ void joinCommand(string commandInput, Client client, Server server) {
     }
 }
 
-bool createChannel(Client Client, Server server, string name, string password) {
-    if (server.getChannel(name) != NULL) {
+bool createChannel(Client Client, Server *server, string name, string password) {
+    if (server->getChannel(name) != NULL) {
         cout << "Channel already exists" << endl;
         return false;
     }
@@ -78,6 +80,9 @@ bool createChannel(Client Client, Server server, string name, string password) {
     }
     Channel channel(name, password);
     channel.addUser(Client);
+    channel.addOperator(Client);
+    server->addChannel(channel);
+    cout << "Channel created" << endl;
     return true;
 }
 

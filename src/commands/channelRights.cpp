@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void changeRightsCommand(string commandInput, Client sender, Server server) {
+void changeRightsCommand(string commandInput, Client sender, Server *server) {
     (void) commandInput;
     vector<string> command;
     Channel *channel;
@@ -10,7 +10,7 @@ void changeRightsCommand(string commandInput, Client sender, Server server) {
         cout << "Wrong input : /(de/pro)mote [channel] [user]" << endl;
         return ;
     }
-    channel = server.getChannel(command[1]);
+    channel = server->getChannel(command[1]);
     if (channel == NULL) {
         cout << "Channel not found" << endl;
         return ;
@@ -21,11 +21,11 @@ void changeRightsCommand(string commandInput, Client sender, Server server) {
         return ;
     }
     if (command[0] == "/promote") {
-        promoteClient(sender, *receiver, server.getChannel(command[1]));
+        promoteClient(sender, *receiver, server->getChannel(command[1]));
         return ;
     }
     if (command[0] == "/demote") {
-        demoteClient(sender, *receiver, server.getChannel(command[1]));
+        demoteClient(sender, *receiver, server->getChannel(command[1]));
         return ;
     }
 }

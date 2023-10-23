@@ -19,20 +19,20 @@ string getMessage(string commandInput) {
     return message;
 }
 
-void leaveCommand(string commandInput, Client client, Server server) {
+void leaveCommand(string commandInput, Client client, Server *server) {
     vector<string> command = getCommand(commandInput);
     Channel *channel;
     string message;
 
     if (command.size() < 1) {
-        cout << "<" << commandInput << "> : Not enough parameters" << endl;
+        cout << "<PART> : Not enough parameters" << endl;
         return ;
     }
     message = getMessage(command[1]);
     if (!message.empty())
-        channel = server.getChannel(command[1].substr(1, command[1].find(":") - 1));
+        channel = server->getChannel(command[1].substr(1, command[1].find(":") - 1));
     else
-        channel = server.getChannel(command[1].substr(1));
+        channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
         cout << "<" << command[1].substr(1) << "> : No such channel" << endl;
         return ;

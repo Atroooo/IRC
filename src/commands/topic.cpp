@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void topicCommand(string commandInput, Client client, Server server) {
+void topicCommand(string commandInput, Client client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
@@ -10,7 +10,7 @@ void topicCommand(string commandInput, Client client, Server server) {
     if (channelMask(command) == false) {
         return ;
     }
-    Channel *channel = server.getChannel(command[1]);
+    Channel *channel = server->getChannel(command[1]);
     if (channel == NULL) {
         return ;
     }

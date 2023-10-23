@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void kickCommand(string commandInput, Client client, Server server) {
+void kickCommand(string commandInput, Client client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
     if (command.size() != 3) {
@@ -10,12 +10,12 @@ void kickCommand(string commandInput, Client client, Server server) {
     if (channelMask(command) == false) {
         return ;
     }
-    Channel *channel = server.getChannel(command[1].substr(1, command[1].length()));
+    Channel *channel = server->getChannel(command[1].substr(1, command[1].length()));
     if (channel == NULL) {
         cout << "<" << command[1].substr(1, command[1].length()) << "> :No such channel" << endl;
         return ;
     }
-    Client *receiver = server.getClient(command[2]);
+    Client *receiver = server->getClient(command[2]);
     if (receiver == NULL) {
         cout << "<" << command[2] << "> :No such nick" << endl;
         return ;

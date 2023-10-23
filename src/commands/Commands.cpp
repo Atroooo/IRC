@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void commandHub(string commandInput, Client client, Server server) {
+void commandHub(string commandInput, Client client, Server *server) {
     stringstream ss(commandInput);
     string key;
     ss >> key;

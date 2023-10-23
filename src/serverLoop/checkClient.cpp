@@ -32,7 +32,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     Client client(getSubStrBuffer(buf, (char *)"NICK "), clientSocket);
     // NEED TO DELETE NAME IN DESTRUCTOR CLIENT
     server->addClient(client);
-    commandHub(buf, client, *server);
+    commandHub(buf, client, server);
     int x = send(clientSocket, buf, bytesReceived + 1, 0);
     if (x < 0) {
         cerr << "Error in send(). Quitting" << endl;

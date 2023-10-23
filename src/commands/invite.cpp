@@ -1,18 +1,18 @@
 #include "../header/Commands.hpp"
 
-void inviteCommand(string commandInput, Client client, Server server) {
+void inviteCommand(string commandInput, Client client, Server *server) {
     (void) commandInput;
     vector<string> command;
     if (command.size() != 3) {
         cout << "Wrong input : /invite [channel] [user]" << endl;
         return ;
     }
-    Channel *channel = server.getChannel(command[1]);
+    Channel *channel = server->getChannel(command[1]);
     if (channel == NULL) {
         cout << "Channel does not exist" << endl;
         return ;
     }
-    Client *receiver = server.getClient(command[2]);
+    Client *receiver = server->getClient(command[2]);
     if (!inviteClient(client, *receiver, channel)) {
         cout << "User not invited" << endl;
         return ;
