@@ -47,7 +47,6 @@ void checkClient(Server server, char *serverPassword) {
                 list<pollfd>::iterator it = server.getFdsList().begin();
                 advance(it, i); // Move the iterator to the 'i'-th element
                 server.getFdsList().erase(it); // Erase the 'i'-th element
-                // server.getFdsList().erase(server.getFdsList().begin() + i);
                 i--;
             }
         }

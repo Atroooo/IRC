@@ -7,15 +7,11 @@ Server::Server(list<struct pollfd> & fds) : _fds(fds) {
 }
 
 Server::~Server() {
-    // for (size_t i = 0; i < _serverFdsCount; i++) {
-    //     close(this->_fds[i].fd);
-    // }
-    // for (size_t i = 0; i < _clients.size(); i++) {
-    //     this->_clients[i].~Client();
-    // }
-    // for (size_t i = 0; i < _channels.size(); i++) {
-    //     this->_channels[i].~Channel();
-    // }
+   
+}
+
+void Server::setList( vector<struct pollfd> fds) {
+    copy(fds.begin(), fds.end(), this->_fds.begin());
 }
 
 struct pollfd * Server::getFd(size_t index) {
