@@ -18,36 +18,36 @@ void commandHub(char *commandInput, Client client, Server server) {
             joinCommand(command, client, server);
             return ;
         }
-        // if (command[0] == "/leave") {
-        //     leaveCommand(command, client, server);
-        //     return ;
-        // }
-        // if (command[0] == "/topic") {
-        //     topicCommand(command, client, server);
-        //     return ;
-        // }
-        // if (command[0] == "/mode") {
-        //     modeCommand(command, client, server);
-        //     return ;
-        // }
-        // if (command[0] == "/invite") {
-        //     inviteCommand(command, client, server);
-        //     return ;
-        // }
-        // if (command[0] == "/kick") {
-        //     kickCommand(command, client, server);
-        //     return ;
-        // }
-        // if (command[0] == "/promote" || command[0] == "/demote") {
-        //     changeRightsCommand(command, client, client, server.getChannel(command[1]));
-        //     return ;
-        // }
-        // return ;
-    // }
+        if (command[0] == "/leave") {
+            leaveCommand(command, client, server);
+            return ;
+        }
+        if (command[0] == "/topic") {
+            topicCommand(command, client, server);
+            return ;
+        }
+        if (command[0] == "/mode") {
+            modeCommand(command, client, server);
+            return ;
+        }
+        if (command[0] == "/invite") {
+            inviteCommand(command, client, server);
+            return ;
+        }
+        if (command[0] == "/kick") {
+            kickCommand(command, client, server); //a modif
+            return ;
+        }
+        if (command[0] == "/promote" || command[0] == "/demote") {
+            changeRightsCommand(command, client, client, server.getChannel(command[1]));
+            return ;
+        }
+        return ;
+    }
     // else {
     //     sendMessageCommand(commandInput, client, server);
     //     return ;
-    }
+    // }
 }
 
 bool sendMessage(string message, Channel Channel) {

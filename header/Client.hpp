@@ -17,12 +17,12 @@ class Client {
         Client(string name, int fd);
         ~Client(void);
 
+        string getName(void) const;
+        int getFd(void) const;
+
         void setName(std::string name);
-        string getName(void);
-
         void setFd(int fd);
-        int getFd(void);
-
         void addChannel(Channel channel);
+
         bool isInChannel(Channel channel);
 };

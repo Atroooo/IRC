@@ -1,11 +1,28 @@
 #include "../header/Commands.hpp"
 
-bool changeMode(Client Client, Channel Channel, char mode) {
-    if (!Channel.isUser(Client)) {
+void modeCommand(vector<string> command, Client client, Server server) {
+    if (command.size() != 3) {
+        cout << "Wrong input : /mode [channel] [mode]" << endl;
+        return ;
+    }
+    Channel *channel = server.getChannel(command[1]);
+    if (channel == NULL) {
+        cout << "Channel does not exist" << endl;
+        return ;
+    }
+    if (!changeMode(client, channel, command[2][0])) {
+        cout << "Mode not changed" << endl;
+        return ;
+    }
+    cout << "Mode changed" << endl;
+}
+
+bool changeMode(Client client, Channel *channel, char mode) {
+    if (!channel->isUser(client)) {
         cout << "User not in channel" << endl;
         return false;
     }
-    if (!Channel.isOperator(Client)) {
+    if (!channel->isOperator(client)) {
         cout << "Operator rights required" << endl;
         return false;
     }
@@ -13,6 +30,6 @@ bool changeMode(Client Client, Channel Channel, char mode) {
         cout << "Mode not supported by channel" << endl;
         return false;
     }
-    Channel.setMode(mode);
+    channel->setMode(mode);
     return true;
 }

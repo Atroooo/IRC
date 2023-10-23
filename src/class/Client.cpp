@@ -7,16 +7,16 @@ Client::Client(string name, int fd) {
 
 Client::~Client() { }
 
-string Client::getName() { 
+string Client::getName() const { 
     return this->_name; 
+}
+
+int Client::getFd() const { 
+    return this->_fd; 
 }
 
 void Client::setName(string name) { 
     this->_name = name; 
-}
-
-int Client::getFd() { 
-    return this->_fd; 
 }
 
 void Client::setFd(int fd) { 

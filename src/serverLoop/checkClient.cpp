@@ -41,9 +41,9 @@ void checkClient(Server server, char *serverPassword) {
         return;
     }
     for (size_t i = server.getServChanCount(); i < server.getFdsList().size(); i++) {
-        if (server.getFd(i).revents == POLLIN) {
-            if (clientAction(server.getFd(i).fd, serverPassword, server) == FALSE) {
-                close(server.getFd(i).fd);
+        if (server.getFd(i)->revents == POLLIN) {
+            if (clientAction(server.getFd(i)->fd, serverPassword, server) == FALSE) {
+                close(server.getFd(i)->fd);
                 list<pollfd>::iterator it = server.getFdsList().begin();
                 advance(it, i); // Move the iterator to the 'i'-th element
                 server.getFdsList().erase(it); // Erase the 'i'-th element

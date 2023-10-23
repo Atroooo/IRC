@@ -8,15 +8,24 @@ void joinCommand(vector<string> command, Client client, Server server);
 bool createChannel(Client client, Server server, string name, string password);
 bool joinChannel(Client Client, Channel *Channel, string password);
 
-bool leaveChannel(Client Client, Channel Channel);
+void leaveCommand(vector<string> command, Client client, Server server);
+bool leaveChannel(Client client, Channel *channel);
 
-bool changeTopic(Client Client, Channel Channel, string topic);
-bool changeMode(Client Client, Channel Channel, char mode);
+void topicCommand(vector<string> command, Client client, Server server);
+bool changeTopic(Client client, Channel *channel, string topic);
 
-bool inviteClient(Client Sender, Client Receiver, Channel Channel);
-bool kickClient(Client Sender, Client Receiver, Channel Channel);
+void modeCommand(vector<string> command, Client client, Server server);
+bool changeMode(Client client, Channel *channel, char mode);
 
-void changeRightsCommand(vector<string> command, Client sender, Client receiver, Channel channel);
+void inviteCommand(vector<string> command, Client client, Server server);
+bool inviteClient(Client sender, Client receiver, Channel *channel);
+
+void kickCommand(vector<string> command, Client client, Server server);
+bool kickClient(Client sender, Client receiver, Channel *channel);
+
+void changeRightsCommand(vector<string> command, Client sender, Client receiver, Channel *channel);
+bool promoteClient(Client sender, Client receiver, Channel *channel);
+bool demoteClient(Client sender, Client receiver, Channel *channel);
 
 bool sendMessage(string message, Channel Channel);
 bool sendPrivateMessage(Client client, string message, Channel Channel);

@@ -17,18 +17,20 @@ class Server {
         Server(list<struct pollfd> & fds);
         ~Server();
 
-        list<struct pollfd>& getFdsList() { return this->_fds; };
+        list<struct pollfd>& getFdsList() const { return this->_fds; };
         void addToFds(struct pollfd fd) { this->_fds.push_back(fd); };
 
-        struct pollfd & getFd(size_t index);
+        struct pollfd * getFd(size_t index);
 
         void setServChanCount(size_t count) { this->_serverFdsCount = count; };
-        size_t getServChanCount() { return this->_serverFdsCount; };
+        size_t getServChanCount() const { return this->_serverFdsCount; };
 
         void addClient(Client & client);
-        list<Client> getClient(void);
+        list<Client> getClient(void) const;
+        Client *getClient(string name);
+        Client *getClient(int fd);
 
         void addChannel(Channel & channel);
-        list<Channel> getChannel(void);
+        list<Channel> getChannel(void) const;
         Channel *getChannel(string name);
 };

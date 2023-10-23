@@ -1,14 +1,31 @@
 #include "../header/Commands.hpp"
 
-bool changeTopic(Client Client, Channel Channel, string topic) {
-    if (!Channel.isUser(Client)) {
+void topicCommand(vector<string> command, Client client, Server server) {
+    if (command.size() != 3) {
+        cout << "Wrong input : /topic [channel] [topic]" << endl;
+        return ;
+    }
+    Channel *channel = server.getChannel(command[1]);
+    if (channel == NULL) {
+        cout << "Channel does not exist" << endl;
+        return ;
+    }
+    if (!changeTopic(client, channel, command[2])) {
+        cout << "Topic not changed" << endl;
+        return ;
+    }
+    cout << "Topic changed" << endl;
+}
+
+bool changeTopic(Client client, Channel *channel, string topic) {
+    if (!channel->isUser(client)) {
         cout << "User not in channel" << endl;
         return false;
     }
-    if (!Channel.isOperator(Client)) {
+    if (!channel->isOperator(client)) {
         cout << "Operator rights required" << endl;
         return false;
     }
-    Channel.setTopic(topic);
+    channel->setTopic(topic);
     return true;
 }

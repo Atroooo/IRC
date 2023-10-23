@@ -12,27 +12,27 @@ Channel::Channel(string name, string password) {
 
 Channel::~Channel() { }
 
-string Channel::getName() { 
-    return this->_name; 
+string Channel::getName() const {
+    return this->_name;
 }
 
-string Channel::getPassword() { 
-    return this->_password; 
+string Channel::getPassword() const {
+    return this->_password;
 }
 
-string Channel::getTopic() { 
+string Channel::getTopic() const {
     return this->_topic; 
 }
 
-list<char> Channel::getMode() { 
+list<char> Channel::getMode() const {
     return this->_mode; 
 }
 
-map<string, Client> Channel::getUsers() { 
+map<string, Client> Channel::getUsers() const {
     return this->_clients; 
 }
 
-int Channel::getMaxUsers() { 
+int Channel::getMaxUsers() const {
     return this->_maxUsers; 
 }
 

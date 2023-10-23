@@ -1,24 +1,41 @@
 #include "../header/Commands.hpp"
 
-bool inviteClient(Client Sender, Client Receiver, Channel Channel) {
-    
-    if (!Channel.isUser(Sender)) {
+void inviteCommand(vector<string> command, Client client, Server server) {
+    if (command.size() != 3) {
+        cout << "Wrong input : /invite [channel] [user]" << endl;
+        return ;
+    }
+    Channel *channel = server.getChannel(command[1]);
+    if (channel == NULL) {
+        cout << "Channel does not exist" << endl;
+        return ;
+    }
+    Client *receiver = server.getClient(command[2]);
+    if (!inviteClient(client, *receiver, channel)) {
+        cout << "User not invited" << endl;
+        return ;
+    }
+    cout << "User invited" << endl;
+}
+
+bool inviteClient(Client sender, Client receiver, Channel *channel) {
+    if (!channel->isUser(sender)) {
         cout << "User not in channel" << endl;
         return false;
     }
-    if (Channel.isUser(Receiver)) {
+    if (channel->isUser(receiver)) {
         cout << "User already in channel" << endl;
         return false;
     }
-    list<char> mode = Channel.getMode();
-    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !Channel.isOperator(Sender)) {
+    list<char> mode = channel->getMode();
+    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel->isOperator(sender)) {
         cout << "Operator rights required" << endl;
         return false;
     }
-    if (Channel.getUsers().size() >= (size_t)Channel.getMaxUsers()) {
+    if (channel->getUsers().size() >= (size_t)channel->getMaxUsers()) {
         cout << "Channel is full" << endl;
         return false;
     }
-    Channel.addUser(Receiver);
+    channel->addInvited(receiver);
     return true;
 }
