@@ -1,24 +1,31 @@
 #include "../header/Commands.hpp"
 
-void changeRightsCommand(string commandInput, Client sender, Server server) {
+void changeRightsCommand(string commandInput, Client sender, Server *server) {
     (void) commandInput;
     vector<string> command;
+    Channel *channel;
+    Client *receiver;
+
     if (command.size() != 3) {
         cout << "Wrong input : /(de/pro)mote [channel] [user]" << endl;
         return ;
     }
-    Channel *channel = server.getChannel(command[1]);
-    Client *receiver = channel->getClient(command[2]);
+    channel = server->getChannel(command[1]);
+    if (channel == NULL) {
+        cout << "Channel not found" << endl;
+        return ;
+    }
+    receiver = channel->getClient(command[2]);
     if (receiver == NULL) {
         cout << "User not found" << endl;
         return ;
     }
     if (command[0] == "/promote") {
-        promoteClient(sender, *receiver, server.getChannel(command[1]));
+        promoteClient(sender, *receiver, server->getChannel(command[1]));
         return ;
     }
     if (command[0] == "/demote") {
-        demoteClient(sender, *receiver, server.getChannel(command[1]));
+        demoteClient(sender, *receiver, server->getChannel(command[1]));
         return ;
     }
 }

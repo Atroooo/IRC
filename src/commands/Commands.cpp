@@ -1,6 +1,6 @@
 #include "../../header/Commands.hpp"
 
-void commandHub(string commandInput, Client client, Server server) {
+void commandHub(string commandInput, Client client, Server *server) {
     stringstream ss(commandInput);
     string key;
     ss >> key;
@@ -56,5 +56,24 @@ bool sendPrivateMessage(Client client, string message) {
     }
     (void)client;
     //Send message to client
+    return true;
+}
+
+vector<string> initCommand(string commandInput) {
+
+    stringstream ss(commandInput);
+    string command;
+    vector<string> commandVector;
+    while (ss >> command) {
+        commandVector.push_back(command);
+    }
+    return commandVector;
+}
+
+bool channelMask(vector<string> command) {
+    if (command[1][0] != '#' && command[1][0] != '&') {
+        cout << "<" << command[1].substr(1, command[1].length()) << "> :Bad Channel Mask" << endl;
+        return false;
+    }
     return true;
 }

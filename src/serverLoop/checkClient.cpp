@@ -50,7 +50,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         return (TRUE);
     cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     
-    commandHub(buf, *server->getClient(clientSocket), *server);
+    commandHub(buf, *server->getClient(clientSocket), server);
     int x = send(clientSocket, buf, bytesReceived + 1, 0);
     if (x < 0) {
         cerr << "Error in send(). Quitting" << endl;

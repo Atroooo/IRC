@@ -3,8 +3,9 @@
 // verifier presence de # devant channel
 vector<string> getCommand(string commandInput) {
     vector<string> command;
-    
-    string cmd = commandInput.substr(0, commandInput.find(" ")); 
+    string cmd;
+
+    cmd = commandInput.substr(0, commandInput.find(" ")); 
     command.push_back(cmd);
     cmd = commandInput.substr(commandInput.find(" ") + 1);
     command.push_back(cmd);
@@ -18,19 +19,20 @@ string getMessage(string commandInput) {
     return message;
 }
 
-void leaveCommand(string commandInput, Client client, Server server) {
-    Channel *channel;
+void leaveCommand(string commandInput, Client client, Server *server) {
     vector<string> command = getCommand(commandInput);
+    Channel *channel;
+    string message;
 
     if (command.size() < 1) {
-        cout << "<" << commandInput << "> : Not enough parameters" << endl;
+        cout << "<PART> : Not enough parameters" << endl;
         return ;
     }
-    string message = getMessage(command[1]);
+    message = getMessage(command[1]);
     if (!message.empty())
-        channel = server.getChannel(command[1].substr(1, command[1].find(":") - 1));
+        channel = server->getChannel(command[1].substr(1, command[1].find(":") - 1));
     else
-        channel = server.getChannel(command[1].substr(1));
+        channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
         cout << "<" << command[1].substr(1) << "> : No such channel" << endl;
         return ;

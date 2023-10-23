@@ -1,13 +1,13 @@
 #include "../header/Commands.hpp"
 
-void modeCommand(string commandInput, Client client, Server server) {
+void modeCommand(string commandInput, Client client, Server *server) {
     (void) commandInput;
     vector<string> command;
     if (command.size() != 3) {
         cout << "Wrong input : /mode [channel] [mode]" << endl;
         return ;
     }
-    Channel *channel = server.getChannel(command[1]);
+    Channel *channel = server->getChannel(command[1]);
     if (channel == NULL) {
         cout << "Channel does not exist" << endl;
         return ;
