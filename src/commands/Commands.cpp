@@ -13,37 +13,39 @@ vector<string> getCommand(char *commandInput, const char *delimiter) {
     return command;
 }
 
-void commandHub(char *commandInput, Client client, Server server) {
-    string delimiter = " ";
-    vector<string> command = getCommand(commandInput, delimiter.c_str());
-    if (command[0] == "JOIN") {
-        joinCommand(commandInput, client, server);
-        return ;
-    }
-    if (command[0] == "PART") {
-        leaveCommand(commandInput, client, server);
-        return ;
-    }
-    if (command[0] == "/topic") {
-        topicCommand(commandInput, client, server);
-        return ;
-    }
-    if (command[0] == "/mode") {
-        modeCommand(commandInput, client, server);
-        return ;
-    }
-    if (command[0] == "/invite") {
-        inviteCommand(commandInput, client, server);
-        return ;
-    }
-    if (command[0] == "/kick") {
+void commandHub(string commandInput, Client client, Server server) {
+    
+    stringstream ss(commandInput);
+    string key;
+    ss >> key;
+    // if (command[0] == "JOIN") {
+    //     joinCommand(commandInput, client, server);
+    //     return ;
+    // }
+    // if (command[0] == "PART") {
+    //     leaveCommand(commandInput, client, server);
+    //     return ;
+    // }
+    // if (command[0] == "/topic") {
+    //     topicCommand(commandInput, client, server);
+    //     return ;
+    // }
+    // if (command[0] == "/mode") {
+    //     modeCommand(commandInput, client, server);
+    //     return ;
+    // }
+    // if (command[0] == "/invite") {
+    //     inviteCommand(commandInput, client, server);
+    //     return ;
+    // }
+    if (key == "KICK") {
         kickCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/promote" || command[0] == "/demote") {
-        changeRightsCommand(commandInput, client, server.getChannel(command[1]));
-        return ;
-    }
+    // if (command[0] == "/promote" || command[0] == "/demote") {
+    //     changeRightsCommand(commandInput, client, server.getChannel(command[1]));
+    //     return ;
+    // }
     // else {
     //     sendMessageCommand(commandInput, client, server);
     //     return ;

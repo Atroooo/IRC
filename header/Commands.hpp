@@ -3,7 +3,7 @@
 #include "includes.hpp"
 
 vector<string> getCommand(char *input, const char *delimiter);
-void commandHub(char *commandInput, Client client, Server server);
+void commandHub(string commandInput, Client client, Server server);
 
 void joinCommand(char * command, Client client, Server server);
 bool createChannel(Client client, Server server, string name, string password);
@@ -21,7 +21,7 @@ bool changeMode(Client client, Channel *channel, char mode);
 void inviteCommand(char * command, Client client, Server server);
 bool inviteClient(Client sender, Client receiver, Channel *channel);
 
-void kickCommand(char * command, Client client, Server server);
+void kickCommand(string command, Client client, Server server);
 bool kickClient(Client sender, Client receiver, Channel *channel);
 
 void changeRightsCommand(char * command, Client sender, Channel *channel);
