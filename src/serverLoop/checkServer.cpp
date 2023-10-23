@@ -1,8 +1,6 @@
 #include "../../header/includes.hpp"
 #include "../../header/typedef.hpp"
 
-
-
 int waitClientConnection(int listening){
 	sockaddr_in client;
     socklen_t clientSize = sizeof(client);

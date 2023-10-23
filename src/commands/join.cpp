@@ -41,6 +41,7 @@ map<string, string> parseCommand(string Command) {
 }
 
 void joinCommand(string commandInput, Client client, Server server) {
+    cout << "ICI" << endl << endl;
     map<string, string> command = parseCommand(commandInput);
     if (command.size() < 1) {
         cout << "Invalid command. Usage : /join <channel>{,<channel>} [<key>{,<key>}]" << endl;

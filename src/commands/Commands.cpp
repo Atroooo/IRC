@@ -1,31 +1,34 @@
 #include "../header/Commands.hpp"
 
 void commandHub(string commandInput, Client client, Server server) {
-    if (commandInput.compare(0,4,"JOIN")) {
+    stringstream ss(commandInput);
+    string key;
+    ss >> key;
+    if (key == "JOIN") {
         joinCommand(commandInput, client, server);
         return ;
     }
-    if (commandInput.compare(0,4,"PART")) {
+    if (key == "PART") {
         leaveCommand(commandInput, client, server);
         return ;
     }
-    if (commandInput.compare(0,4,"TOPIC")) {
+    if (key == "TOPIC") {
         topicCommand(commandInput, client, server);
         return ;
     }
-    if (commandInput.compare(0,4,"MODE")) {
+    if (key == "MODE") {
         modeCommand(commandInput, client, server);
         return ;
     }
-    if (commandInput.compare(0,4,"INVITE")) {
+    if (key == "INVITE") {
         inviteCommand(commandInput, client, server);
         return ;
     }
-    if (commandInput.compare(0,4,"KICK")) {
+    if (key == "KICK") {
         kickCommand(commandInput, client, server);
         return ;
     }
-    if (commandInput.compare(0,4,"PROMOTE") || commandInput.compare(0,4,"DEMOTE")) {
+    if (key == "PROMOTE" || key == "DEMOTE") {
         changeRightsCommand(commandInput, client, server);
         return ;
     }

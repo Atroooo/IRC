@@ -3,7 +3,6 @@
 #include <cstring>
 #include <sys/poll.h>
 
-
 int clientAction(int clientSocket, char *serverPassword, Server *server){
 	char buf[4096];
 
@@ -23,9 +22,10 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     }
     buf[bytesReceived] = '\0';
     // Echo message back to client
-    if (checkPassword(buf, serverPassword) == false){
-        return FALSE;
-    }
+    // if (checkPassword(buf, serverPassword) == false){
+    //     return FALSE;
+    // }
+    (void) serverPassword;
     cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     if (buf[0] == '\0')
         return (TRUE);
