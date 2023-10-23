@@ -36,6 +36,13 @@ int Channel::getMaxUsers() const {
     return this->_maxUsers; 
 }
 
+Client *Channel::getClient(string name) {
+    map<string, Client>::iterator it = this->_clients.find(name);
+    if (it != this->_clients.end())
+        return &it->second;
+    return NULL;
+}
+
 void Channel::setTopic(string topic) { 
     this->_topic = topic; 
 }

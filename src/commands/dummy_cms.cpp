@@ -1,16 +1,3 @@
-#include "../header/Commands.hpp"
-
-bool createChannel(Client Client, std::string name, std::string password) {
-    //Gerer cas ou le channel existe deja mais a voir ou est ce qu on stock les channels ? class server ??
-    if (name.empty()) {
-        cout << "Channel name is empty" << endl;
-        return false;
-    }
-    Channel channel(name, password);
-    channel.addUser(Client);
-    return true;
-}
-
 // join 0 to leave all channels the client is in
 // if join is successful, return true and "channel: <topic>" to client + lsit of users in channel (new client included)
 // Numeric Replies:
@@ -149,18 +136,6 @@ bool kickClient(Client Sender, Client Receiver, Channel Channel) {
     return true;
 }
 
-bool promoteClient(Client Sender, Client Receiver, Channel Channel) {
-    if (!Channel.isUser(Sender) || !Channel.isUser(Receiver)) {
-        cout << "User not in channel" << endl;
-        return false;
-    }
-    if (!Channel.isOperator(Sender)) {
-        cout << "Operator rights required" << endl;
-        return false;
-    }
-    Channel.addOperator(Receiver);
-    return true;
-}
 
 bool sendMessage(std::string message, Channel Channel) {
     if (message.empty()) {

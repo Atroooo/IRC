@@ -23,12 +23,13 @@ class Channel {
         Channel(string name, string password);
         ~Channel(void);
 
-        string                  getName(void)const;
+        string                  getName(void) const;
         string                  getPassword(void) const;
         string                  getTopic(void) const;
         list<char>              getMode(void) const;
         map<string, Client>     getUsers(void) const;
         int                     getMaxUsers(void) const;
+        Client                  *getClient(string name);
 
         void                    setTopic(string topic);
         void                    setMode(char mode);
