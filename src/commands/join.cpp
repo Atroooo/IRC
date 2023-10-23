@@ -1,6 +1,8 @@
 #include "../header/Commands.hpp"
 
-void joinCommand(string command, Client client, Server server) {
+void joinCommand(char *commandInput, Client client, Server server) {
+    string  delimiter = "#";
+    vector<string> command = getCommand(commandInput, delimiter.c_str());
     if (command.size() < 1 || command.size() > 3) {
         cout << "Invalid command. Usage : /join [name] [pass(opt)]" << endl;
         return ;

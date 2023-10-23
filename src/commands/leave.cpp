@@ -1,16 +1,19 @@
 #include "../header/Commands.hpp"
 
-void leaveCommand(string command, Client client, Server server) {
+void leaveCommand(char *commandInput, Client client, Server server) {
+    string  delimiter = "#";
+    vector<string> command = getCommand(commandInput, delimiter.c_str());
     if (command.size() < 2) {
         cout << "<" << command[0] << "> : Not enough parameters" << endl;
         return ;
     }
     for (size_t i = 1; i < command.size(); i++) {
-        string message = getMessage(command[i]);
-        if (message.empty())
-            Channel *channel = server.getChannel(command[i].substr(1, command[i].find(":") - 1));
-        else 
-            Channel *channel = server.getChannel(command[i].substr(1));
+        // string message = getMessage(command[i]);
+        // if (message.empty())
+        //     Channel *channel = server.getChannel(command[i].substr(1, command[i].find(":") - 1));
+        // else
+        string message = " ";
+        Channel *channel = server.getChannel(command[i].substr(1));
         if (channel == NULL) {
             cout << "<" << command[i] << "> : No such channel" << endl;
             return ;

@@ -1,6 +1,8 @@
 #include "../header/Commands.hpp"
 
-void topicCommand(string command, Client client, Server server) {
+void topicCommand(char *commandInput, Client client, Server server) {
+    string delimiter = "#";
+    vector<string> command = getCommand(commandInput, delimiter.c_str());
     if (command.size() != 3) {
         cout << "Wrong input : /topic [channel] [topic]" << endl;
         return ;

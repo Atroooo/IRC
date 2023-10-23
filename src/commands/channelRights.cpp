@@ -1,6 +1,8 @@
 #include "../header/Commands.hpp"
 
-void changeRightsCommand(string command, Client sender, Channel *channel) {
+void changeRightsCommand(char *commandInput, Client sender, Channel *channel) {
+    string delimiter = "#";
+    vector<string> command = getCommand(commandInput, delimiter.c_str());
     if (command.size() != 3) {
         cout << "Wrong input : /(de/pro)mote [channel] [user]" << endl;
         return ;
