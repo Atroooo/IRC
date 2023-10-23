@@ -14,6 +14,6 @@ void serverLoop(list<struct pollfd> fds, char *serverPassword){
         }
         server.setList(fdsVector);
         checkServer(newFd, server);
-		checkClient(server, serverPassword);
+		checkClient(&server, serverPassword);
     }
 }

@@ -68,3 +68,9 @@ Channel *Server::getChannel(string name) {
     }
     return NULL;
 }
+
+void Server::printClients(){
+    for (list<Client>::iterator it = this->_clients.begin(); it != this->_clients.begin(); it ++) {
+        cout << it->getName() << endl;
+    }
+}

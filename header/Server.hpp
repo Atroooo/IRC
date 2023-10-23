@@ -31,4 +31,5 @@ class Server {
         void addToFds(const struct pollfd& fd) { this->_fds.push_back(fd); };
         void addClient(Client & client);
         void addChannel(Channel & channel);
+        void printClients(); 
 };
