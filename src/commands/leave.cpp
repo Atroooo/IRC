@@ -6,8 +6,11 @@ void leaveCommand(vector<string> command, Client client, Server server) {
         return ;
     }
     for (size_t i = 1; i < command.size(); i++) {
-        Channel *channel = server.getChannel(command[i].substr(1));
-        string message = "";
+        string message = getMessage(command[i]);
+        if (message.empty())
+            Channel *channel = server.getChannel(command[i].substr(1, command[i].find(":") - 1));
+        else 
+            Channel *channel = server.getChannel(command[i].substr(1));
         if (channel == NULL) {
             cout << "<" << command[i] << "> : No such channel" << endl;
             return ;
