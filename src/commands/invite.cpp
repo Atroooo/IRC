@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void inviteCommand(vector<string> command, Client client, Server server) {
+void inviteCommand(string command, Client client, Server server) {
     if (command.size() != 3) {
         cout << "Wrong input : /invite [channel] [user]" << endl;
         return ;

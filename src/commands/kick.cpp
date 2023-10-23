@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void kickCommand(vector<string> command, Client client, Server server) {
+void kickCommand(string command, Client client, Server server) {
     if (command.size() != 3) {
         cout << "Wrong input : /kick [channel] [user]" << endl;
         return ;

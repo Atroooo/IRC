@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void leaveCommand(vector<string> command, Client client, Server server) {
+void leaveCommand(string command, Client client, Server server) {
     if (command.size() < 2) {
         cout << "<" << command[0] << "> : Not enough parameters" << endl;
         return ;

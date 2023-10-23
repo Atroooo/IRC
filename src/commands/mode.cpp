@@ -1,6 +1,6 @@
 #include "../header/Commands.hpp"
 
-void modeCommand(vector<string> command, Client client, Server server) {
+void modeCommand(string command, Client client, Server server) {
     if (command.size() != 3) {
         cout << "Wrong input : /mode [channel] [mode]" << endl;
         return ;
