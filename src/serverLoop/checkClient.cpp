@@ -23,17 +23,18 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     }
     buf[bytesReceived] = '\0';
     // Echo message back to client
-    if (checkPassword(buf, serverPassword) == false){
-        return FALSE;
-    }
-    cout << "Received: " << string(buf, 0, bytesReceived) << endl;
+    (void)serverPassword;
+    // if (checkPassword(buf, serverPassword) == false){
+    //     return FALSE;
+    // }
+    // cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     if (buf[0] == '\0')
         return (TRUE);
     Client client(getSubStrBuffer(buf, (char *)"NICK "), clientSocket);
     // NEED TO DELETE NAME IN DESTRUCTOR CLIENT
     server->addClient(client);
     commandHub(buf, client, *server);
-    int x = send(clientSocket, buf, bytesReceived + 1, 0);
+    int x = send(clientSocket, "", bytesReceived + 1, 0);
     if (x < 0) {
         cerr << "Error in send(). Quitting" << endl;
         //NEED EXIT

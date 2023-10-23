@@ -1,4 +1,4 @@
-#include "../header/Commands.hpp"
+#include "../../header/Commands.hpp"
 
 vector<string> getCommand(char *commandInput) {
     vector<string> command;

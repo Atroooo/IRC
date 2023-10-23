@@ -19,6 +19,7 @@ SRC_FILE        =   main \
 					serverLoop/checkClient \
 					serverLoop/checkServer \
 					serverLoop/checkPassword \
+					serverLoop/bot \
 					class/Channel \
 					class/Client \
 					class/Server \
