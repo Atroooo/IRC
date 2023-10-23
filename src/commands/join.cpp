@@ -1,22 +1,59 @@
 #include "../header/Commands.hpp"
 
-void joinCommand(char *commandInput, Client client, Server server) {
-    string  delimiter = "#";
-    vector<string> command = getCommand(commandInput, delimiter.c_str());
-    if (command.size() < 1 || command.size() > 3) {
-        cout << "Invalid command. Usage : /join [name] [pass(opt)]" << endl;
+vector<string> split(string str, char delimiter) {
+    vector<string> result;
+    string tmp = "";
+
+    for (size_t i = 0; i < str.size(); i++) {
+        if (str[i] == delimiter) {
+            result.push_back(tmp);
+            tmp = "";
+        }
+        else
+            tmp += str[i];
+    }
+    result.push_back(tmp);
+    return result;
+}
+
+map<string, string> parseCommand(string Command) {
+    vector<string> command;
+    map<string, string> parsedCommand;
+
+    char *cmd = strtok((char *)Command.c_str(), " ");
+    while (cmd != NULL) {
+        command.push_back(cmd);
+        cmd = strtok(NULL, " ");
+    }
+    if (command.size() < 2)
+        return parseCommand("");
+
+    vector<string> channels = split(command[1], ',');
+    vector<string> keys = split(command[2], ',');
+    if (keys.size() > channels.size())
+        return parseCommand("");
+    for (size_t i = 0; i < channels.size(); i++) {
+        if (keys[i].empty())
+            keys[i] = "";
+        parsedCommand[channels[i]] = keys[i];
+    }
+    return parsedCommand;
+}
+
+void joinCommand(string commandInput, Client client, Server server) {
+    map<string, string> command = parseCommand(commandInput);
+    if (command.size() < 1) {
+        cout << "Invalid command. Usage : /join <channel>{,<channel>} [<key>{,<key>}]" << endl;
         return ;
     }
-
-    if (command.size() == 2)
-        command.push_back("");
-
-    if (joinChannel(client, server.getChannel(command[1]), command[2])) 
-        cout << "Joined channel" << endl;
-    else if (!createChannel(client, server, command[1], command[2])) 
-        cout << "Error creating channel" << endl;
-    else
-        cout << "Channel joined" << endl;
+    for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
+        if (joinChannel(client, server.getChannel(it->first), it->second)) 
+            cout << "Joined channel" << endl;
+        else if (!createChannel(client, server, it->first, it->second)) {
+            cout << "Error creating channel" << endl;
+            return ;
+        } 
+    }
 }
 
 bool createChannel(Client Client, Server server, string name, string password) {

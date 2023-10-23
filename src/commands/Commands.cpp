@@ -1,51 +1,34 @@
 #include "../header/Commands.hpp"
 
-vector<string> getCommand(char *commandInput, const char *delimiter) {
-    vector<string> command;
-    
-    if (commandInput == NULL || delimiter == NULL)
-        return command;
-    char *cmd = strtok(commandInput, delimiter); 
-    while (cmd != NULL) {
-        command.push_back(cmd);
-        cmd = strtok(NULL, delimiter);
-    }
-    return command;
-}
-
 void commandHub(string commandInput, Client client, Server server) {
-    
-    stringstream ss(commandInput);
-    string key;
-    ss >> key;
-    // if (command[0] == "JOIN") {
-    //     joinCommand(commandInput, client, server);
-    //     return ;
-    // }
-    // if (command[0] == "PART") {
-    //     leaveCommand(commandInput, client, server);
-    //     return ;
-    // }
-    // if (command[0] == "/topic") {
-    //     topicCommand(commandInput, client, server);
-    //     return ;
-    // }
-    // if (command[0] == "/mode") {
-    //     modeCommand(commandInput, client, server);
-    //     return ;
-    // }
-    // if (command[0] == "/invite") {
-    //     inviteCommand(commandInput, client, server);
-    //     return ;
-    // }
-    if (key == "KICK") {
+    if (commandInput.compare(0,4,"JOIN")) {
+        joinCommand(commandInput, client, server);
+        return ;
+    }
+    if (commandInput.compare(0,4,"PART")) {
+        leaveCommand(commandInput, client, server);
+        return ;
+    }
+    if (commandInput.compare(0,4,"TOPIC")) {
+        topicCommand(commandInput, client, server);
+        return ;
+    }
+    if (commandInput.compare(0,4,"MODE")) {
+        modeCommand(commandInput, client, server);
+        return ;
+    }
+    if (commandInput.compare(0,4,"INVITE")) {
+        inviteCommand(commandInput, client, server);
+        return ;
+    }
+    if (commandInput.compare(0,4,"KICK")) {
         kickCommand(commandInput, client, server);
         return ;
     }
-    // if (command[0] == "/promote" || command[0] == "/demote") {
-    //     changeRightsCommand(commandInput, client, server.getChannel(command[1]));
-    //     return ;
-    // }
+    if (commandInput.compare(0,4,"PROMOTE") || commandInput.compare(0,4,"DEMOTE")) {
+        changeRightsCommand(commandInput, client, server);
+        return ;
+    }
     // else {
     //     sendMessageCommand(commandInput, client, server);
     //     return ;

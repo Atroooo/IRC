@@ -1,15 +1,15 @@
 #include "../../header/includes.hpp"
 #include "../../header/typedef.hpp"
 
-int getIndexBeginningPassword(char *buf){
+int getIndexBeginningSubStr(char *buf, char *name){
     int i = 0;
-    while (strncmp(&buf[i], "PASS ", 5) != 0 && buf[i]) {
+    while (strncmp(&buf[i], name, 5) != 0 && buf[i]) {
         i++;
     }
     return i + 5;
 }
 
-int getLenPassword(char *buf){
+int getLenSubStr(char *buf){
     int i = 0;
     while (buf[i] && buf[i + 1] &&buf[i + 1] != '\n') {
         i++;
@@ -17,9 +17,9 @@ int getLenPassword(char *buf){
     return i;
 }
 
-char *getPassword(char *buf){
-    int indexBeginning = getIndexBeginningPassword(buf);
-    int lenPassword = getLenPassword(&buf[indexBeginning]);
+char * getSubStrBuffer(char *buf, char *name){
+    int indexBeginning = getIndexBeginningSubStr(buf, name);
+    int lenPassword = getLenSubStr(&buf[indexBeginning]);
     char *passwordClient = new char[lenPassword + 1];
     strncpy(passwordClient, &buf[indexBeginning],  lenPassword);
     passwordClient[lenPassword] = '\0';
@@ -27,7 +27,7 @@ char *getPassword(char *buf){
 }
 
 bool checkPassword(char *buf, char *serverPassword){
-    char *passwordClient = getPassword(buf);
+    char *passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
     if (strcmp(passwordClient, serverPassword) != 0){
         cout << "Wrong password. " << endl;
         delete[] passwordClient;
