@@ -8,7 +8,7 @@
 class Server {
 
     private:
-        list<struct pollfd>&  _fds;
+        list<struct pollfd>&    _fds;
         size_t                  _serverFdsCount;
         list<Client>            _clients;
         list<Channel>           _channels;
@@ -18,6 +18,7 @@ class Server {
         ~Server();
 
         list<struct pollfd>& getFdsList() const { return this->_fds; };
+
         struct pollfd * getFd(size_t index);
         size_t getServChanCount() const { return this->_serverFdsCount; };
         list<Client> getClient(void) const;

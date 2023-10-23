@@ -1,8 +1,6 @@
 #include "../../header/includes.hpp"
 #include "../../header/typedef.hpp"
 
-
-
 int waitClientConnection(int listening){
 	sockaddr_in client;
     socklen_t clientSize = sizeof(client);
@@ -35,7 +33,6 @@ void checkServer(pollfd & newFd, Server & server){
             int clientSocket = waitClientConnection(server.getFd(i)->fd);
             newFd.fd = clientSocket;
             newFd.events = POLLIN;
-            cout << "newFd: " << newFd.fd << endl;
             server.addToFds(newFd);
         }
 	}

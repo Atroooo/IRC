@@ -1,44 +1,35 @@
 #include "../../header/Commands.hpp"
 
-vector<string> getCommand(char *commandInput) {
-    vector<string> command;
-    
-    char *cmd = strtok(commandInput, " "); 
-    while (cmd != NULL) {
-        command.push_back(cmd);
-        cmd = strtok(NULL, " ");
-    }
-    return command;
-}
-
-void commandHub(char *commandInput, Client client, Server server) {
-    vector<string> command = getCommand(commandInput);
-    if (command[0] == "JOIN") {
-        joinCommand(command, client, server);
+void commandHub(string commandInput, Client client, Server server) {
+    stringstream ss(commandInput);
+    string key;
+    ss >> key;
+    if (key == "JOIN") {
+        joinCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "PART") {
-        leaveCommand(command, client, server);
+    if (key == "PART") {
+        leaveCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/topic") {
-        topicCommand(command, client, server);
+    if (key == "TOPIC") {
+        topicCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/mode") {
-        modeCommand(command, client, server);
+    if (key == "MODE") {
+        modeCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/invite") {
-        inviteCommand(command, client, server);
+    if (key == "INVITE") {
+        inviteCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/kick") {
-        kickCommand(command, client, server);
+    if (key == "KICK") {
+        kickCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/promote" || command[0] == "/demote") {
-        changeRightsCommand(command, client, server.getChannel(command[1]));
+    if (key == "PROMOTE" || key == "DEMOTE") {
+        changeRightsCommand(commandInput, client, server);
         return ;
     }
     // else {
