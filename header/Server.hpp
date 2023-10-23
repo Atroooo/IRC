@@ -8,7 +8,7 @@
 class Server {
 
     private:
-        list<struct pollfd>&  _fds;
+        list<struct pollfd>&    _fds;
         size_t                  _serverFdsCount;
         list<Client>            _clients;
         list<Channel>           _channels;
@@ -18,11 +18,9 @@ class Server {
         ~Server();
 
         void setList( vector<struct pollfd> fds);
-
         list<struct pollfd>& getFdsList() const { return this->_fds; };
-        void addToFds(const struct pollfd& fd) {
-            cout << "add to fds: " << fd.fd << endl;
-            this->_fds.push_back(fd); };
+
+        void addToFds(const struct pollfd& fd) { this->_fds.push_back(fd); };
 
         struct pollfd * getFd(size_t index);
 

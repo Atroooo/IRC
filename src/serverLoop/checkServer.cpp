@@ -35,7 +35,6 @@ void checkServer(pollfd & newFd, Server & server){
             int clientSocket = waitClientConnection(server.getFd(i)->fd);
             newFd.fd = clientSocket;
             newFd.events = POLLIN;
-            cout << "newFd: " << newFd.fd << endl;
             server.addToFds(newFd);
         }
 	}
