@@ -3,12 +3,19 @@
 void changeRightsCommand(string commandInput, Client sender, Server server) {
     (void) commandInput;
     vector<string> command;
+    Channel *channel;
+    Client *receiver;
+
     if (command.size() != 3) {
         cout << "Wrong input : /(de/pro)mote [channel] [user]" << endl;
         return ;
     }
-    Channel *channel = server.getChannel(command[1]);
-    Client *receiver = channel->getClient(command[2]);
+    channel = server.getChannel(command[1]);
+    if (channel == NULL) {
+        cout << "Channel not found" << endl;
+        return ;
+    }
+    receiver = channel->getClient(command[2]);
     if (receiver == NULL) {
         cout << "User not found" << endl;
         return ;

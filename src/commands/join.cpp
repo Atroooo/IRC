@@ -17,31 +17,41 @@ vector<string> split(string str, char delimiter) {
 }
 
 map<string, string> parseCommand(string Command) {
-    vector<string> command;
     map<string, string> parsedCommand;
+    vector<string> command;
+    vector<string> channels;
+    vector<string> keys;
 
+    if (Command.empty())
+        return parsedCommand;
     char *cmd = strtok((char *)Command.c_str(), " ");
     while (cmd != NULL) {
         command.push_back(cmd);
         cmd = strtok(NULL, " ");
     }
     if (command.size() < 2)
-        return parseCommand("");
+        return parsedCommand;
 
-    vector<string> channels = split(command[1], ',');
-    vector<string> keys = split(command[2], ',');
-    if (keys.size() > channels.size())
-        return parseCommand("");
+    channels = split(command[1], ',');
+    if (command.size() == 3) {
+        keys = split(command[2], ',');
+        if (keys.size() > channels.size())
+            return parsedCommand;
+    }
     for (size_t i = 0; i < channels.size(); i++) {
-        if (keys[i].empty())
-            keys[i] = "";
-        parsedCommand[channels[i]] = keys[i];
+        if (command.size() == 3) {
+            if (i >= keys.size())
+                parsedCommand[channels[i]] = "";
+            else
+                parsedCommand[channels[i]] = keys[i];
+        }
+        else
+            parsedCommand[channels[i]] = "";
     }
     return parsedCommand;
 }
 
 void joinCommand(string commandInput, Client client, Server server) {
-    cout << "ICI" << endl << endl;
     map<string, string> command = parseCommand(commandInput);
     if (command.size() < 1) {
         cout << "Invalid command. Usage : /join <channel>{,<channel>} [<key>{,<key>}]" << endl;
