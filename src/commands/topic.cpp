@@ -1,31 +1,56 @@
 #include "../header/Commands.hpp"
 
 void topicCommand(string commandInput, Client client, Server server) {
-    (void) commandInput;
-    vector<string> command;
-    if (command.size() != 3) {
-        cout << "Wrong input : /topic [channel] [topic]" << endl;
+
+    vector<string> command = initCommand(commandInput);
+    if (command.size() < 2) {
+        cout << "<TOPIC> :Not enough parameters" << endl;
+        return ;
+    }
+    if (channelMask(command) == false) {
         return ;
     }
     Channel *channel = server.getChannel(command[1]);
     if (channel == NULL) {
-        cout << "Channel does not exist" << endl;
         return ;
     }
-    if (!changeTopic(client, channel, command[2])) {
-        cout << "Topic not changed" << endl;
+    if (command.size() < 3) {
+        if (channel->getTopic() == "") {
+            cout << "<" << channel->getName() << "> :No topic is set" << endl;
+            return ;
+        }
+        cout << "<" << channel->getName() << "> :" << channel->getTopic() << endl;
         return ;
     }
-    cout << "Topic changed" << endl;
+    if (command[2][0] == ':'){
+        command[2].erase(0, 1);
+    }
+    else
+        return ;
+    size_t i = 2;
+    string message = "";
+    while (i < command.size()) {
+        message += command[i];
+        message += " ";
+        i++;
+    }
+    if (!changeTopic(client, channel, message)) {
+        return ;
+    }
+    cout <<  "<" << channel->getName() << "> :<" << command[2] << ">" << endl;
 }
 
 bool changeTopic(Client client, Channel *channel, string topic) {
     if (!channel->isUser(client)) {
-        cout << "User not in channel" << endl;
+        cout << "<" << channel->getName() << "> :You're not on that channel" << endl;
         return false;
     }
     if (!channel->isOperator(client)) {
-        cout << "Operator rights required" << endl;
+        cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
+        return false;
+    }
+    if (find(channel->getMode().begin(), channel->getMode().end(), 't') != channel->getMode().end()) {
+        cout << "<" << channel->getName() << "> :Channel doesn't support modes" << endl;
         return false;
     }
     channel->setTopic(topic);
