@@ -1,29 +1,45 @@
 #include "../header/Commands.hpp"
 
-void leaveCommand(char *commandInput, Client client, Server server) {
-    string  delimiter = "#";
-    vector<string> command = getCommand(commandInput, delimiter.c_str());
-    if (command.size() < 2) {
-        cout << "<" << command[0] << "> : Not enough parameters" << endl;
+// verifier presence de # devant channel
+vector<string> getCommand(string commandInput) {
+    vector<string> command;
+    
+    string cmd = commandInput.substr(0, commandInput.find(" ")); 
+    command.push_back(cmd);
+    cmd = commandInput.substr(commandInput.find(" ") + 1);
+    command.push_back(cmd);
+    return command;
+}
+
+string getMessage(string commandInput) {
+    string message = commandInput.substr(commandInput.find(":") + 1);
+    if (message.empty())
+        return "";
+    return message;
+}
+
+void leaveCommand(string commandInput, Client client, Server server) {
+    Channel *channel;
+    vector<string> command = getCommand(commandInput);
+
+    if (command.size() < 1) {
+        cout << "<" << commandInput << "> : Not enough parameters" << endl;
         return ;
     }
-    for (size_t i = 1; i < command.size(); i++) {
-        // string message = getMessage(command[i]);
-        // if (message.empty())
-        //     Channel *channel = server.getChannel(command[i].substr(1, command[i].find(":") - 1));
-        // else
-        string message = " ";
-        Channel *channel = server.getChannel(command[i].substr(1));
-        if (channel == NULL) {
-            cout << "<" << command[i] << "> : No such channel" << endl;
-            return ;
-        }
-        if (leaveChannel(client, channel, message) == false) {
-            cout << "Error leaving channel" << endl;
-            return ;
-        }
-        cout << "Left channel " << channel->getName() << endl;
+    string message = getMessage(command[1]);
+    if (!message.empty())
+        channel = server.getChannel(command[1].substr(1, command[1].find(":") - 1));
+    else
+        channel = server.getChannel(command[1].substr(1));
+    if (channel == NULL) {
+        cout << "<" << command[1].substr(1) << "> : No such channel" << endl;
+        return ;
     }
+    if (leaveChannel(client, channel, message) == false) {
+        cout << "Error leaving channel" << endl;
+        return ;
+    }
+    cout << "Left channel " << channel->getName() << endl;
 }
 
 bool leaveChannel(Client client, Channel *channel, string msg) {

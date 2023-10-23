@@ -2,29 +2,28 @@
 
 #include "includes.hpp"
 
-vector<string> getCommand(char *input, const char *delimiter);
-void commandHub(char *commandInput, Client client, Server server);
+void commandHub(string commandInput, Client client, Server server);
 
-void joinCommand(char * command, Client client, Server server);
+void joinCommand(string command, Client client, Server server);
 bool createChannel(Client client, Server server, string name, string password);
 bool joinChannel(Client Client, Channel *Channel, string password);
 
-void leaveCommand(char * command, Client client, Server server);
+void leaveCommand(string command, Client client, Server server);
 bool leaveChannel(Client client, Channel *channel, string message);
 
-void topicCommand(char * command, Client client, Server server);
+void topicCommand(string command, Client client, Server server);
 bool changeTopic(Client client, Channel *channel, string topic);
 
-void modeCommand(char * command, Client client, Server server);
+void modeCommand(string command, Client client, Server server);
 bool changeMode(Client client, Channel *channel, char mode);
 
-void inviteCommand(char * command, Client client, Server server);
+void inviteCommand(string command, Client client, Server server);
 bool inviteClient(Client sender, Client receiver, Channel *channel);
 
-void kickCommand(char * command, Client client, Server server);
+void kickCommand(string command, Client client, Server server);
 bool kickClient(Client sender, Client receiver, Channel *channel);
 
-void changeRightsCommand(char * command, Client sender, Channel *channel);
+void changeRightsCommand(string command, Client sender, Server server);
 bool promoteClient(Client sender, Client receiver, Channel *channel);
 bool demoteClient(Client sender, Client receiver, Channel *channel);
 

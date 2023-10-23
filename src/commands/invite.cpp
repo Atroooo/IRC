@@ -1,8 +1,8 @@
 #include "../header/Commands.hpp"
 
-void inviteCommand(char *commandInput, Client client, Server server) {
-    string delimiter = "#";
-    vector<string> command = getCommand(commandInput, delimiter.c_str());
+void inviteCommand(string commandInput, Client client, Server server) {
+    (void) commandInput;
+    vector<string> command;
     if (command.size() != 3) {
         cout << "Wrong input : /invite [channel] [user]" << endl;
         return ;

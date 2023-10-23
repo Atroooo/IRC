@@ -1,47 +1,32 @@
 #include "../header/Commands.hpp"
 
-vector<string> getCommand(char *commandInput, const char *delimiter) {
-    vector<string> command;
-    
-    if (commandInput == NULL || delimiter == NULL)
-        return command;
-    char *cmd = strtok(commandInput, delimiter); 
-    while (cmd != NULL) {
-        command.push_back(cmd);
-        cmd = strtok(NULL, delimiter);
-    }
-    return command;
-}
-
-void commandHub(char *commandInput, Client client, Server server) {
-    string delimiter = " ";
-    vector<string> command = getCommand(commandInput, delimiter.c_str());
-    if (command[0] == "JOIN") {
+void commandHub(string commandInput, Client client, Server server) {
+    if (commandInput.compare(0,4,"JOIN")) {
         joinCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "PART") {
+    if (commandInput.compare(0,4,"PART")) {
         leaveCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/topic") {
+    if (commandInput.compare(0,4,"TOPIC")) {
         topicCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/mode") {
+    if (commandInput.compare(0,4,"MODE")) {
         modeCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/invite") {
+    if (commandInput.compare(0,4,"INVITE")) {
         inviteCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/kick") {
+    if (commandInput.compare(0,4,"KICK")) {
         kickCommand(commandInput, client, server);
         return ;
     }
-    if (command[0] == "/promote" || command[0] == "/demote") {
-        changeRightsCommand(commandInput, client, server.getChannel(command[1]));
+    if (commandInput.compare(0,4,"PROMOTE") || commandInput.compare(0,4,"DEMOTE")) {
+        changeRightsCommand(commandInput, client, server);
         return ;
     }
     // else {
