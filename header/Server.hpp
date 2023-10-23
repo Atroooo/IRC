@@ -17,10 +17,7 @@ class Server {
         Server(list<struct pollfd> & fds);
         ~Server();
 
-        void setList( vector<struct pollfd> fds);
         list<struct pollfd>& getFdsList() const { return this->_fds; };
-
-        void addToFds(const struct pollfd& fd) { this->_fds.push_back(fd); };
 
         struct pollfd * getFd(size_t index);
         size_t getServChanCount() const { return this->_serverFdsCount; };
