@@ -1,6 +1,6 @@
-#include "../header/includes.hpp"
-#include "../header/Server.hpp"
-#include "../header/typedef.hpp"
+#include "../../header/includes.hpp"
+#include "../../header/Server.hpp"
+#include "../../header/typedef.hpp"
 
 Server::Server(list<struct pollfd> & fds) : _fds(fds) {
     _serverFdsCount = 1;

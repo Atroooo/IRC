@@ -1,4 +1,4 @@
-#include "../header/Commands.hpp"
+#include "../../header/Commands.hpp"
 
 //Gerer les cas ou l utilisateur n existe pas
 Channel::Channel(string name, string password) {
