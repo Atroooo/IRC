@@ -17,8 +17,12 @@ class Server {
         Server(list<struct pollfd> & fds);
         ~Server();
 
+        void setList( vector<struct pollfd> fds);
+
         list<struct pollfd>& getFdsList() const { return this->_fds; };
-        void addToFds(struct pollfd fd) { this->_fds.push_back(fd); };
+        void addToFds(const struct pollfd& fd) {
+            cout << "add to fds: " << fd.fd << endl;
+            this->_fds.push_back(fd); };
 
         struct pollfd * getFd(size_t index);
 

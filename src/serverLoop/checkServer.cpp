@@ -28,13 +28,16 @@ int waitClientConnection(int listening){
 	return clientSocket;
 }
 
-void checkServer(pollfd newFd, Server server){
+void checkServer(pollfd & newFd, Server & server){
+
 	for (size_t i = 0; i < server.getServChanCount(); i++) {
         if (server.getFd(i) != NULL && server.getFd(i)->revents == POLLIN){
             int clientSocket = waitClientConnection(server.getFd(i)->fd);
             newFd.fd = clientSocket;
             newFd.events = POLLIN;
+            cout << "newFd: " << newFd.fd << endl;
             server.addToFds(newFd);
         }
 	}
 }
+
