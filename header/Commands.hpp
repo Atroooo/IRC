@@ -3,6 +3,8 @@
 #include "includes.hpp"
 
 void commandHub(string commandInput, Client client, Server server);
+vector<string> initCommand(string commandInput);
+bool channelMask (vector<string> command);
 
 void joinCommand(string command, Client client, Server server);
 bool createChannel(Client client, Server server, string name, string password);
@@ -22,6 +24,7 @@ bool inviteClient(Client sender, Client receiver, Channel *channel);
 
 void kickCommand(string command, Client client, Server server);
 bool kickClient(Client sender, Client receiver, Channel *channel);
+void sendKickMessage(Client client, Client *receiver, Channel *channel, vector<string> command);
 
 void changeRightsCommand(string command, Client sender, Server server);
 bool promoteClient(Client sender, Client receiver, Channel *channel);
