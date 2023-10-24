@@ -47,6 +47,7 @@ void checkRetSend(int ret) {
 }
 
 void sendInfoClient(Client client, string msg) {
+    cout << "Sending to client: " << msg << endl;
     int ret = send(client.getFd(), msg.c_str(), strlen(msg.c_str()), 0);
     checkRetSend(ret);
 }

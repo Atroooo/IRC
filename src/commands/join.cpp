@@ -3,7 +3,7 @@
 bool checkMask(vector<string> channels, Client client) {
     for (size_t i = 0; i < channels.size(); i++) {
         if (channels[i][0] != '#' && channels[i][0] != '&') {
-            sendInfoClient(client, "<" + channels[i].substr(1, channels[i].length()) + "> :Bad Channel Mask");
+            sendInfoClient(client, "<" + channels[i].substr(0, channels[i].length() - 1) + "> :Bad Channel Mask");
             return false;
         }
     }

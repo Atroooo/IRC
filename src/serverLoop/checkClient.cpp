@@ -27,11 +27,8 @@ int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serv
 
 int clientAction(int clientSocket, char *serverPassword, Server *server){
 	char buf[4096];
-
     memset(buf, 0, 4096);
 
-    // Wait for client to send data
-    //BOUCLE WHILE
     int bytesReceived = 1;
     while (bytesReceived < 30){
         bytesReceived = recv(clientSocket, buf, 4096, MSG_DONTWAIT);
@@ -43,12 +40,10 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
             break ;
         }
     }
-    // cout << "BUF = " <<buf << endl;
-    // if (bytesReceived == -1){
-    //     cerr << "Error in recv(). Quitting" << endl;
-    //     exit(1);
-    // }
-
+    if (bytesReceived == -1){
+        cerr << "Error in recv(). Quitting" << endl;
+        exit(1);
+    }
     buf[bytesReceived] = '\0';
     int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
     if (connectionStatus == WRONG_PASSWORD)
@@ -56,7 +51,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     else if (connectionStatus == FIRST_CONNECTION){
         return (TRUE);
     }
-    // cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     commandHub(buf, server->getClient(clientSocket), server);
     int x = send(clientSocket, buf, bytesReceived, 0);
     botAction(buf, clientSocket, x);
