@@ -8,9 +8,9 @@ int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serv
     if (server->getClient(clientSocket) != NULL)
         return ALREADY_CONNECTED;
     (void)serverPassword;
-    if (checkPassword(buf, serverPassword) == false){
-        return WRONG_PASSWORD;
-    }
+    // if (checkPassword(buf, serverPassword) == false){
+    //     return WRONG_PASSWORD;
+    // }
     string nickname = getSubStrBuffer(buf, (char *)"NICK ");
     Client client(nickname, clientSocket);
     server->addClient(client);
@@ -65,8 +65,8 @@ void checkClient(Server *server, char *serverPassword) {
             if (clientAction(server->getFd(i)->fd, serverPassword, server) == FALSE) {
                 close(server->getFd(i)->fd);
                 list<pollfd>::iterator it = server->getFdsList().begin();
-                advance(it, i); // Move the iterator to the 'i'-th element
-                server->getFdsList().erase(it); // Erase the 'i'-th element
+                advance(it, i);
+                server->getFdsList().erase(it);
                 i--;
             }
         }

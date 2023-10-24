@@ -51,21 +51,19 @@ map<string, string> parseCommand(string Command) {
     return parsedCommand;
 }
 
-void joinCommand(string commandInput, Client client, Server *server) {
+void joinCommand(string commandInput, Client *client, Server *server) {
     map<string, string> command = parseCommand(commandInput);
     if (command.size() < 1) {
         cout << "Invalid command. Usage : /join <channel>{,<channel>} [<key>{,<key>}]" << endl;
         return ;
     }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        if (joinChannel(client, server->getChannel(it->first), it->second)) {
-            cout << "Joined channel" << endl;
+        if (joinChannel(*client, server->getChannel(it->first), it->second) != -1) {
             continue;
         }
-        else if (!createChannel(client, server, it->first, it->second)) {
-            cout << "Error creating channel" << endl;
-            return ;
-        } 
+        else if (createChannel(*client, server, it->first, it->second)) {
+            continue;
+        }
     }
 }
 
@@ -83,12 +81,15 @@ bool createChannel(Client Client, Server *server, string name, string password) 
     channel.addOperator(Client);
     server->addChannel(channel);
     cout << "Channel created" << endl;
+    const char * msg = ":lcompieg  ";
+    int ret = send(Client.getFd(), msg, strlen(msg) - 1, 0);
+    checkRetSend(ret);
     return true;
 }
 
-bool joinChannel(Client Client, Channel *Channel, string password) {
+int joinChannel(Client Client, Channel *Channel, string password) {
     if (Channel == NULL) {
-        return false;
+        return -1;
     }
     if (Channel->isUser(Client)) {
         cout << "Already in channel" << endl;
@@ -103,10 +104,11 @@ bool joinChannel(Client Client, Channel *Channel, string password) {
         cout << "Channel is invite only" << endl;
         return false;
     }
-    if (Channel->getUsers().size() >= (size_t)Channel->getMaxUsers()) {
+    if (Channel->getClients().size() >= (size_t)Channel->getMaxUsers()) {
         cout << "Channel is full" << endl;
         return false;
     }
     Channel->addUser(Client);
+    cout << "Joined channel" << endl;
     return true;
 }

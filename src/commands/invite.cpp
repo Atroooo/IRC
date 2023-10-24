@@ -1,4 +1,4 @@
-#include "../header/Commands.hpp"
+#include "../../header/Commands.hpp"
 
 void inviteCommand(string commandInput, Client client, Server *server) {
     vector<string> command = initCommand(commandInput);

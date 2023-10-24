@@ -1,4 +1,4 @@
-#include "../header/Commands.hpp"
+#include "../../header/Commands.hpp"
 
 void changeRightsCommand(string commandInput, Client sender, Server *server) {
     (void) commandInput;
