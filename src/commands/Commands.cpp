@@ -33,31 +33,10 @@ void commandHub(string commandInput, Client *client, Server *server) {
         changeRightsCommand(commandInput, *client, server);
         return ;
     }
-    // else {
-    //     sendMessageCommand(commandInput, client, server);
-    //     return ;
-    // }
-}
-
-bool sendMessage(Client client, Channel *channel, string message) {
-    if (message.empty()) {
-        cout << "Message is empty" << endl;
-        return false;
+    if (key == "PRIVMSG") {
+        sendMessageCommand(commandInput, *client, server);
+        return ;
     }
-    (void)channel, (void)client;
-    //Send message to all users in channel
-    //send(socket, buf, size, flag)
-    return true;
-}
-
-bool sendPrivateMessage(Client client, string message) {
-    if (message.empty()) {
-        cout << "Message is empty" << endl;
-        return false;
-    }
-    (void)client;
-    //Send message to client
-    return true;
 }
 
 vector<string> initCommand(string commandInput) {

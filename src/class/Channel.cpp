@@ -10,29 +10,29 @@ Channel::Channel(string name, string password) {
     this->_maxUsers = 10;
 }
 
-Channel::~Channel() { }
+Channel::~Channel(void) { }
 
-string Channel::getName() const {
+string Channel::getName(void) const {
     return this->_name;
 }
 
-string Channel::getPassword() const {
+string Channel::getPassword(void) const {
     return this->_password;
 }
 
-string Channel::getTopic() const {
+string Channel::getTopic(void) const {
     return this->_topic; 
 }
 
-list<char> Channel::getMode() const {
+list<char> Channel::getMode(void) const {
     return this->_mode; 
 }
 
-map<string, Client> Channel::getUsers() const {
-    return this->_clients; 
+map<string, Client> Channel::getClients(void) const {
+    return this->_clients;
 }
 
-int Channel::getMaxUsers() const {
+int Channel::getMaxUsers(void) const {
     return this->_maxUsers; 
 }
 

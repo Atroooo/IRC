@@ -30,5 +30,8 @@ void changeRightsCommand(string command, Client sender, Server *server);
 bool promoteClient(Client sender, Client receiver, Channel *channel);
 bool demoteClient(Client sender, Client receiver, Channel *channel);
 
+void sendMessageCommand(string CommandInput, Client client, Server *server);
 bool sendMessage(Client client, Channel *channel, string message);
-bool sendPrivateMessage(Client client, string message);
+bool sendPrivateMessage(Client sender, Client receiver, string message);
+
+void checkRetSend(int ret);

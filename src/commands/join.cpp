@@ -81,6 +81,9 @@ bool createChannel(Client Client, Server *server, string name, string password) 
     channel.addOperator(Client);
     server->addChannel(channel);
     cout << "Channel created" << endl;
+    const char * msg = ":lcompieg  ";
+    int ret = send(Client.getFd(), msg, strlen(msg) - 1, 0);
+    checkRetSend(ret);
     return true;
 }
 
@@ -101,7 +104,7 @@ int joinChannel(Client Client, Channel *Channel, string password) {
         cout << "Channel is invite only" << endl;
         return false;
     }
-    if (Channel->getUsers().size() >= (size_t)Channel->getMaxUsers()) {
+    if (Channel->getClients().size() >= (size_t)Channel->getMaxUsers()) {
         cout << "Channel is full" << endl;
         return false;
     }
