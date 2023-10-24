@@ -4,7 +4,7 @@ void commandHub(string commandInput, Client *client, Server *server) {
     stringstream ss(commandInput);
     string key;
     ss >> key;
-    cout << "key: " << key << endl;
+    // cout << "key: " << key << endl;
     if (key == "JOIN") {
         joinCommand(commandInput, client, server);
         return ;
