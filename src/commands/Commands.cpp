@@ -4,6 +4,7 @@ void commandHub(string commandInput, Client client, Server *server) {
     stringstream ss(commandInput);
     string key;
     ss >> key;
+    cout << "key: " << key << endl;
     if (key == "JOIN") {
         joinCommand(commandInput, client, server);
         return ;
@@ -71,6 +72,7 @@ vector<string> initCommand(string commandInput) {
 }
 
 bool channelMask(vector<string> command) {
+    cout << command[1][0] << endl;
     if (command[1][0] != '#' && command[1][0] != '&') {
         cout << "<" << command[1].substr(1, command[1].length()) << "> :Bad Channel Mask" << endl;
         return false;

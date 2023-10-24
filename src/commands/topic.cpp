@@ -22,11 +22,6 @@ void topicCommand(string commandInput, Client client, Server *server) {
         cout << "<" << channel->getName() << "> :" << channel->getTopic() << endl;
         return ;
     }
-    if (command[2][0] == ':'){
-        command[2].erase(0, 1);
-    }
-    else
-        return ;
     size_t i = 2;
     string message = "";
     while (i < command.size()) {

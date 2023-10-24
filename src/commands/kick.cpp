@@ -45,8 +45,7 @@ bool kickClient(Client sender, Client receiver, Channel *channel) {
 
 void sendKickMessage(Client client, Client *receiver, Channel *channel, vector<string> command) {
 
-    if (command[4][0] == ':'){
-        command[4].erase(0, 1);
+    if (command[4][0]) {
         size_t i = 4;
         string message = "";
         while (i < command.size()) {
