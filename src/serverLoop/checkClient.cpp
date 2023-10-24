@@ -48,7 +48,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     if (connectionStatus == WRONG_PASSWORD)
         return (FALSE);
     else if (connectionStatus == FIRST_CONNECTION){
-
         return (TRUE);
     }
     cout << "Received: " << string(buf, 0, bytesReceived) << endl;

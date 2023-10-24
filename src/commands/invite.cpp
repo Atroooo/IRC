@@ -38,7 +38,7 @@ bool inviteClient(Client sender, Client receiver, Channel *channel) {
         cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
         return false;
     }
-    if (channel->getUsers().size() >= (size_t)channel->getMaxUsers()) {
+    if (channel->getClients().size() >= (size_t)channel->getMaxUsers()) {
         return false;
     }
     channel->addInvited(receiver);
