@@ -1,7 +1,28 @@
 #include "../../header/includes.hpp"
-#include <cstddef>
-#include <cstring>
-#include <sys/poll.h>
+
+#define ALREADY_CONNECTED  0
+#define WRONG_PASSWORD  1
+#define FIRST_CONNECTION  2
+
+int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serverPassword){
+    if (server->getClient(clientSocket) != NULL)
+        return ALREADY_CONNECTED;
+    (void)serverPassword;
+    if (checkPassword(buf, serverPassword) == false){
+        return WRONG_PASSWORD;
+    }
+    string nickname = getSubStrBuffer(buf, (char *)"NICK ");
+    Client client(nickname, clientSocket);
+    server->addClient(client);
+    string botMessage = "Hello ";
+    botMessage.append(nickname);
+    int x = send(clientSocket, botMessage.c_str(), sizeof(buf), 0);
+    if (x < 0) {
+        cerr << "Error in send(). Quitting" << endl;
+        //NEED EXIT
+    }
+    return FIRST_CONNECTION;
+}
 
 int clientAction(int clientSocket, char *serverPassword, Server *server){
 	char buf[4096];
@@ -21,23 +42,17 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         return (FALSE);
     }
     buf[bytesReceived] = '\0';
-    // Echo message back to client
-    // if (checkPassword(buf, serverPassword) == false){
-    //     return FALSE;
-    // }
-    (void) serverPassword;
-    cout << "Received: " << string(buf, 0, bytesReceived) << endl;
-    if (buf[0] == '\0')
+    int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
+    if (connectionStatus == WRONG_PASSWORD)
+        return (FALSE);
+    else if (connectionStatus == FIRST_CONNECTION)
         return (TRUE);
-    Client client(getSubStrBuffer(buf, (char *)"NICK "), clientSocket);
-    // NEED TO DELETE NAME IN DESTRUCTOR CLIENT
-    server->addClient(client);
-    commandHub(buf, client, server);
+    cout << "Received: " << string(buf, 0, bytesReceived) << endl;
+    
+    commandHub(buf, *server->getClient(clientSocket), server);
     int x = send(clientSocket, buf, bytesReceived + 1, 0);
-    if (x < 0) {
-        cerr << "Error in send(). Quitting" << endl;
-        //NEED EXIT
-    }
+    botAction(buf, clientSocket, x);
+
     return (TRUE);
 }
 
