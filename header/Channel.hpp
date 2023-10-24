@@ -45,4 +45,6 @@ class Channel {
         bool                    isOperator(Client client);
         bool                    isInvited(Client client);
 
+        void                    displayChannelMembers(void) const; 
+
 };

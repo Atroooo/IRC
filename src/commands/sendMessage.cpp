@@ -6,28 +6,7 @@ void sendMessageCommand(string CommandInput, Client client, Server *server) {
         cout << "<PRIVMSG> :Not enough parameters" << endl;
         return ;
     }
-    if (channelMask(command) == false) {
-        return ;
-    }
-    Channel *channel = server->getChannel(command[1]);
-    if (channel == NULL) {
-        return ;
-    }
-    if (command.size() < 3) {
-        cout << "<PRIVMSG> :No message to send" << endl;
-        return ;
-    }
-    size_t i = 2;
-    string message = "";
-    while (i < command.size()) {
-        message += command[i];
-        message += " ";
-        i++;
-    }
-    if (!sendMessage(client, channel, message)) {
-        return ;
-    }
-    cout << "<" << client.getName() << "> :" << message << endl;
+    (void) server, (void) client;
 }
 
 bool sendMessage(Client client, Channel *channel, string message) {
@@ -65,4 +44,9 @@ void checkRetSend(int ret) {
         cerr << "Error in send(). Quitting" << endl;
         //NEED EXIT
     }
+}
+
+void sendInfoClient(Client client, string msg) {
+    int ret = send(client.getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+    checkRetSend(ret);
 }
