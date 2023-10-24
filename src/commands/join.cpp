@@ -58,16 +58,16 @@ void joinCommand(string commandInput, Client *client, Server *server) {
         return ;
     }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        if (joinChannel(*client, server->getChannel(it->first), it->second) != -1) {
+        if (joinChannel(client, server->getChannel(it->first), it->second) != -1) {
             continue;
         }
-        else if (createChannel(*client, server, it->first, it->second)) {
+        else if (createChannel(client, server, it->first, it->second)) {
             continue;
         }
     }
 }
 
-bool createChannel(Client Client, Server *server, string name, string password) {
+bool createChannel(Client *client, Server *server, string name, string password) {
     if (server->getChannel(name) != NULL) {
         cout << "Channel already exists" << endl;
         return false;
@@ -77,40 +77,41 @@ bool createChannel(Client Client, Server *server, string name, string password) 
         return false;
     }
     Channel channel(name.substr(1), password);
-    channel.addUser(Client);
-    channel.addOperator(Client);
+    channel.addUser(*client);
+    channel.addOperator(*client);
     server->addChannel(channel);
     cout << "Channel created" << endl;
-    // const char * msg = ":lcompieg ";
-    string msg = ":" + Client.getName() + " JOIN " + name + "\r\n";
-    cout << msg << endl;
-    int ret = send(Client.getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+    string msg = ":" + client->getName() + " JOIN " + name + "\r\n";
+    int ret = send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
     checkRetSend(ret);
     return true;
 }
 
-int joinChannel(Client Client, Channel *Channel, string password) {
-    if (Channel == NULL) {
+int joinChannel(Client *client, Channel *channel, string password) {
+    if (channel == NULL) {
         return -1;
     }
-    if (Channel->isUser(Client)) {
+    if (channel->isUser(*client)) {
         cout << "Already in channel" << endl;
         return false;
     }
-    list<char> mode = Channel->getMode();
-    if (find(mode.begin(), mode.end(), 'k') != mode.end() && Channel->getPassword() != password) {
+    list<char> mode = channel->getMode();
+    if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel->getPassword() != password) {
         cout << "Wrong password" << endl;
         return false;
     }
-    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !Channel->isInvited(Client)) {
+    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel->isInvited(*client)) {
         cout << "Channel is invite only" << endl;
         return false;
     }
-    if (Channel->getClients().size() >= (size_t)Channel->getMaxUsers()) {
+    if (channel->getClients().size() >= (size_t)channel->getMaxUsers()) {
         cout << "Channel is full" << endl;
         return false;
     }
-    Channel->addUser(Client);
+    channel->addUser(*client);
     cout << "Joined channel" << endl;
+    string msg = ":" + client->getName() + " JOIN #" + channel->getName() + "\r\n";
+    int ret = send(client->getFd(), msg.c_str(), strlen(msg.c_str()), 0);
+    checkRetSend(ret);
     return true;
 }
