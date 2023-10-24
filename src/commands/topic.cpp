@@ -1,4 +1,4 @@
-#include "../header/Commands.hpp"
+#include "../../header/Commands.hpp"
 
 void topicCommand(string commandInput, Client client, Server *server) {
 

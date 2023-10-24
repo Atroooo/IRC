@@ -1,4 +1,4 @@
-#include "../header/Commands.hpp"
+#include "../../header/Commands.hpp"
 
 // verifier presence de # devant channel
 vector<string> getCommand(string commandInput) {

@@ -1,3 +1,5 @@
+#include "../../header/Commands.hpp"
+
 // join 0 to leave all channels the client is in
 // if join is successful, return true and "channel: <topic>" to client + lsit of users in channel (new client included)
 // Numeric Replies:

@@ -14,9 +14,9 @@ list<struct pollfd> setUpFds(int port){
 
 int main(int argc, char *argv[])
 {
+    
     ServerArgument serverArgument = parsingArgument(argc, argv);
     list<struct pollfd> fds = setUpFds(serverArgument.port);
     serverLoop(fds, serverArgument.password);
-
     return 0;
 }
