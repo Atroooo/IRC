@@ -20,10 +20,10 @@ int getLenSubStr(char *buf){
 char * getSubStrBuffer(char *buf, char *name){
     int indexBeginning = getIndexBeginningSubStr(buf, name);
     int lenPassword = getLenSubStr(&buf[indexBeginning]);
-    char *passwordClient = new char[lenPassword + 1];
-    strncpy(passwordClient, &buf[indexBeginning],  lenPassword);
-    passwordClient[lenPassword] = '\0';
-    return passwordClient;
+    char *subStrName = new char[lenPassword + 1];
+    strncpy(subStrName, &buf[indexBeginning],  lenPassword);
+    subStrName[lenPassword] = '\0';
+    return subStrName;
 }
 
 bool checkPassword(char *buf, char *serverPassword){

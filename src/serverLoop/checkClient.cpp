@@ -12,9 +12,9 @@ int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serv
     //     return WRONG_PASSWORD;
     // }
     string nickname = getSubStrBuffer(buf, (char *)"NICK ");
+    cout << nickname << " connected" << endl;
     Client client(nickname, clientSocket);
     server->addClient(client);
-    cout << nickname << " connected" << endl;
     // string botMessage = "Hello ";
     // botMessage.append(nickname);
     // int x = send(clientSocket, botMessage.c_str(), sizeof(botMessage), 0);
@@ -31,18 +31,24 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     memset(buf, 0, 4096);
 
     // Wait for client to send data
-    int bytesReceived = recv(clientSocket, buf, 4096, 0);
-    // cout << "buf = " << buf << endl;
-    if (bytesReceived == -1)
-    {
-        cerr << "Error in recv(). Quitting" << endl;
-        //NEED EXIT
+    //BOUCLE WHILE
+    int bytesReceived = 1;
+    while (bytesReceived < 30){
+        bytesReceived = recv(clientSocket, buf, 4096, MSG_DONTWAIT);
+        if (strncmp(buf, "QUIT", 4) == 0){
+            cout << "Client disconnected " << endl;
+            return (FALSE);
+        }
+        if (server->getClient(clientSocket) != NULL){
+            break ;
+        }
     }
-    if (bytesReceived == 0 || strncmp(buf, "QUIT", 4) == 0)
-    {
-        cout << "Client disconnected " << endl;
-        return (FALSE);
-    }
+    // cout << "BUF = " <<buf << endl;
+    // if (bytesReceived == -1){
+    //     cerr << "Error in recv(). Quitting" << endl;
+    //     exit(1);
+    // }
+
     buf[bytesReceived] = '\0';
     int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
     if (connectionStatus == WRONG_PASSWORD)
@@ -50,7 +56,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     else if (connectionStatus == FIRST_CONNECTION){
         return (TRUE);
     }
-    cout << "Received: " << string(buf, 0, bytesReceived) << endl;
+    // cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     commandHub(buf, server->getClient(clientSocket), server);
     int x = send(clientSocket, buf, bytesReceived, 0);
     botAction(buf, clientSocket, x);
