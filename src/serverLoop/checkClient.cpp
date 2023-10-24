@@ -14,13 +14,13 @@ int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serv
     string nickname = getSubStrBuffer(buf, (char *)"NICK ");
     Client client(nickname, clientSocket);
     server->addClient(client);
-    string botMessage = "Hello ";
-    botMessage.append(nickname);
-    int x = send(clientSocket, botMessage.c_str(), sizeof(buf), 0);
-    if (x < 0) {
-        cerr << "Error in send(). Quitting" << endl;
-        //NEED EXIT
-    }
+    // string botMessage = "Hello ";
+    // botMessage.append(nickname);
+    // int x = send(clientSocket, botMessage.c_str(), sizeof(buf), 0);
+    // if (x < 0) {
+    //     cerr << "Error in send(). Quitting" << endl;
+    //     //NEED EXIT
+    // }
     return FIRST_CONNECTION;
 }
 
@@ -50,7 +50,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     cout << "Received: " << string(buf, 0, bytesReceived) << endl;
     
     commandHub(buf, *server->getClient(clientSocket), server);
-    int x = send(clientSocket, buf, bytesReceived + 1, 0);
+    int x = send(clientSocket, buf, bytesReceived, 0);
     botAction(buf, clientSocket, x);
 
     return (TRUE);
