@@ -76,13 +76,15 @@ bool createChannel(Client Client, Server *server, string name, string password) 
         cout << "Channel name is empty" << endl;
         return false;
     }
-    Channel channel(name, password);
+    Channel channel(name.substr(1), password);
     channel.addUser(Client);
     channel.addOperator(Client);
     server->addChannel(channel);
     cout << "Channel created" << endl;
-    const char * msg = ":lcompieg  ";
-    int ret = send(Client.getFd(), msg, strlen(msg) - 1, 0);
+    // const char * msg = ":lcompieg ";
+    string msg = ":" + Client.getName() + " JOIN " + name + "\r\n";
+    cout << msg << endl;
+    int ret = send(Client.getFd(), msg.c_str(), strlen(msg.c_str()), 0);
     checkRetSend(ret);
     return true;
 }
