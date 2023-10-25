@@ -138,17 +138,6 @@ bool kickClient(Client Sender, Client Receiver, Channel Channel) {
     return true;
 }
 
-
-bool sendMessage(std::string message, Channel Channel) {
-    if (message.empty()) {
-        cout << "Message is empty" << endl;
-        return false;
-    }
-    (void)Channel;
-    //Send message to all users in channel
-    return true;
-}
-
 // Numeric Replies:
 
   //         ERR_NORECIPIENT                 ERR_NOTEXTTOSEND

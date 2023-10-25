@@ -108,7 +108,7 @@ string Channel::getChannelMembers(void) const {
     for (map<string, Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
         members += it->first;
         if (it != --this->_clients.end())
-            members += ", ";
+            members += " ";
     }
     return members;
 }
