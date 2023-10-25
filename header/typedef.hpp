@@ -9,20 +9,6 @@
 #define TRUE             1
 #define FALSE            0
 
-#define SERVER_NAME "IRC"
-
-#define RPL_NOTOPIC 331
-#define RPL_TOPIC 332
-#define RPL_TOPICWHOTIME 333
-#define RPL_INVITING 341
-#define ERR_NOSUCHCHANNEL 403
-#define ERR_USERNOTINCHANNEL 441
-#define ERR_NOTONCHANNEL 442
-#define ERR_USERONCHANNEL 443
-#define ERR_NEEDMOREPARAMS 461
-#define ERR_BADCHANMASK 476
-#define ERR_CHANOPRIVSNEEDED 482
-
 typedef int SOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
@@ -33,3 +19,21 @@ typedef struct sockaddr SOCKADDR;
 
 /*------ JOIN ------*/
 #define RPL_NAMREPLY "353"
+
+/*------ INVITE ------*/
+#define RPL_INVITING 341
+
+/*------ TOPIC ------*/
+#define RPL_TOPIC 332
+#define RPL_NOTOPIC 331
+#define RPL_TOPICWHOTIME 333
+
+
+/*------ Errors ------*/
+#define ERR_NOSUCHCHANNEL 403
+#define ERR_USERNOTINCHANNEL 441
+#define ERR_NOTONCHANNEL 442
+#define ERR_USERONCHANNEL 443
+#define ERR_NEEDMOREPARAMS 461
+#define ERR_BADCHANMASK 476
+#define ERR_CHANOPRIVSNEEDED 482
