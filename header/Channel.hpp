@@ -29,8 +29,9 @@ class Channel {
         list<char>              getMode(void) const;
         map<string, Client>     getClients(void) const;
         int                     getMaxUsers(void) const;
-        string                  getChannelMembers(void) const; 
         Client                  *getClient(string name);
+        string                  getMembers(void) const;
+        string                  getChannelMembers(void); 
 
         void                    setTopic(string topic);
         void                    setMode(char mode);

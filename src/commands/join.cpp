@@ -4,7 +4,7 @@
 bool checkMask(vector<string> channels, Client client) {
     for (size_t i = 0; i < channels.size(); i++) {
         if (channels[i][0] != '#' && channels[i][0] != '&') {
-            sendInfoClient(client, "<" + channels[i].substr(0, channels[i].length() - 1) + "> :Bad Channel Mask");
+            sendInfoClient(client, ERR_BADCHANMASK(channels[i].substr(0, channels[i].length() - 1)));
             return false;
         }
     }
@@ -42,7 +42,7 @@ map<string, string> parseCommand(string Command, Client client) {
         cmd = strtok(NULL, " ");
     }
     if (command.size() < 2) {
-        sendInfoClient(client, "<JOIN> :Not enough parameters");
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("JOIN")));
         return parsedCommand;
     }
 
@@ -72,12 +72,12 @@ map<string, string> parseCommand(string Command, Client client) {
 
 /*---------------------------------------- Join Command ----------------------------------------*/
 void joinCommand(string commandInput, Client *client, Server *server) {
+    if (commandInput == "JOIN 0") {
+        //leave all channels
+        return ;
+    }
     map<string, string> command = parseCommand(commandInput, *client);
     if (command.size() < 1) { return ; }
-    // if (command[0] == "JOIN" && command[1][0] == '0') {
-    //     //leave all channels
-    //     return ;
-    // }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
         if (joinChannel(*client, server->getChannel(it->first.substr(1, it->first.size() - 3)), it->second) != -1) {
             continue;
@@ -94,7 +94,7 @@ bool createChannel(Client client, Server *server, string name, string password) 
         return false;
     }
     if (name.empty()) {
-        sendInfoClient(client, "<JOIN> :Not enough parameters");
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("JOIN")));
         return false;
     }
     Channel channel(name.substr(1, name.size() - 3), password);
@@ -102,7 +102,7 @@ bool createChannel(Client client, Server *server, string name, string password) 
     channel.addOperator(client);
     server->addChannel(channel);
     sendInfoClient(client, ":" + client.getName() + " JOIN " + name + "\r\n");
-    sendInfoClient(client, ": 353 " + client.getName() + " = #" + channel.getName() + " :" + channel.getChannelMembers() + "\r\n");
+    sendInfoClient(client, RPL_NAMREPLY(client.getName(), channel.getName(), channel.getChannelMembers()));
     return true;
 }
 
@@ -113,15 +113,15 @@ int passCheck(Client client, Channel channel, string password) {
     }
     list<char> mode = channel.getMode();
     if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel.getPassword() != password) {
-        sendInfoClient(client, "<" + channel.getName() + "> : Cannot join channel (+k) - bad key");
+        sendInfoClient(client, ERR_BADCHANNELKEY(string("#" + channel.getName())));
         return false;
     }
     if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel.isInvited(client)) {
-        sendInfoClient(client, "<" + channel.getName() + "> : Cannot join channel (+i) - bad key");
+        sendInfoClient(client, ERR_INVITEONLYCHAN(string("#" + channel.getName())));
         return false;
     }
     if (channel.getClients().size() >= (size_t)channel.getMaxUsers()) {
-        sendInfoClient(client, "<" + channel.getName() + "> : Cannot join channel (+l) - channel full");
+        sendInfoClient(client, ERR_CHANNELISFULL(string("#" + channel.getName())));
         return false;
     }
     return true;
@@ -129,16 +129,14 @@ int passCheck(Client client, Channel channel, string password) {
 
 int joinChannel(Client client, Channel *channel, string password) {
     if (channel == NULL) {
+        sendInfoClient(client, ERR_NOSUCHCHANNEL);
         return -1;
     }
-    if (passCheck(client, *channel, password) == false) {
-        return false;
-    }    
+    if (passCheck(client, *channel, password) == false) { return false; }    
     channel->addUser(client);
     sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
-    sendInfoClient(client, "<" + channel->getName() + "> :" + " Channel joined\nTopic " + channel->getTopic() + \
-        "\nMembers : " + channel->getChannelMembers() + "\r\n");
+    sendInfoClient(client, INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
     sendInfoChannel(*channel, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
-    sendInfoClient(client, ": 353 " + client.getName() + " = #" + channel->getName() + " :" + channel->getChannelMembers() + "\r\n");
+    sendInfoClient(client, RPL_NAMREPLY(client.getName(), channel->getName(), channel->getChannelMembers()));
     return true;
 }

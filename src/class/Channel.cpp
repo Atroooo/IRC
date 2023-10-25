@@ -43,6 +43,29 @@ Client *Channel::getClient(string name) {
     return NULL;
 }
 
+string Channel::getMembers(void) const {
+    string members = "";
+    for (map<string, Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+        members += it->first;
+        if (it != --this->_clients.end())
+            members += " ";
+    }
+    return members;
+}
+
+string Channel::getChannelMembers(void) {
+    string members = "";
+    for (map<string, Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+        if (this->isOperator(it->second))
+            members += "@" + it->first;
+        else
+            members += it->first;
+        if (it != --this->_clients.end())
+            members += " ";
+    }
+    return members;
+}
+
 void Channel::setTopic(string topic) { 
     this->_topic = topic; 
 }
@@ -101,14 +124,4 @@ bool Channel::isInvited(Client client) {
             return true;
     }
     return false;
-}
-
-string Channel::getChannelMembers(void) const {
-    string members = "";
-    for (map<string, Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
-        members += it->first;
-        if (it != --this->_clients.end())
-            members += " ";
-    }
-    return members;
 }
