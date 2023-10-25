@@ -14,7 +14,7 @@ void leaveCommand(string command, Client client, Server *server);
 bool leaveChannel(Client client, Channel *channel, string message);
 
 void topicCommand(string command, Client client, Server *server);
-bool changeTopic(Client client, Channel *channel, string topic);
+bool changeTopic(Client client, Channel *channel);
 
 void modeCommand(string command, Client client, Server *server);
 bool changeMode(Client client, Channel *channel, char mode);

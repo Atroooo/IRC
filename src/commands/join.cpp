@@ -79,7 +79,7 @@ void joinCommand(string commandInput, Client *client, Server *server) {
 }
 
 bool createChannel(Client client, Server *server, string name, string password) {
-    if (server->getChannel(name) != NULL) {
+    if (server->getChannel(name.substr(1)) != NULL) {
         cout << "Channel already exists" << endl;
         return false;
     }
@@ -117,6 +117,7 @@ int joinChannel(Client client, Channel *channel, string password) {
         return false;
     }
     channel->addUser(client);
+    cout << "Joined channel" << endl;
     sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
     sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + \
         "\nMembers :");
