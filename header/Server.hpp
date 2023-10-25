@@ -25,7 +25,7 @@ class Server {
         Client *getClient(string name);
         Client *getClient(int fd);
         list<Channel> getChannel(void) const;
-        Channel *getChannel(string name);
+        Channel *getChannel(const string & name);
 
         void setList( vector<struct pollfd> fds);
         void setServChanCount(size_t count) { this->_serverFdsCount = count; };

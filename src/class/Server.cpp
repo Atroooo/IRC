@@ -60,9 +60,9 @@ list<Channel> Server::getChannel(void) const {
     return this->_channels;
 }
 
-Channel *Server::getChannel(string name) {
+Channel *Server::getChannel(const string & name) {
     for (list<Channel>::iterator i = this->_channels.begin(); i != this->_channels.end(); i++) {
-        if (i->getName() == name) {
+        if (i->getName().compare(name) == 0) {
             return &(*i);
         }
     }

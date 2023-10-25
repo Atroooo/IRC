@@ -69,7 +69,7 @@ void joinCommand(string commandInput, Client *client, Server *server) {
     map<string, string> command = parseCommand(commandInput, *client);
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        if (joinChannel(*client, server->getChannel(it->first), it->second) != -1) {
+        if (joinChannel(*client, server->getChannel(it->first.substr(1)), it->second) != -1) {
             continue;
         }
         else if (createChannel(*client, server, it->first, it->second)) {
@@ -79,7 +79,8 @@ void joinCommand(string commandInput, Client *client, Server *server) {
 }
 
 bool createChannel(Client client, Server *server, string name, string password) {
-    if (server->getChannel(name) != NULL) {
+    cout << "name " << name << endl;
+    if (server->getChannel(name.substr(1)) != NULL) {
         cout << "Channel already exists" << endl;
         return false;
     }
@@ -91,6 +92,7 @@ bool createChannel(Client client, Server *server, string name, string password) 
     channel.addUser(client);
     channel.addOperator(client);
     server->addChannel(channel);
+    cout << "Created channel" << endl;
     sendInfoClient(client, ":" + client.getName() + " JOIN " + name + "\r\n");
     return true;
 }
@@ -117,6 +119,7 @@ int joinChannel(Client client, Channel *channel, string password) {
         return false;
     }
     channel->addUser(client);
+    cout << "Joined channel" << endl;
     sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
     sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + \
         "\n Members :");
