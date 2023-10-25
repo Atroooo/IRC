@@ -2,7 +2,6 @@
 
 void topicCommand(string commandInput, Client client, Server *server) {
 
-    cout << commandInput << endl;
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
         cout << "<TOPIC> :Not enough parameters" << endl;
@@ -18,20 +17,20 @@ void topicCommand(string commandInput, Client client, Server *server) {
         return ;
     }
     if (commandInput.find(':') == string::npos) {
-        if (channel->getTopic() == "No topic is set") {
-            cout << "!<" << channel->getName() << "> :No topic is set" << endl;
-            sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + "\r\n");
+        if (channel->getTopic() == "No topic") {
+            sendInfoClient(client, "<" + channel->getName() + ">:" + channel->getTopic() + " is set\r\n");
             return ;
         }
-        sendInfoClient(client, "Topic for <" + channel->getName() + "> is : " + channel->getTopic() + "\r\n");
+        sendInfoClient(client, "Topic for <" + channel->getName() + "> is: " + channel->getTopic() + "\r\n");
         cout << "<" << channel->getName() << "> :" << channel->getTopic() << endl;
         return ;
     }
     if (!changeTopic(client, channel)) {
         return ;
     }
+    cout << commandInput << endl;
     channel->setTopic(commandInput.substr(commandInput.find(':') + 1));
-    sendInfoClient(client, client.getName() + " has changed the topic to : " + channel->getTopic() + "\r\n");
+    sendInfoClient(client, ":" + std::string(SERVER_NAME) + "TOPIC " + client.getName() + " has changed the topic to :" + channel->getTopic() + "\r\n");
 }
 
 bool changeTopic(Client client, Channel *channel) {
