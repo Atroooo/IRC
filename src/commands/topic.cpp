@@ -17,27 +17,20 @@ void topicCommand(string commandInput, Client client, Server *server) {
     if (channel == NULL) {
         return ;
     }
-    if (command.size() > 2) {
+    if (commandInput.find(':') == string::npos) {
         if (channel->getTopic() == "No topic is set") {
             cout << "!<" << channel->getName() << "> :No topic is set" << endl;
             sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + "\r\n");
             return ;
         }
         sendInfoClient(client, "Topic for <" + channel->getName() + "> is : " + channel->getTopic() + "\r\n");
-        cout << "#<" << channel->getName() << "> :" << channel->getTopic() << endl;
+        cout << "<" << channel->getName() << "> :" << channel->getTopic() << endl;
         return ;
     }
     if (!changeTopic(client, channel)) {
         return ;
     }
-    size_t i = 2;
-    string message = "";
-    while (i < command.size()) {
-        message += command[i];
-        message += " ";
-        i++;
-    }
-    channel->setTopic(message.substr(1, message.length()));
+    channel->setTopic(commandInput.substr(commandInput.find(':') + 1));
     sendInfoClient(client, client.getName() + " has changed the topic to : " + channel->getTopic() + "\r\n");
 }
 
@@ -52,10 +45,10 @@ bool changeTopic(Client client, Channel *channel) {
         cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
         return false;
     }
-    if (find(channel->getMode().begin(), channel->getMode().end(), 't') != channel->getMode().end()) {
-        sendInfoClient(client, "<" + channel->getName() + "> :Channel doesn't support modes\r\n");
-        cout << "<" << channel->getName() << "> :Channel doesn't support modes" << endl;
-        return false;
-    }
+    // if (find(channel->getMode().begin(), channel->getMode().end(), 't') != channel->getMode().end()) {
+    //     sendInfoClient(client, "<" + channel->getName() + "> :Channel doesn't support modes\r\n");
+    //     cout << "<" << channel->getName() << "> :Channel doesn't support modes" << endl;
+    //     return false;
+    // }
     return true;
 }
