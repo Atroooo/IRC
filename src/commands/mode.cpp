@@ -4,7 +4,7 @@ void modeCommand(string commandInput, Client client, Server *server) {
     (void) commandInput;
     vector<string> command;
     if (command.size() != 3) {
-        cout << "Wrong input : /mode [channel] [mode]" << endl;
+        // cout << "Wrong input : /mode [channel] [mode]" << endl;
         return ;
     }
     Channel *channel = server->getChannel(command[1]);

@@ -29,6 +29,7 @@ class Channel {
         list<char>              getMode(void) const;
         map<string, Client>     getClients(void) const;
         int                     getMaxUsers(void) const;
+        string                  getChannelMembers(void) const; 
         Client                  *getClient(string name);
 
         void                    setTopic(string topic);
@@ -45,6 +46,5 @@ class Channel {
         bool                    isOperator(Client client);
         bool                    isInvited(Client client);
 
-        void                    displayChannelMembers(void) const; 
 
 };

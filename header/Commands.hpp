@@ -9,6 +9,7 @@ bool channelMask (vector<string> command);
 void joinCommand(string command, Client *client, Server *server);
 bool createChannel(Client client, Server *server, string name, string password);
 int  joinChannel(Client client, Channel *channel, string password);
+void connectClient(Client client, Channel channel);
 
 void leaveCommand(string command, Client client, Server *server);
 bool leaveChannel(Client client, Channel *channel, string message);
@@ -36,3 +37,4 @@ bool sendPrivateMessage(Client sender, Client receiver, string message);
 
 void checkRetSend(int ret);
 void sendInfoClient(Client client, string msg);
+void sendInfoChannel(Channel channel, string msg);

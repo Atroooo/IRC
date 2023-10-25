@@ -103,8 +103,12 @@ bool Channel::isInvited(Client client) {
     return false;
 }
 
-void Channel::displayChannelMembers(void) const {
+string Channel::getChannelMembers(void) const {
+    string members = "";
     for (map<string, Client>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
-        cout << it->first << endl;
+        members += it->first;
+        if (it != --this->_clients.end())
+            members += ", ";
     }
+    return members;
 }

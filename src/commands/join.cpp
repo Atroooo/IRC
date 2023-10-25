@@ -117,10 +117,23 @@ int joinChannel(Client client, Channel *channel, string password) {
         return false;
     }
     channel->addUser(client);
-    cout << "Joined channel" << endl;
-    sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
-    sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + \
-        "\nMembers :");
-    channel->displayChannelMembers();
+    // sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
+    // sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + \
+    //     "\nMembers : " + channel->getChannelMembers() + "\r\n");
+    // sendInfoChannel(*channel, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
+    connectClient(client, *channel);
     return true;
+}
+
+void connectClient(Client client, Channel channel) {
+    map<string, Client> clients = channel.getClients();
+
+    sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel.getName() + "\r\n");
+    sendInfoClient(client, "<" + channel.getName() + "> :" + channel.getTopic() + \
+        "\nMembers : " + channel.getChannelMembers() + "\r\n");
+    sendInfoChannel(channel, ":" + client.getName() + " JOIN #" + channel.getName() + "\r\n");
+    for (map<string, Client>::iterator it = clients.begin(); it != clients.end(); it++) {
+        if (it->first != client.getName())
+            sendInfoClient(client, ":" + it->second.getName() + " JOIN #" + channel.getName() + "\r\n");
+    }
 }
