@@ -63,6 +63,7 @@ list<Channel> Server::getChannel(void) const {
 Channel *Server::getChannel(string name) {
     for (list<Channel>::iterator i = this->_channels.begin(); i != this->_channels.end(); i++) {
         if (i->getName() == name) {
+            cout << "found" << endl;
             return &(*i);
         }
     }

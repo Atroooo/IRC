@@ -69,7 +69,7 @@ void joinCommand(string commandInput, Client *client, Server *server) {
     map<string, string> command = parseCommand(commandInput, *client);
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        if (joinChannel(*client, server->getChannel(it->first), it->second) != -1) {
+        if (joinChannel(*client, server->getChannel(it->first.substr(1, it->first.size() - 3)), it->second) != -1) {
             continue;
         }
         else if (createChannel(*client, server, it->first, it->second)) {
@@ -87,7 +87,7 @@ bool createChannel(Client client, Server *server, string name, string password) 
         cout << "Channel name is empty" << endl;
         return false;
     }
-    Channel channel(name.substr(1), password);
+    Channel channel(name.substr(1, name.size() - 3), password);
     channel.addUser(client);
     channel.addOperator(client);
     server->addChannel(channel);
@@ -119,7 +119,7 @@ int joinChannel(Client client, Channel *channel, string password) {
     channel->addUser(client);
     sendInfoClient(client, ":" + client.getName() + " JOIN #" + channel->getName() + "\r\n");
     sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + \
-        "\n Members :");
+        "\nMembers :");
     channel->displayChannelMembers();
     return true;
 }

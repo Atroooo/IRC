@@ -10,8 +10,10 @@ void topicCommand(string commandInput, Client client, Server *server) {
     if (channelMask(command) == false) {
         return ;
     }
-    Channel *channel = server->getChannel(command[1]);
+    Channel *channel = server->getChannel(command[1].substr(1));
+    cout << "cmd: |" << command[1].substr(1) << "|" << endl;
     if (channel == NULL) {
+        cout << "ICI" << endl;
         return ;
     }
     if (command.size() < 3) {
