@@ -18,6 +18,7 @@ typedef struct sockaddr SOCKADDR;
 #define RPL_WELCOME 001
 
 /*------ JOIN ------*/
+#define JOINCHAN(client, channel) ":" + client + " JOIN #" + channel + "\r\n"
 #define INFO_JOIN(channel, topic, members) "<" + channel + "> :" + " Channel joined\nTopic " + topic + "\nMembers : " + members + "\r\n"
 #define RPL_NAMREPLY(client, channel, members) ": 353 " + client + " = #" + channel + " :" + members + "\r\n" //353
 

@@ -28,11 +28,7 @@ void commandHub(string commandInput, Client *client, Server *server) {
         kickCommand(commandInput, *client, server);
         return ;
     }
-    if (key == "PROMOTE" || key == "DEMOTE") {
-        changeRightsCommand(commandInput, *client, server);
-        return ;
-    }
-    if (key == "PRIVMSG") {
+    if (key == "PRIVMSG" || key == "NOTICE") {
         sendMessageCommand(commandInput, *client, server);
         return ;
     }

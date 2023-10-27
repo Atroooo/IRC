@@ -30,7 +30,6 @@ SRC_FILE        =   main \
 					commands/mode \
 					commands/topic \
 					commands/invite \
-					commands/channelRights \
 					commands/sendMessage \
 
 SRC             =   $(addsuffix .cpp, $(addprefix $(SRC_DIR)/, $(SRC_FILE)))
