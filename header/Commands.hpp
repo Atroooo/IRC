@@ -24,7 +24,6 @@ bool inviteClient(Client sender, Client receiver, Channel *channel);
 
 void kickCommand(string command, Client client, Server *server);
 bool kickClient(Client sender, Client receiver, Channel *channel);
-void sendKickMessage(Client client, Client *receiver, Channel *channel, vector<string> command);
 
 void changeRightsCommand(string command, Client sender, Server *server);
 bool promoteClient(Client sender, Client receiver, Channel *channel);

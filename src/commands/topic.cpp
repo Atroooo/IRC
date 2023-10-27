@@ -4,50 +4,42 @@ void topicCommand(string commandInput, Client client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
-        cout << "<TOPIC> :Not enough parameters" << endl;
-        sendInfoClient(client, "<TOPIC> :Not enough parameters\r\n");
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("TOPIC")));
         return ;
     }
     if (channelMask(command) == false) {
-        sendInfoClient(client, "<" + command[1].substr(0, command[1].length()) + "> :Bad Channel Mask\r\n");
+        sendInfoClient(client, ERR_BADCHANMASK(command[1].substr(1)));
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
+        sendInfoClient(client, ERR_NOSUCHCHANNEL);
         return ;
     }
     if (commandInput.find(':') == string::npos) {
         if (channel->getTopic() == "No topic") {
-            sendInfoClient(client, "<" + channel->getName() + ">:" + channel->getTopic() + " is set\r\n");
+            sendInfoClient(client, RPL_NOTOPIC(channel->getName(), client.getName()));
             return ;
         }
-        sendInfoClient(client, "Topic for <" + channel->getName() + "> is: " + channel->getTopic() + "\r\n");
-        cout << "<" << channel->getName() << "> :" << channel->getTopic() << endl;
+        sendInfoClient(client, RPL_TOPIC(channel->getName(), client.getName(), channel->getTopic()));
         return ;
     }
     if (!changeTopic(client, channel)) {
         return ;
     }
-    cout << commandInput << endl;
     channel->setTopic(commandInput.substr(commandInput.find(':') + 1));
-    sendInfoClient(client, ":" + std::string(SERVER_NAME) + "TOPIC " + client.getName() + " has changed the topic to :" + channel->getTopic() + "\r\n");
+    sendInfoChannel(*channel, ":" + client.getName() + " TOPIC :" + channel->getTopic() + "\r\n");
 }
 
 bool changeTopic(Client client, Channel *channel) {
     if (!channel->isUser(client)) {
-        sendInfoClient(client, "<" + channel->getName() + "> :You're not on that channel\r\n");
-        cout << "<" << channel->getName() << "> :You're not on that channel" << endl;
+        sendInfoClient(client, ERR_NOTONCHANNEL(channel->getName(), client.getName()));
         return false;
     }
     if (!channel->isOperator(client)) {
-        sendInfoClient(client, "<" + channel->getName() + "> :You're not channel operator\r\n");
-        cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
+        sendInfoClient(client, ERR_CHANOPRIVSNEEDED(channel->getName(), client.getName()));
         return false;
     }
-    // if (find(channel->getMode().begin(), channel->getMode().end(), 't') != channel->getMode().end()) {
-    //     sendInfoClient(client, "<" + channel->getName() + "> :Channel doesn't support modes\r\n");
-    //     cout << "<" << channel->getName() << "> :Channel doesn't support modes" << endl;
-    //     return false;
-    // }
+
     return true;
 }
