@@ -22,7 +22,8 @@ void kickCommand(string commandInput, Client client, Server *server) {
     if (!kickClient(client, *receiver, channel)) {
         return ;
     }
-    // sendInfoChannel(channel, ":" + client.getName() + " KICK " + channel->getName() + " " + receiver->getName() + "\r\n");
+    sendInfoChannel(*channel, ":" + client.getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client.getName() + "\r\n");
+    sendInfoClient(*receiver, ":" + client.getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client.getName() + "\r\n");
 }
 
 bool kickClient(Client sender, Client receiver, Channel *channel) {

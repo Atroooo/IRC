@@ -140,7 +140,6 @@ int passCheck(Client client, Channel channel, string password) {
 
 int joinChannel(Client client, Channel *channel, string password) {
     if (channel == NULL) {
-        sendInfoClient(client, ERR_NOSUCHCHANNEL);
         return -1;
     }
     if (passCheck(client, *channel, password) == false) { return false; }    

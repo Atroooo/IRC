@@ -47,7 +47,6 @@ vector<string> initCommand(string commandInput) {
 
 bool channelMask(vector<string> command) {
     if (command[1][0] != '#' && command[1][0] != '&') {
-        cout << "<" << command[1].substr(1, command[1].length()) << "> :Bad Channel Mask" << endl;
         return false;
     }
     return true;
