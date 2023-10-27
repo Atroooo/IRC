@@ -9,7 +9,7 @@ int acceptNewConnection(int listening){
 	return clientSocket;
 }
 
-void checkServer(pollfd & newFd, Server & server){
+void checkNewConnection(pollfd & newFd, Server & server){
     if (server.getFd(0)->revents != POLLIN )
         return;
     int clientSocket = acceptNewConnection(server.getFd(0)->fd);

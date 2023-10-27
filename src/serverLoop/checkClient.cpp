@@ -39,8 +39,9 @@ bool checkPassAndNick(char *buf){
 int clientAction(int clientSocket, char *serverPassword, Server *server){
 	char buf[1028];
     memset(buf, 0, 1028);
+    int bytesReceived;
     while (true){
-        int bytesReceived = recv(clientSocket, buf, 1028, MSG_DONTWAIT);    
+        bytesReceived = recv(clientSocket, buf, 1028, MSG_DONTWAIT);    
         if (bytesReceived == 0){
             cerr << "Client disconnected" << endl;
             return FALSE;
@@ -49,20 +50,14 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         if (checkPassAndNick(buf) == true) break;
         usleep(100);
     }
-    // cout <<endl <<endl<<(int)buf[totalBytes - 2] << endl<<endl;
-    // cout << buf << endl;
-    // if (buf[totalBytes - 1] == '\r')
-    //     break;
-
-    // cout << (int)buf[bytesReceived - 2] << endl;
     if (strncmp(buf, "QUIT", 4) == 0){
         cout << "Client disconnected " << endl;
         return (FALSE);
     }
-    // if (bytesReceived == -1){
-    //     cerr << "Error in recv(). Quitting" << endl;
-    //     exit(1);
-    // }
+    if (bytesReceived == -1){
+        cerr << "Error in recv(). Quitting" << endl;
+        exit(1);
+    }
     cout << "BUF = " << buf << endl;
     // int size = sizeof(buf);
     int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
