@@ -1,7 +1,14 @@
 #include "../../header/Commands.hpp"
 
+void printVector(vector<string> vec) {
+    for (size_t i = 0; i < vec.size(); i++) {
+        cout << vec[i] << endl;
+    }
+}
+
 void sendMessageCommand(string CommandInput, Client client, Server *server) {
     vector<string> command = initCommand(CommandInput);
+    printVector(command);
     if (command.size() < 2) {
         cout << "<PRIVMSG> :Not enough parameters" << endl;
         return ;

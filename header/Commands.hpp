@@ -18,6 +18,8 @@ bool changeTopic(Client client, Channel *channel);
 
 void modeCommand(string command, Client client, Server *server);
 bool changeMode(Client client, Channel *channel, char mode);
+bool promoteClient(Client sender, Client receiver, Channel *channel);
+bool demoteClient(Client sender, Client receiver, Channel *channel);
 
 void inviteCommand(string command, Client client, Server *server);
 bool inviteClient(Client sender, Client receiver, Channel *channel);
@@ -26,10 +28,6 @@ void kickCommand(string command, Client client, Server *server);
 bool kickClient(Client sender, Client receiver, Channel *channel);
 void sendKickMessage(Client client, Client *receiver, Channel *channel, vector<string> command);
 
-void changeRightsCommand(string command, Client sender, Server *server);
-bool promoteClient(Client sender, Client receiver, Channel *channel);
-bool demoteClient(Client sender, Client receiver, Channel *channel);
-
 void sendMessageCommand(string CommandInput, Client client, Server *server);
 bool sendMessage(Client client, Channel *channel, string message);
 bool sendPrivateMessage(Client sender, Client receiver, string message);
@@ -37,3 +35,6 @@ bool sendPrivateMessage(Client sender, Client receiver, string message);
 void checkRetSend(int ret);
 void sendInfoClient(Client client, string msg);
 void sendInfoChannel(Channel channel, string msg);
+
+//DELETE
+void printVector(vector<string> vec);
