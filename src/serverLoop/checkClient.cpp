@@ -52,8 +52,8 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         return (TRUE);
     }
     commandHub(buf, server->getClient(clientSocket), server);
-    int x = send(clientSocket, buf, bytesReceived, 0);
-    botAction(buf, clientSocket, x);
+    // int x = send(clientSocket, buf, bytesReceived, 0);
+    // botAction(buf, clientSocket, x);
 
     return (TRUE);
 }

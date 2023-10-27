@@ -30,7 +30,7 @@ void sendKickMessage(Client client, Client *receiver, Channel *channel, vector<s
 
 void sendMessageCommand(string CommandInput, Client client, Server *server);
 bool sendMessage(Client client, Channel *channel, string message);
-bool sendPrivateMessage(Client sender, Client receiver, string message);
+bool sendPrivateMessage(Client sender, Client *receiver, string message);
 
 void checkRetSend(int ret);
 void sendInfoClient(Client client, string msg);

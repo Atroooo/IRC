@@ -70,10 +70,16 @@ map<string, string> parseCommand(string Command, Client client) {
     return parsedCommand;
 }
 
-string removeENDL(string str) {
-    if (str[str.length() - 1] == '\n')
-        str = str.substr(0, str.length() - 1);
-    return str;
+string getName(string name) {
+    string retName = "";
+    int i = 1;
+
+    while (name[i]) {
+        if (name[i] >= 31 && name[i] <= 126)
+            retName += name[i];
+        i++;
+    }
+    return retName;
 }
 
 /*---------------------------------------- Join and Create Command ---------------------------------*/
@@ -85,7 +91,7 @@ void joinCommand(string commandInput, Client *client, Server *server) {
     map<string, string> command = parseCommand(commandInput, *client);
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        string name = removeENDL(it->first.substr(1, it->first.size() - 1));
+        string name = getName(it->first);
         if (joinChannel(*client, server->getChannel(name), it->second) != -1) {
             continue;
         }
