@@ -3,12 +3,13 @@
 
 list<struct pollfd> setUpFds(int port){
     list<struct pollfd> fds;
+    struct pollfd listenerFd;
+
     int listening = setUpSocket(port);
-    struct pollfd listenerFd = {0, POLLIN, 0};
     listenerFd.fd = listening;
     listenerFd.events = POLLIN;
-    // listenerFd.revents = 1;
     fds.push_back(listenerFd);
+    
     return fds;
 }
 

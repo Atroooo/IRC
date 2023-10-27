@@ -30,11 +30,14 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     memset(buf, 0, 4096);
 
     int bytesReceived = 0;
+    cout << "before" << endl;
     bytesReceived = recv(clientSocket, buf, 4096, MSG_DONTWAIT);
     if (strncmp(buf, "QUIT", 4) == 0){
         cout << "Client disconnected " << endl;
         return (FALSE);
     }
+    cout << "bytesReceived " << bytesReceived << endl;
+    cout << buf << endl;
     // while (bytesReceived < 30){
     //     bytesReceived = recv(clientSocket, buf, 4096, MSG_DONTWAIT);
     //     if (strncmp(buf, "QUIT", 4) == 0){
@@ -50,6 +53,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         exit(1);
     }
     buf[bytesReceived] = '\0';
+    // if on le \n
     int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
     if (connectionStatus == WRONG_PASSWORD)
         return (FALSE);

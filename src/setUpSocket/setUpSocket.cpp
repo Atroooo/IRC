@@ -27,12 +27,19 @@ int setUpSocket(int port){
         cerr << "Can't create a socket! Quitting" << endl;
         _exit(-1);
     }
-    int opt = 1;
+    int opt = -1;
     if (setsockopt(listening, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) < 0)
     {
         perror("Erreur lors de la configuration de SO_REUSEADDR");
         exit(1);
     }
+
+    // Set the socket to be non-blocking (the sockets created after will inherit)
+	if (ioctl(listening, FIONBIO, (char *)&opt) < 0) {
+		std::cerr << "Error: ioctl() failed" << std::endl;
+		exit(1);
+	}
+
 	bindToSocket(listening, port);
 	listenSocket(listening);
 	return listening;
