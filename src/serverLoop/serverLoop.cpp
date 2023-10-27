@@ -3,6 +3,7 @@
 #include "../../header/Server.hpp"
 #include <iostream>
 #include <csignal>
+#include <unistd.h>
 
 bool	stopSignal = false;
 
