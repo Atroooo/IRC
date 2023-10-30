@@ -2,60 +2,58 @@
 
 void topicCommand(string commandInput, Client client, Server *server) {
 
-    cout << commandInput << endl;
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
-        cout << "<TOPIC> :Not enough parameters" << endl;
-        sendInfoClient(client, "<TOPIC> :Not enough parameters\r\n");
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("TOPIC")));
         return ;
     }
     if (channelMask(command) == false) {
-        sendInfoClient(client, "<" + command[1].substr(0, command[1].length()) + "> :Bad Channel Mask\r\n");
+        sendInfoClient(client, ERR_BADCHANMASK(command[1].substr(1)));
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
+        sendInfoClient(client, ERR_NOSUCHCHANNEL(client.getName(), command[1].substr(1)));
         return ;
     }
-    if (command.size() > 2) {
-        if (channel->getTopic() == "No topic is set") {
-            cout << "!<" << channel->getName() << "> :No topic is set" << endl;
-            sendInfoClient(client, "<" + channel->getName() + "> :" + channel->getTopic() + "\r\n");
+    if (commandInput.find(':') == string::npos) {
+        if (channel->getTopic() == "No topic") {
+            sendInfoClient(client, RPL_NOTOPIC(channel->getName(), client.getName()));
             return ;
         }
-        sendInfoClient(client, "Topic for <" + channel->getName() + "> is : " + channel->getTopic() + "\r\n");
-        cout << "#<" << channel->getName() << "> :" << channel->getTopic() << endl;
+        sendInfoClient(client, RPL_TOPIC(channel->getName(), client.getName(), channel->getTopic()));
         return ;
     }
     if (!changeTopic(client, channel)) {
         return ;
     }
-    size_t i = 2;
-    string message = "";
-    while (i < command.size()) {
-        message += command[i];
-        message += " ";
-        i++;
-    }
-    channel->setTopic(message.substr(1, message.length()));
-    sendInfoClient(client, client.getName() + " has changed the topic to : " + channel->getTopic() + "\r\n");
+    channel->setTopic(commandInput.substr(commandInput.find(':') + 1));
+    sendInfoChannel(*channel, RPL_TOPICWHOTIME(channel->getName(), client.getName(), get_time()));
+    sendInfoChannel(*channel, RPL_TOPIC(channel->getName(), client.getName(), channel->getTopic()));
 }
 
 bool changeTopic(Client client, Channel *channel) {
     if (!channel->isUser(client)) {
-        sendInfoClient(client, "<" + channel->getName() + "> :You're not on that channel\r\n");
-        cout << "<" << channel->getName() << "> :You're not on that channel" << endl;
+        sendInfoClient(client, ERR_NOTONCHANNEL(channel->getName(), client.getName()));
         return false;
     }
     if (!channel->isOperator(client)) {
-        sendInfoClient(client, "<" + channel->getName() + "> :You're not channel operator\r\n");
-        cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
+        sendInfoClient(client, ERR_CHANOPRIVSNEEDED(channel->getName(), client.getName()));
         return false;
     }
-    if (find(channel->getMode().begin(), channel->getMode().end(), 't') != channel->getMode().end()) {
-        sendInfoClient(client, "<" + channel->getName() + "> :Channel doesn't support modes\r\n");
-        cout << "<" << channel->getName() << "> :Channel doesn't support modes" << endl;
-        return false;
-    }
+
     return true;
+}
+
+string get_time(void) {
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
+
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
+    string str(buffer);
+    return str;
 }

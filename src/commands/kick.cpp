@@ -3,62 +3,42 @@
 void kickCommand(string commandInput, Client client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
-    if (command.size() != 3) {
-        cout << "<KICK> :Not enough parameters" << endl;
+    if (channelMask(command) == false || command.size() >= 3) {
         return ;
     }
-    if (channelMask(command) == false) {
-        return ;
-    }
-    Channel *channel = server->getChannel(command[1].substr(1, command[1].length()));
+    Channel *channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
-        cout << "<" << command[1].substr(1, command[1].length()) << "> :No such channel" << endl;
         return ;
     }
     Client *receiver = server->getClient(command[2]);
     if (receiver == NULL) {
-        cout << "<" << command[2] << "> :No such nick" << endl;
+        sendInfoClient(client, ERR_NOSUCHNICK(command[1].substr(1)));
+        return ;
+    }
+    if (command.size() < 3) {
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("KICK")));
         return ;
     }
     if (!kickClient(client, *receiver, channel)) {
         return ;
     }
-    sendKickMessage(client, receiver, channel, command);
+    sendInfoChannel(*channel, ":" + client.getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client.getName() + "\r\n");
+    sendInfoClient(*receiver, ":" + client.getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client.getName() + "\r\n");
 }
 
 bool kickClient(Client sender, Client receiver, Channel *channel) {
     if (!channel->isUser(sender)) {
-        cout << "<" << channel->getName() << "> :You're not on that channel" << endl;
+        sendInfoClient(sender, ERR_NOTONCHANNEL(channel->getName(), sender.getName()));
         return false;
     }
     if (!channel->isUser(receiver)) {
-        cout << "<" << receiver.getName() << "><"<< channel->getName() << "> :They aren't on that channel" << endl;
+        sendInfoClient(sender, ERR_USERNOTINCHANNEL(channel->getName(), sender.getName(), receiver.getName()));
         return false;
     }
     if (!channel->isOperator(sender)) {
-        cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
+        sendInfoClient(sender, ERR_CHANOPRIVSNEEDED(channel->getName(), sender.getName()));
         return false;
     }
     channel->removeUser(receiver);
     return true;
-}
-
-void sendKickMessage(Client client, Client *receiver, Channel *channel, vector<string> command) {
-
-    if (command[4][0]) {
-        size_t i = 4;
-        string message = "";
-        while (i < command.size()) {
-            message += command[i];
-            message += " ";
-            i++;
-        }
-        sendMessage(client, channel, \
-            "User " + client.getName() + " kicked user " + receiver->getName() \
-            + " from channel #" + channel->getName() + " with the message \"" + message + "\".");
-    }
-    else
-        sendMessage(client, channel, \
-            "User " + client.getName() + " kicked user " + receiver->getName() \
-            + " from channel #" + channel->getName() + ".");
 }

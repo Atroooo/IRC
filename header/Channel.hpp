@@ -30,6 +30,8 @@ class Channel {
         map<string, Client>     getClients(void) const;
         int                     getMaxUsers(void) const;
         Client                  *getClient(string name);
+        string                  getMembers(void) const;
+        string                  getChannelMembers(void); 
 
         void                    setTopic(string topic);
         void                    setMode(char mode);
@@ -45,6 +47,5 @@ class Channel {
         bool                    isOperator(Client client);
         bool                    isInvited(Client client);
 
-        void                    displayChannelMembers(void) const; 
 
 };

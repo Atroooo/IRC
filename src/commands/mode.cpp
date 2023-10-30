@@ -4,7 +4,7 @@ void modeCommand(string commandInput, Client client, Server *server) {
     (void) commandInput;
     vector<string> command;
     if (command.size() != 3) {
-        cout << "Wrong input : /mode [channel] [mode]" << endl;
+        // cout << "Wrong input : /mode [channel] [mode]" << endl;
         return ;
     }
     Channel *channel = server->getChannel(command[1]);
@@ -35,3 +35,30 @@ bool changeMode(Client client, Channel *channel, char mode) {
     channel->setMode(mode);
     return true;
 }
+
+bool promoteClient(Client sender, Client receiver, Channel *channel) {
+    if (!channel->isUser(sender)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (!channel->isOperator(sender)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
+    channel->addOperator(receiver);
+    return true;
+}
+
+bool demoteClient(Client sender, Client receiver, Channel *channel) {
+    if (!channel->isUser(sender)) {
+        cout << "User not in channel" << endl;
+        return false;
+    }
+    if (!channel->isOperator(sender)) {
+        cout << "Operator rights required" << endl;
+        return false;
+    }
+    channel->removeOperator(receiver);
+    return true;
+}
+
