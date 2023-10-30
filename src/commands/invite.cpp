@@ -1,9 +1,7 @@
 #include "../../header/Commands.hpp"
 
 void inviteCommand(string commandInput, Client client, Server *server) {
-    cout << "inviteCommand: " << commandInput << endl;
     vector<string> command = initCommand(commandInput);
-    cout << "inviteCommand size: " << command.size() << endl;
     if (command.size() > 3) {
         return ;
     }
@@ -12,7 +10,6 @@ void inviteCommand(string commandInput, Client client, Server *server) {
         return ;
     }
     Channel *channel = server->getChannel(command[2].substr(1));
-    cout << "inviteCommand channel: " << command[2].substr(1) << endl;
     if (channel == NULL) {
         sendInfoClient(client, ERR_NOSUCHCHANNEL(client.getName(), command[2].substr(1)));
         return ;

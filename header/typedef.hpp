@@ -19,7 +19,7 @@ typedef struct sockaddr SOCKADDR;
 
 /*-------- JOIN -------*/
 #define JOINCHAN(client, channel) ":" + client + " JOIN #" + channel + "\r\n"
-#define INFO_JOIN(channel, topic, members) "<" + channel + "> :" + " Channel joined\nTopic " + topic + "\nMembers : " + members + "\r\n"
+#define INFO_JOIN(channel, topic, members) "" + channel + " :" + " Channel joined\nTopic " + topic + "\nMembers : " + members + "\r\n"
 #define RPL_NAMREPLY(client, channel, members) ": 353 " + client + " = #" + channel + " :" + members + "\r\n" //353
 
 /*------ PRIVMSG ------*/
@@ -36,7 +36,7 @@ typedef struct sockaddr SOCKADDR;
 
 /*------- Errors ------*/
 #define ERR_NEEDMOREPARAMS(cmd) ":IRC 461 " + cmd + " :Not enough parameters\r\n" //461
-#define ERR_BADCHANMASK(channel) ":IRC 476 " + channel + " :Bad Channel Mask\r\n" //476
+#define ERR_BADCHANMASK(channel) ":IRC 476 " + channel + " #"+ channel + " :Bad Channel Mask\r\n" //476
 #define ERR_NOSUCHNICK(client) ":IRC 401 " + client + " " + client  + " :No such nick\r\n" //401
 #define ERR_NOSUCHCHANNEL(client, channel) ":IRC 403 " + client + " #" + channel + " :No such channel\r\n" //403
 #define ERR_BADCHANNELKEY(channel) ":IRC 475 " + channel + " : Cannot join channel (+k) - bad key\r\n" //475
