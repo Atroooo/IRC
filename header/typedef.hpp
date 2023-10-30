@@ -44,5 +44,5 @@ typedef struct sockaddr SOCKADDR;
 #define ERR_CHANNELISFULL(channel) ":IRC 471 <" + channel + "> : Cannot join channel (+l) - channel full\r\n" //471
 #define ERR_USERNOTINCHANNEL(channel, client, nick) ": 441 #" + channel +" " + client + " " + nick + " " + channel + " :They aren't on that channel\r\n" //441
 #define ERR_NOTONCHANNEL(channel, client) ":IRC 442 #" + channel +" " + client + " " + channel + " :You're not on that channel\r\n" //442
-#define ERR_USERONCHANNEL(channel, client) ":IRC 443 " + client + " " + channel + " :is already on channel\r\n" //443
+#define ERR_USERONCHANNEL(channel, client) ":IRC 443 " + channel + " " + client + " :is already on channel\r\n" //443
 #define ERR_CHANOPRIVSNEEDED(channel, client) ":IRC 482 " + client +  " #" + channel + " :You're not channel operator\r\n" //482

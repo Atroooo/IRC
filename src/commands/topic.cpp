@@ -41,7 +41,6 @@ bool changeTopic(Client client, Channel *channel) {
         sendInfoClient(client, ERR_CHANOPRIVSNEEDED(channel->getName(), client.getName()));
         return false;
     }
-
     return true;
 }
 

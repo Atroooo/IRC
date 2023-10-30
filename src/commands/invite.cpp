@@ -25,11 +25,9 @@ void inviteCommand(string commandInput, Client client, Server *server) {
     if (!inviteClient(client, *receiver, channel)) {
         return ;
     }
-    // to all users in channel
-    sendInfoClient(client, "<" +  channel->getName() + "><" + command[2] + ">\r\n");
-    cout << "<" << channel->getName() << "> <" << command[2] << ">" << endl;
+    sendInfoClient(client, RPL_INVITING(client.getName(), receiver->getName(), channel->getName()));
+    sendInfoClient(*receiver, ":" + client.getName() + " INVITE " + receiver->getName() + " #" + channel->getName() + "\r\n");
 }
-
 bool inviteClient(Client sender, Client receiver, Channel *channel) {
     if (!channel->isUser(sender)) {
         sendInfoClient(sender, ERR_NOTONCHANNEL(channel->getName(), sender.getName()));
@@ -44,7 +42,7 @@ bool inviteClient(Client sender, Client receiver, Channel *channel) {
         return false;
     }
     list<char> mode = channel->getMode();
-    if (find(mode.begin(), mode.end(), 'i') == mode.end()) {
+    if (find(mode.begin(), mode.end(), 'i') != mode.end()) {
         sendInfoClient(sender, ERR_INVITEONLYCHAN(channel->getName()));
         return false;
     }
