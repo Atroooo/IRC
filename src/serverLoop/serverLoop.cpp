@@ -3,6 +3,7 @@
 #include "../../header/Server.hpp"
 #include <iostream>
 #include <csignal>
+#include <unistd.h>
 
 bool	stopSignal = false;
 
@@ -23,7 +24,7 @@ void serverLoop(list<struct pollfd> fds, char *serverPassword){
             _exit(-1);
         }
         server.setList(fdsVector);
-        checkServer(newFd, server);
+        checkNewConnection(newFd, server);
 		checkClient(&server, serverPassword);
     }
 }

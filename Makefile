@@ -17,7 +17,7 @@ SRC_FILE        =   main \
 					setUpSocket/setUpSocket \
 					serverLoop/serverLoop \
 					serverLoop/checkClient \
-					serverLoop/checkServer \
+					serverLoop/checkNewConnection \
 					serverLoop/checkPassword \
 					serverLoop/bot \
 					class/Channel \

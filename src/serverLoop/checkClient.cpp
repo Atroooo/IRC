@@ -1,58 +1,73 @@
 #include "../../header/includes.hpp"
 
 #define ALREADY_CONNECTED  0
-#define WRONG_PASSWORD  1
+#define WRONG_LOGIN_DATA  1
 #define FIRST_CONNECTION  2
+
+bool checkIfNickNameAvailable(Server *server, string nickname){
+    if (server->getClient(nickname)){
+        cout << "Nickname already used" << endl;
+        return false;
+    }
+    return true;
+}
 
 int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serverPassword){
     if (server->getClient(clientSocket) != NULL)
         return ALREADY_CONNECTED;
-    (void)serverPassword;
-    // if (checkPassword(buf, serverPassword) == false){
-    //     return WRONG_PASSWORD;
-    // }
+    if (checkPassword(buf, serverPassword) == false){
+        return WRONG_LOGIN_DATA;
+    }
     string nickname = getSubStrBuffer(buf, (char *)"NICK ");
-    cout << nickname << " connected" << endl;
+    if (checkIfNickNameAvailable(server, nickname) == false){
+        return WRONG_LOGIN_DATA;
+    }
     Client client(nickname, clientSocket);
     server->addClient(client);
-    // string botMessage = "Hello ";
-    // botMessage.append(nickname);
-    // int x = send(clientSocket, botMessage.c_str(), sizeof(botMessage), 0);
-    // if (x < 0) {
-    //     cerr << "Error in send(). Quitting" << endl;
-    //     //NEED EXIT
-    // }
     return FIRST_CONNECTION;
 }
 
-int clientAction(int clientSocket, char *serverPassword, Server *server){
-	char buf[4096];
-    memset(buf, 0, 4096);
+bool checkPassAndNick(char *buf){
+    string bufStr = string(buf);
+    if (bufStr.find("PASS") == string::npos)
+        return false;
+    if (bufStr.find("NICK") == string::npos)
+        return false;
+    return true;
+}
 
-    int bytesReceived = 1;
-    while (bytesReceived < 30){
-        bytesReceived = recv(clientSocket, buf, 4096, MSG_DONTWAIT);
-        if (strncmp(buf, "QUIT", 4) == 0){
-            cout << "Client disconnected " << endl;
-            return (FALSE);
+int clientAction(int clientSocket, char *serverPassword, Server *server){
+	char buf[1028];
+    memset(buf, 0, 1028);
+    int bytesReceived;
+    while (true){
+        bytesReceived = recv(clientSocket, buf, 1028, MSG_DONTWAIT);    
+        if (bytesReceived == 0){
+            cerr << "Client disconnected" << endl;
+            return FALSE;
         }
-        if (server->getClient(clientSocket) != NULL){
-            break ;
-        }
+        if (server->getClient(clientSocket) != NULL) break;
+        if (checkPassAndNick(buf) == true) break;
+        usleep(100);
+    }
+    if (strncmp(buf, "QUIT", 4) == 0){
+        cout << "Client disconnected " << endl;
+        return (FALSE);
     }
     if (bytesReceived == -1){
         cerr << "Error in recv(). Quitting" << endl;
         exit(1);
     }
-    buf[bytesReceived] = '\0';
+    cout << "BUF = " << buf << endl;
+    // int size = sizeof(buf);
     int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
-    if (connectionStatus == WRONG_PASSWORD)
+    if (connectionStatus == WRONG_LOGIN_DATA)
         return (FALSE);
     else if (connectionStatus == FIRST_CONNECTION){
         return (TRUE);
     }
     commandHub(buf, server->getClient(clientSocket), server);
-    // int x = send(clientSocket, buf, bytesReceived, 0);
+    // int x = send(clientSocket, buf, strlen(buf), 0);
     // botAction(buf, clientSocket, x);
 
     return (TRUE);
@@ -62,7 +77,7 @@ void checkClient(Server *server, char *serverPassword) {
     if (server->getFdsList().size() == 1) {
         return;
     }
-    for (size_t i = server->getServChanCount(); i < server->getFdsList().size(); i++) {
+    for (size_t i = 1; i < server->getFdsList().size(); i++) {
         if (server->getFd(i)->revents == POLLIN) {
             if (clientAction(server->getFd(i)->fd, serverPassword, server) == FALSE) {
                 close(server->getFd(i)->fd);
