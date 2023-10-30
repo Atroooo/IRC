@@ -110,9 +110,9 @@ bool createChannel(Client client, Server *server, string name, string password) 
     Channel channel(name, password);
     channel.addUser(client);
     channel.addOperator(client);
-    server->addChannel(channel);
-    server->setCommandsToSend(client.getFd(), JOINCHAN(client.getName(), name));
-    server->setCommandsToSend(client.getFd(), RPL_NAMREPLY(client.getName(), name, channel.getChannelMembers()));
+    // server->addChannel(channel);
+    // server->setCommandsToSend(client.getFd(), JOINCHAN(client.getName(), name));
+    // server->setCommandsToSend(client.getFd(), RPL_NAMREPLY(client.getName(), name, channel.getChannelMembers()));
     // sendInfoClient(client, JOINCHAN(client.getName(), name));
     // sendInfoClient(client, RPL_NAMREPLY(client.getName(), name, channel.getChannelMembers()));
     return true;
@@ -146,10 +146,11 @@ int joinChannel(Client client, Channel *channel, string password, Server *server
     }
     if (passCheck(client, *channel, password) == false) { return false; }    
     channel->addUser(client);
-    server->setCommandsToSend(client.getFd(), JOINCHAN(client.getName(), channel->getName()));
-    server->setCommandsToSend(client.getFd(), INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
-    server->setCommandsToSend(client.getFd(), RPL_NAMREPLY(client.getName(), channel->getName(), channel->getChannelMembers()));
-    sendInfoChannel(*channel, JOINCHAN(client.getName(), channel->getName()), server);
+    (void)  server;
+    // server->setCommandsToSend(client.getFd(), JOINCHAN(client.getName(), channel->getName()));
+    // server->setCommandsToSend(client.getFd(), INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
+    // server->setCommandsToSend(client.getFd(), RPL_NAMREPLY(client.getName(), channel->getName(), channel->getChannelMembers()));
+    // sendInfoChannel(*channel, JOINCHAN(client.getName(), channel->getName()), server);
     // sendInfoClient(client, JOINCHAN(client.getName(), channel->getName()));
     // sendInfoClient(client, INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
     // sendInfoChannel(*channel, JOINCHAN(client.getName(), channel->getName()));

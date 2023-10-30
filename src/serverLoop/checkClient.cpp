@@ -54,30 +54,31 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
     }
     buf[bytesReceived] = '\0';
     // if on le \n
-    int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
-    if (connectionStatus == WRONG_PASSWORD)
-        return (FALSE);
-    else if (connectionStatus == FIRST_CONNECTION){
-        return (TRUE);
-    }
-    commandHub(buf, server->getClient(clientSocket), server);
-    // int x = send(clientSocket, buf, bytesReceived, 0);
+    // int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
+    // if (connectionStatus == WRONG_PASSWORD)
+    //     return (FALSE);
+    // else if (connectionStatus == FIRST_CONNECTION){
+    //     return (TRUE);
+    // }
+    // commandHub(buf, server->getClient(clientSocket), server);
+    // // int x = send(clientSocket, buf, bytesReceived, 0);
     // botAction(buf, clientSocket, x);
-
+    (void)server;
+    (void)serverPassword;
     return (TRUE);
 }
 
 void checkClient(Server *server, char *serverPassword) {
-    if (server->getFdsList().size() == 1) {
+    if (server->getFdsVector().size() == 1) {
         return;
     }
-    for (size_t i = server->getServChanCount(); i < server->getFdsList().size(); i++) {
+    for (size_t i = server->getServChanCount(); i < server->getFdsVector().size(); i++) {
         if (server->getFd(i)->revents == POLLIN) {
             if (clientAction(server->getFd(i)->fd, serverPassword, server) == FALSE) {
                 close(server->getFd(i)->fd);
-                list<pollfd>::iterator it = server->getFdsList().begin();
-                advance(it, i);
-                server->getFdsList().erase(it);
+                vector<struct pollfd> vec = server->getFdsVector();
+                vec.erase(vec.begin() + i);
+                server->setVector(vec);
                 i--;
             }
         }

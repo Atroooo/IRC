@@ -23,6 +23,8 @@ int waitClientConnection(int listening){
     //     inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
     //     cout << host << " connected on port " << ntohs(client.sin_port) << endl;
     // }
+
+
 	return clientSocket;
 }
 

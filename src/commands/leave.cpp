@@ -50,7 +50,7 @@ bool leaveChannel(Client client, Channel *channel, string msg) {
     }
     (void)msg;
     // if (msg == "") {
-    //     sendMessage(client, channel, "User " + client.getName() + " leaving channel #" + channel->getName() \
+    //     sendMessage(client, channel, "User " + client.getName() + " leaving channel #" + channel->getName() 
     //         + "with the message \""+  msg + "\".");
     // }
     // else {

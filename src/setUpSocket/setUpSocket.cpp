@@ -1,46 +1,46 @@
 #include "../../header/includes.hpp"
-#include <sys/ioctl.h>
 
 void	bindToSocket(int listening, int port){
-	sockaddr_in hint;
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(port);
-    inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
-    if (bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1){
-		std::cerr << "Can't bind to IP/port" << std::endl;
+	sockaddr_in servAddr;
+
+    servAddr.sin_family = AF_INET;
+    servAddr.sin_addr.s_addr = INADDR_ANY;
+    servAddr.sin_port = htons(port);
+    
+    // inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
+    if (bind(listening, (sockaddr*)&servAddr, sizeof(servAddr)) < 0) {
+		cerr << "Can't bind to IP/port" << endl;
         _exit(-1);
 	}
 }
 
 void listenSocket(int listening){
-    if (listen(listening, SOMAXCONN) == -1)
-    {
+    if (listen(listening, SOMAXCONN) < 0) {
         cerr << "Can't listen! Quitting" << endl;
         _exit(-1);
     }
 }
 
-int setUpSocket(int port){
-	int listening = socket(AF_INET, SOCK_STREAM, 0);
-    if (listening == -1)
-    {
-        cerr << "Can't create a socket! Quitting" << endl;
-        _exit(-1);
-    }
+int setUpSocket(int port) {
     int opt = -1;
-    if (setsockopt(listening, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) < 0)
-    {
-        perror("Erreur lors de la configuration de SO_REUSEADDR");
+
+    int socketFd = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFd < 0) {
+        cerr << "Error: socket() failed" << endl;
         exit(1);
     }
 
-    // Set the socket to be non-blocking (the sockets created after will inherit)
-	if (ioctl(listening, FIONBIO, (char *)&opt) < 0) {
-		std::cerr << "Error: ioctl() failed" << std::endl;
+    if (setsockopt(socketFd, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0) {
+        cerr << "Error: setsockopt() failed" << endl;
+        exit(1);
+    }
+
+    if (ioctl(socketFd, FIONBIO, (char *)&opt) < 0) {
+		cerr << "Error: ioctl() failed" << endl;
 		exit(1);
 	}
 
-	bindToSocket(listening, port);
-	listenSocket(listening);
-	return listening;
+	bindToSocket(socketFd, port);
+    listenSocket(socketFd);
+    return socketFd;
 }

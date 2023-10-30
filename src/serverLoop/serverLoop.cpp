@@ -1,68 +1,63 @@
 #include "../../header/includes.hpp"
 #include "../../header/typedef.hpp"
 #include "../../header/Server.hpp"
-#include <iostream>
-#include <csignal>
-#include <fcntl.h>
-
-int clientAction(int clientSocket, char *serverPassword, Server *server);
 
 bool	stopSignal = false;
 
-static void	shutdown(int)
-{
-	stopSignal = true;
-}
+static void	shutdown(int) { stopSignal = true; }
 
-// concatener les 2 fonctions + redefinir le vecteur principal pollfd pour bien l'init + il y a un truc bloquant sur buf ?? 
-void serverLoop(list<struct pollfd> fds, char *serverPassword){
-    // struct pollfd	fds[MAX_SOCKETS];
-    struct pollfd newFd;
-    Server server(fds);
+void serverLoop(Server * server, char *serverPassword) {
+    int             pollReturn;
+    struct pollfd   newFd;
+
     signal(SIGINT, shutdown); 
     while (stopSignal == false) {
-        vector<struct pollfd> fdsVector(server.getFdsList().begin(), server.getFdsList().end());
-        int opt = poll(fdsVector.data(), fdsVector.size(), -1);
-        if (opt < 0) {
+        vector<struct pollfd> fds = server->getFdsVector();
+
+        pollReturn = poll(fds.data(), fds.size(), -1);
+        if (pollReturn < 0) {
             herror("poll");
             _exit(-1);
+        } 
+        if (pollReturn == 0) {
+			std::cerr << "Error: poll() timed out" << std::endl;
+			break ;
+		}
+
+        for (size_t socketID = 0; socketID < fds.size(); socketID++) {
+            std::cout << "===> " << fds[socketID].revents << std::endl;
+            if (fds[socketID].revents & POLLOUT){
+                cout << "SENDING" << endl; 
+                _exit(0);
+            }
+            if (fds[socketID].revents & POLLIN) {
+                cerr << "RECEIVING" << endl;
+                if (fds[socketID].fd == server->getFd(0)->fd) {
+                    int clientSocket = waitClientConnection(fds[socketID].fd);
+                    	// Set the socket to be non-blocking (the sockets created after will inherit)
+                    int flags = fcntl(clientSocket, F_GETFL, 0);
+                    flags |= O_NONBLOCK;
+                    fcntl(clientSocket, F_SETFL, flags);
+                    newFd.fd = clientSocket;
+                    newFd.events = POLLIN;
+                    server->addToFds(newFd);
+                }
+                else {
+                    cout << "client action" << endl;
+                    (void)serverPassword;
+                    // checkClient(server, serverPassword);
+                    // clientAction(fds[socketID].fd, serverPassword, server);
+                    char buf[512];
+                    memset(buf, 0, 512);
+                    recv(fds[socketID].fd, buf, 512, MSG_DONTWAIT);
+                    fds[socketID].events |= POLLOUT;
+                }
+            }
         }
-        cout << opt << endl;
-        server.setList(fdsVector);
-        sendInfoToClient(&server, newFd, serverPassword);
     }
 }
 
 /*---------------------------------------- Send Info -------------------------------------------*/
-void sendInfoToClient(Server *server, struct pollfd newFd, char *serverPassword) {
-    vector<struct pollfd> fds(server->getFdsList().begin(), server->getFdsList().end());
-    for (size_t socketID = 0; socketID < fds.size(); socketID++) {
-        std::cout << "===> " << fds[socketID].revents << std::endl;
-        if (fds[socketID].revents & POLLOUT){
-            cout << "sending ..." << endl; 
-            if (server->getCommandsToSend()[fds[socketID].fd] != "") {
-                sendFunction(fds[socketID].fd, server->getCommandsToSend()[fds[socketID].fd]);
-                server->getCommandsToSend()[fds[socketID].fd].clear();
-            }
-        }
-        if (fds[socketID].revents & POLLIN) {
-            cerr << "RECEIVING" << endl;
-            if (fds[socketID].fd == server->getFd(0)->fd) {
-                int clientSocket = waitClientConnection(fds[socketID].fd);
-                newFd.fd = clientSocket;
-                newFd.events = POLLIN;
-                server->addToFds(newFd);
-            }
-            else {
-                cout << "client action" << endl;
-                // checkClient(server, serverPassword);
-                clientAction(fds[socketID].fd, serverPassword, server);
-                fds[socketID].events |= POLLOUT;
-            }
-        }
-    }
-}
-
 void checkRetSend(int ret) {
     if (ret < 0) {
         cerr << "Error in send(). Quitting" << endl;

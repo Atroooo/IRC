@@ -28,7 +28,7 @@ void sendMessageCommand(string CommandInput, Client client, Server *server) {
     vector<string> command = initCommand(CommandInput);
     printVector(command);
     if (command.size() < 2) {
-        server->setCommandsToSend(client.getFd(), ERR_NEEDMOREPARAMS(string("PRIVMSG")));
+        // server->setCommandsToSend(client.getFd(), ERR_NEEDMOREPARAMS(string("PRIVMSG")));
         // sendInfoClient(client, ERR_NEEDMOREPARAMS(string("PRIVMSG")));
         return ;
     }
@@ -48,8 +48,9 @@ bool sendPrivateMessage(Client sender, Client *receiver , string message, Server
     if (receiver == NULL)
         return false;
     (void) sender;
+    (void) server;
     cout << "PV " << message << endl;
-    server->setCommandsToSend(receiver->getFd(), PRIVMSGUSER(sender.getName(), receiver->getName(), message));
+    // server->setCommandsToSend(receiver->getFd(), PRIVMSGUSER(sender.getName(), receiver->getName(), message));
     // sendInfoClient(*receiver, PRIVMSGUSER(sender.getName(), receiver->getName(), message));
     return true;
 }
@@ -64,9 +65,12 @@ bool sendMessage(Channel *channel, string message, Server *server) {
 
 /*---------------------------------------- Send Info -------------------------------------------*/
 void sendInfoChannel(Channel channel, string msg, Server *server) {
+    (void) server;
+    (void) msg;
     map<string, Client> members = channel.getClients();
     for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
-        server->setCommandsToSend(it->second.getFd(), msg);
+        cout << "osef" << endl;
+        // server->setCommandsToSend(it->second.getFd(), msg);
         // sendInfoClient(it->second, msg);
     }
 }

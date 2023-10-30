@@ -2,27 +2,19 @@
 #include "../../header/Server.hpp"
 #include "../../header/typedef.hpp"
 
-Server::Server(list<struct pollfd> & fds) : _fds(fds) {
+Server::Server(vector<struct pollfd> & fds) : _fds(fds) {
     _serverFdsCount = 1;
 }
 
-Server::~Server() {
-   
-}
+Server::~Server() { }
 
-void Server::setList( vector<struct pollfd> fds) {
-    copy(fds.begin(), fds.end(), this->_fds.begin());
+void Server::setVector(vector<struct pollfd> fds) {
+    this->_fds = fds;
 }
 
 struct pollfd * Server::getFd(size_t index) {
-    size_t i = 0;
-
-    for (list<struct pollfd>::iterator it = this->_fds.begin(); it != this->_fds.end(); it++) {
-        if (i == index) {
-            return &(*it);
-        }
-        i++;
-    }
+    if (index < this->_fds.size())
+        return &this->_fds[index];
     return NULL;
 }
 

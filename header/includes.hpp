@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <string.h>
@@ -13,8 +14,10 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
-# include <stdlib.h>
+#include <csignal>
+#include <stdlib.h>
 #include <poll.h>
+#include <fcntl.h>
 #include <algorithm>
 #include <map>
 #include <list>

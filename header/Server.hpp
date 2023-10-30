@@ -8,17 +8,16 @@
 class Server {
 
     private:
-        list<struct pollfd>&    _fds;
+        vector<struct pollfd>&  _fds;
         size_t                  _serverFdsCount;
         list<Client>            _clients;
         list<Channel>           _channels;
-        map<int, string>         _commandsToSend;
     
     public:
-        Server(list<struct pollfd> & fds);
+        Server(vector<struct pollfd>& fds);
         ~Server();
 
-        list<struct pollfd>& getFdsList() const { return this->_fds; };
+        vector<struct pollfd>& getFdsVector() const { return this->_fds; };
 
         struct pollfd * getFd(size_t index);
         size_t getServChanCount() const { return this->_serverFdsCount; };
@@ -27,15 +26,13 @@ class Server {
         Client *getClient(int fd);
         list<Channel> getChannel(void) const;
         Channel *getChannel(const string & name);
-        map<int, string> getCommandsToSend() const { return this->_commandsToSend; };
 
-        void setList(vector<struct pollfd> fds);
+        void setVector(vector<struct pollfd> fds);
         void setServChanCount(size_t count) { this->_serverFdsCount = count; };
         void addToFds(const struct pollfd& fd) { this->_fds.push_back(fd); };
         void addClient(Client & client);
         void addChannel(Channel & channel);
         void printClients();
-        void setCommandsToSend(int fd, string command) { this->_commandsToSend[fd] = command; };
 };
 
 void sendInfoToClient(Server *server, struct pollfd newFd, char *serverPassword);
