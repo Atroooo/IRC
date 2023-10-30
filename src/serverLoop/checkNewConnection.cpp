@@ -13,7 +13,6 @@ void checkNewConnection(pollfd & newFd, Server & server){
     if (server.getFd(0)->revents != POLLIN )
         return;
     int clientSocket = acceptNewConnection(server.getFd(0)->fd);
-    cout << "listen = " << server.getFd(0)->fd << endl;
     newFd.fd = clientSocket;
     newFd.events = POLLIN;
     server.addToFds(newFd);
