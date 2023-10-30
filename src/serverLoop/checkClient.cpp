@@ -59,7 +59,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         exit(1);
     }
     cout << "BUF = " << buf << endl;
-    // int size = sizeof(buf);
     int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
     if (connectionStatus == WRONG_LOGIN_DATA)
         return (FALSE);
@@ -67,8 +66,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         return (TRUE);
     }
     commandHub(buf, server->getClient(clientSocket), server);
-    // int x = send(clientSocket, buf, strlen(buf), 0);
-    // botAction(buf, clientSocket, x);
+    //botAction(buf, clientSocket, x);
 
     return (TRUE);
 }
