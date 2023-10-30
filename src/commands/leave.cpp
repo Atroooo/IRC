@@ -42,7 +42,6 @@ vector<string> split(string str, char delimiter, vector<string> &result) {
     string token;
     while (getline(ss, token, delimiter)) {
         result.push_back(token);
-        cout << "token: " << token << endl;
     }
     return result;
 }

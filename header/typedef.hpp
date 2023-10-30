@@ -34,6 +34,10 @@ typedef struct sockaddr SOCKADDR;
 #define RPL_NOTOPIC(channel, client) ":IRC 331 " + client + " #" + channel + " :No topic is set\r\n"
 #define RPL_TOPICWHOTIME(channel, client, time) ":IRC 333 " + client + " #" + channel + " " + client + " " + time + "\r\n" //333
 
+/*------ MODES ------*/
+#define RPL_CHANNELMODEIS(channel, mode) ":IRC 324 " + channel + " " + " #" + channel + " " + mode + "\r\n" //324
+#define RPL_CREATIONTIME(channel, client, time) ":IRC 329 " + client + " #" + channel + " " + time + "\r\n" //329
+
 /*------- Errors ------*/
 #define ERR_NEEDMOREPARAMS(cmd) ":IRC 461 " + cmd + " :Not enough parameters\r\n" //461
 #define ERR_BADCHANMASK(channel) ":IRC 476 " + channel + " #"+ channel + " :Bad Channel Mask\r\n" //476

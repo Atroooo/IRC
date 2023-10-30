@@ -12,6 +12,7 @@ class Channel {
         string                  _name;
         string                  _password;
         string                  _topic;
+        string                  _creationTime;
         list<char>              _mode;
         map<string, Client>     _clients;
         list<Client>            _operators;
@@ -23,6 +24,7 @@ class Channel {
         Channel(string name, string password);
         ~Channel(void);
 
+        string                  getCreationTime(void) const;
         string                  getName(void) const;
         string                  getPassword(void) const;
         string                  getTopic(void) const;

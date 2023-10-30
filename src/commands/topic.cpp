@@ -44,15 +44,15 @@ bool changeTopic(Client client, Channel *channel) {
     return true;
 }
 
+#include <ctime>
+#include <sstream>
+#include <sys/time.h>
 string get_time(void) {
-    time_t rawtime;
-    struct tm * timeinfo;
-    char buffer[80];
 
-    time (&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
-    string str(buffer);
-    return str;
+    struct timeval now;
+	std::ostringstream oss;
+	
+	gettimeofday(&now, 0);
+	oss << now.tv_sec;
+	return oss.str();
 }

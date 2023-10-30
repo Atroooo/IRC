@@ -8,9 +8,14 @@ Channel::Channel(string name, string password) {
     if (!password.empty())
         this->_mode.push_back('k');
     this->_maxUsers = 10;
+    _creationTime = get_time();
 }
 
 Channel::~Channel(void) { }
+
+string Channel::getCreationTime(void) const {
+    return this->_creationTime;
+}
 
 string Channel::getName(void) const {
     return this->_name;
