@@ -3,7 +3,7 @@
 void kickCommand(string commandInput, Client client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
-    if (channelMask(command) == false) {
+    if (channelMask(command) == false || command.size() >= 3) {
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
@@ -15,7 +15,7 @@ void kickCommand(string commandInput, Client client, Server *server) {
         sendInfoClient(client, ERR_NOSUCHNICK(command[1].substr(1)));
         return ;
     }
-    if (command.size() != 3) {
+    if (command.size() < 3) {
         sendInfoClient(client, ERR_NEEDMOREPARAMS(string("KICK")));
         return ;
     }

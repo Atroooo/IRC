@@ -1,22 +1,25 @@
 #include "../../header/Commands.hpp"
 
 void inviteCommand(string commandInput, Client client, Server *server) {
+    cout << "inviteCommand: " << commandInput << endl;
     vector<string> command = initCommand(commandInput);
-    if (command.size() != 3) {
-        sendInfoClient(client, "<INVITE> :Not enough parameters\r\n");
-        cout << "<INVITE> :Not enough parameters" << endl;
+    cout << "inviteCommand size: " << command.size() << endl;
+    if (command.size() > 3) {
         return ;
     }
-    Channel *channel = server->getChannel(command[1].substr(1));
+    if (command.size() < 3) {
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("INVITE")));
+        return ;
+    }
+    Channel *channel = server->getChannel(command[2].substr(1));
+    cout << "inviteCommand channel: " << command[2].substr(1) << endl;
     if (channel == NULL) {
-        sendInfoClient(client, "<" + command[1] + "> :Channel does not exist\r\n");
-        cout << "Channel does not exist" << endl;
+        sendInfoClient(client, ERR_NOSUCHCHANNEL(client.getName(), command[2].substr(1)));
         return ;
     }
-    Client *receiver = server->getClient(command[2]);
+    Client *receiver = server->getClient(command[1]);
     if (receiver == NULL) {
-        sendInfoClient(client, "<" + command[2] + "> :No such nick/channel\r\n");
-        cout << "<" << command[2] << "> :No such nick/channel" << endl;
+        sendInfoClient(client, ERR_NOSUCHNICK(command[1]));
         return ;
     }
     if (!inviteClient(client, *receiver, channel)) {
@@ -29,19 +32,20 @@ void inviteCommand(string commandInput, Client client, Server *server) {
 
 bool inviteClient(Client sender, Client receiver, Channel *channel) {
     if (!channel->isUser(sender)) {
-        sendInfoClient(sender, "<" + sender.getName() + "> :You're not on that channel\r\n");
-        cout << "<" << sender.getName() << "> :You're not on that channel" << endl;
+        sendInfoClient(sender, ERR_NOTONCHANNEL(channel->getName(), sender.getName()));
         return false;
     }
     if (channel->isUser(receiver)) {
-        sendInfoClient(sender, "<" + receiver.getName() + "><" + channel->getName() + "> :is already on channel\r\n");
-        cout << "<" << receiver.getName() << "> <"<< channel->getName() << "> :is already on channel" << endl;
+        sendInfoClient(sender, ERR_USERONCHANNEL(channel->getName(), receiver.getName()));
+        return false;
+    }
+    if (!channel->isOperator(sender)){
+        sendInfoClient(sender, ERR_CHANOPRIVSNEEDED(channel->getName(), sender.getName()));
         return false;
     }
     list<char> mode = channel->getMode();
-    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel->isOperator(sender)) {
-        sendInfoClient(sender, "<" + channel->getName() + "> :You're not channel operator\r\n");
-        cout << "<" << channel->getName() << "> :You're not channel operator" << endl;
+    if (find(mode.begin(), mode.end(), 'i') == mode.end()) {
+        sendInfoClient(sender, ERR_INVITEONLYCHAN(channel->getName()));
         return false;
     }
     if (channel->getClients().size() >= (size_t)channel->getMaxUsers()) {
@@ -50,5 +54,3 @@ bool inviteClient(Client sender, Client receiver, Channel *channel) {
     channel->addInvited(receiver);
     return true;
 }
-// err 301
-// "<nick> :<away message>"

@@ -27,7 +27,7 @@ typedef struct sockaddr SOCKADDR;
 #define PRIVMSGUSER(sender, receiver, message) ":" + sender + " PRIVMSG " + receiver + ":" + message + "\r\n"
 
 /*------- INVITE ------*/
-#define RPL_INVITING 341
+#define RPL_INVITING(client, receiver, channel) ":IRC 341 " + client + " " + receiver + " #" + channel + "\r\n" //341
 
 /*------ TOPIC ------*/
 #define RPL_TOPIC(channel, client, topic) ":IRC 332 " + client + " #" + channel + " :" + topic + "\r\n" //332
@@ -37,12 +37,12 @@ typedef struct sockaddr SOCKADDR;
 /*------- Errors ------*/
 #define ERR_NEEDMOREPARAMS(cmd) ":IRC 461 " + cmd + " :Not enough parameters\r\n" //461
 #define ERR_BADCHANMASK(channel) ":IRC 476 " + channel + " :Bad Channel Mask\r\n" //476
-#define ERR_NOSUCHNICK(channel) ":IRC 401 " + channel + " :No such nick\r\n" //401
+#define ERR_NOSUCHNICK(client) ":IRC 401 " + client + " " + client  + " :No such nick\r\n" //401
 #define ERR_NOSUCHCHANNEL(client, channel) ":IRC 403 " + client + " #" + channel + " :No such channel\r\n" //403
-#define ERR_BADCHANNELKEY(channel) ":IRC 475 <" + channel + "> : Cannot join channel (+k) - bad key\r\n" //475
-#define ERR_INVITEONLYCHAN(channel) ":IRC 473 <" + channel + "> : Cannot join channel (+i) - bad key\r\n" //473
+#define ERR_BADCHANNELKEY(channel) ":IRC 475 " + channel + " : Cannot join channel (+k) - bad key\r\n" //475
+#define ERR_INVITEONLYCHAN(channel) ":IRC 473 " + channel + " : Cannot join channel (+i) - bad key\r\n" //473
 #define ERR_CHANNELISFULL(channel) ":IRC 471 <" + channel + "> : Cannot join channel (+l) - channel full\r\n" //471
-#define ERR_USERNOTINCHANNEL(channel, client, nick) ": 441 #" + channel +" <" + client + "><" + nick + "><" + channel + "> :They aren't on that channel\r\n" //441
-#define ERR_NOTONCHANNEL(channel, client) ":IRC 442 #" + channel +" <" + client + "><" + channel + "> :You're not on that channel\r\n" //442
-#define ERR_USERONCHANNEL 443
+#define ERR_USERNOTINCHANNEL(channel, client, nick) ": 441 #" + channel +" " + client + " " + nick + " " + channel + " :They aren't on that channel\r\n" //441
+#define ERR_NOTONCHANNEL(channel, client) ":IRC 442 #" + channel +" " + client + " " + channel + " :You're not on that channel\r\n" //442
+#define ERR_USERONCHANNEL(channel, client) ":IRC 443 " + client + " " + channel + " :is already on channel\r\n" //443
 #define ERR_CHANOPRIVSNEEDED(channel, client) ":IRC 482 " + client +  " #" + channel + " :You're not channel operator\r\n" //482
