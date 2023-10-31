@@ -4,7 +4,7 @@ void topicCommand(string commandInput, Client client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("TOPIC")));
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string(""),string("TOPIC")));
         return ;
     }
     if (channelMask(command) == false) {

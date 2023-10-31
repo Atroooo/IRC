@@ -19,9 +19,9 @@ bool changeTopic(Client client, Channel *channel);
 string get_time(void);
 
 void modeCommand(string command, Client client, Server *server);
-bool changeMode(Client client, Channel *channel, char mode);
-bool promoteClient(Client sender, Client receiver, Channel *channel);
-bool demoteClient(Client sender, Client receiver, Channel *channel);
+bool changeMode(Client client, Channel *channel);
+bool promoteClient(Client sender, Client *receiver, Channel *channel);
+bool demoteClient(Client sender, Client *receiver, Channel *channel);
 
 void inviteCommand(string command, Client client, Server *server);
 bool inviteClient(Client sender, Client receiver, Channel *channel);

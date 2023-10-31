@@ -130,3 +130,10 @@ bool Channel::isInvited(Client client) {
     }
     return false;
 }
+
+bool Channel::isModeSet(char mode) {
+    list<char>::iterator it = find(this->_mode.begin(), this->_mode.end(), mode);
+    if (it != this->_mode.end())
+        return true;
+    return false;
+}

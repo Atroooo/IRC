@@ -6,7 +6,7 @@ void inviteCommand(string commandInput, Client client, Server *server) {
         return ;
     }
     if (command.size() < 3) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("INVITE")));
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string(""), string("INVITE")));
         return ;
     }
     Channel *channel = server->getChannel(command[2].substr(1));
@@ -38,11 +38,11 @@ bool inviteClient(Client sender, Client receiver, Channel *channel) {
         sendInfoClient(sender, ERR_CHANOPRIVSNEEDED(channel->getName(), sender.getName()));
         return false;
     }
-    list<char> mode = channel->getMode();
-    if (find(mode.begin(), mode.end(), 'i') != mode.end()) {
-        sendInfoClient(sender, ERR_INVITEONLYCHAN(channel->getName()));
-        return false;
-    }
+    // list<char> mode = channel->getMode();
+    // if (find(mode.begin(), mode.end(), 'i') == mode.end()) {
+    //     sendInfoClient(sender, ERR_INVITEONLYCHAN(channel->getName()));
+    //     return false;
+    // }
     if (channel->getClients().size() >= (size_t)channel->getMaxUsers()) {
         return false;
     }

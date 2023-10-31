@@ -16,7 +16,7 @@ void kickCommand(string commandInput, Client client, Server *server) {
         return ;
     }
     if (command.size() < 3) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("KICK")));
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(channel->getName(), string("KICK")));
         return ;
     }
     if (!kickClient(client, *receiver, channel)) {

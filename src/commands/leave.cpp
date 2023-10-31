@@ -2,10 +2,9 @@
 
 void leaveCommand(string commandInput, Client client, Server *server) {
     
-    cout << "leaveCommand: " << commandInput << endl;
     vector<string> command = initCommand(commandInput);
     if (command.size() < 1) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("PART")));
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string(""), string("PART")));
         return ;
     }
     vector<string> channelToLeave;

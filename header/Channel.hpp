@@ -37,6 +37,7 @@ class Channel {
 
         void                    setTopic(string topic);
         void                    setMode(char mode);
+        bool                    isModeSet(char mode);
         void                    setPassword(string password);
         void                    addUser(Client client);
         void                    addOperator(Client client);

@@ -42,7 +42,7 @@ map<string, string> parseCommand(string Command, Client client) {
         cmd = strtok(NULL, " ");
     }
     if (command.size() < 2) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("JOIN")));
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
         return parsedCommand;
     }
 

@@ -54,7 +54,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         memset(buf, 0, 1028);
         bytesReceived = recv(clientSocket, buf, 1027, MSG_DONTWAIT);
         finalBuf += buf;   
-        cout << endl << endl << buf << endl << endl;
         if (bytesReceived == 0){
             cerr << "Client disconnected" << endl;
             return FALSE;

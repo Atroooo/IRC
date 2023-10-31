@@ -25,7 +25,7 @@ string concatMsg(vector<string> command) {
 void sendMessageCommand(string CommandInput, Client client, Server *server) {
     vector<string> command = initCommand(CommandInput);
     if (command.size() < 2) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("PRIVMSG")));
+        sendInfoClient(client, ERR_NEEDMOREPARAMS(string(""), string("PRIVMSG")));
         return ;
     }
     string message = concatMsg(command);
