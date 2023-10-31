@@ -1,6 +1,7 @@
 #pragma once
 
-/*Libraries*/
+using namespace std;
+
 #include <iostream>
 #include <unistd.h>
 #include <sys/types.h>
@@ -13,19 +14,15 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
-#include <stdlib.h>
+# include <stdlib.h>
 #include <poll.h>
 #include <algorithm>
-#include <map>
-#include <list>
-#include <vector>
 
-using namespace std;
+struct ServerArgument {
+public:
+    int port;
+	char *password;
+};
 
-/*Classes*/
-#include "Server.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
-#include "Commands.hpp"
-#include "typedef.hpp"
-#include "serverUtils.hpp"
+ServerArgument parsingArgument(int argc, char *argv[]);
+int setUpSocket(int port);

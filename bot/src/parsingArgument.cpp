@@ -1,4 +1,4 @@
-#include "../../header/includes.hpp"
+#include "../header/bot.hpp"
 
 bool isAllDigits(const std::string& str) {
     for (size_t i = 0; i < str.length(); i++) {

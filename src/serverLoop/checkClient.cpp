@@ -29,21 +29,25 @@ int checkIfUserConnected(char *buf, int clientSocket, Server *server, char *serv
     return FIRST_CONNECTION;
 }
 
-int checkPassAndNick(char *buf, int clientSocket, Server *server, char *serverPassword){
-    string bufStr = string(buf);
+int checkPassAndNick(string bufStr, int clientSocket, Server *server, char *serverPassword){
     if (bufStr.find("PASS") == string::npos)
         return NOT_ALL_DATA;
     if (bufStr.find("NICK") == string::npos)
         return NOT_ALL_DATA;
-    int connectionStatus = checkIfUserConnected(buf, clientSocket, server, serverPassword);
+    int connectionStatus = checkIfUserConnected((char *)bufStr.c_str(), clientSocket, server, serverPassword);
     if (connectionStatus == WRONG_LOGIN_DATA)
         return ( WRONG_LOGIN_DATA);
-    // else if (connectionStatus == FIRST_CONNECTION){
-    //     return (FIRST_CONNECTION);
-    // }
     if (bufStr.find("USER") == string::npos)
         return NOT_ALL_DATA;
+    if (bufStr.find("\r\n") == string::npos)
+            return false;
     return GOT_ALL_DATA;
+}
+
+bool checkEndOfLine(string bufStr){
+    if (bufStr.find("\r\n") == string::npos)
+            return false;
+    return true;
 }
 
 int clientAction(int clientSocket, char *serverPassword, Server *server){
@@ -54,15 +58,17 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         memset(buf, 0, 1028);
         bytesReceived = recv(clientSocket, buf, 1027, MSG_DONTWAIT);
         finalBuf += buf;   
-        cout << endl << endl << buf << endl << endl;
         if (bytesReceived == 0){
             cerr << "Client disconnected" << endl;
             return FALSE;
         }
-        if (server->getClient(clientSocket) != NULL) break;
-        int allDataParsed = checkPassAndNick((char *)finalBuf.c_str(), clientSocket, server, serverPassword);
-        if (allDataParsed == GOT_ALL_DATA) break;
-        if (allDataParsed == WRONG_LOGIN_DATA) return false;
+        if (server->getClient(clientSocket) != NULL && checkEndOfLine(finalBuf))
+            break;
+        else{
+            int allDataParsed = checkPassAndNick((char *)finalBuf.c_str(), clientSocket, server, serverPassword);
+            if (allDataParsed == GOT_ALL_DATA) break;
+            if (allDataParsed == WRONG_LOGIN_DATA) return false;
+        }
     }
     if (strncmp(finalBuf.c_str(), "QUIT", 4) == 0){
         cout << "Client disconnected " << endl;
@@ -72,7 +78,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         cerr << "Error in recv(). Quitting" << endl;
         exit(1);
     }
-    // cout << "BUF = " << buf << endl;
+    cout << "BUF = " << finalBuf << endl;
     commandHub(finalBuf.c_str(), server->getClient(clientSocket), server);
     //botAction(buf, clientSocket, x);
     return (TRUE);
