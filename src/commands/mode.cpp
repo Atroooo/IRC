@@ -42,8 +42,7 @@ void modeCommand(string commandInput, Client client, Server *server) {
                 }
                 else if (AddOrRemove == '+') {
                     promoteClient(client, server->getClient(command[3]), channel);
-                    commandParameters.erase(command    cout << password << endl;
-rameters.begin());
+                    commandParameters.erase(commandParameters.begin());
                 }
                 else {
                     demoteClient(client, server->getClient(command[3]), channel);
@@ -87,9 +86,17 @@ rameters.begin());
                 }
             }
             else {
-                if (!channel->isModeSet(mode)){
-                    channel->setMode(mode);
-                    sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " +" + mode + "\r\n");
+                if (AddOrRemove == '+') {
+                    if (!channel->isModeSet(mode)){
+                        channel->setMode(mode);
+                        sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " +" + mode + "\r\n");
+                    }
+                }
+                else {
+                    if (channel->isModeSet(mode)){
+                        channel->unsetMode(mode);
+                        sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " -" + mode + "\r\n");
+                    }
                 }
             }
         }
