@@ -52,26 +52,21 @@ bool checkEndOfLine(string bufStr){
 }
 
 int clientAction(int clientSocket, char *serverPassword, Server *server){
+    char buf[1028];
     string finalBuf;
     int bytesReceived;
+    
     while (true) {
-        char buf[1028];
-        memset(buf, 0, 1028);
-        bytesReceived = recv(clientSocket, buf, 1027, MSG_DONTWAIT);
+        memset(buf, 0, sizeof(buf));
+        bytesReceived = recv(clientSocket, buf, sizeof(buf), MSG_DONTWAIT);
         finalBuf += buf;
         if (bytesReceived == 0){
             cerr << "Client disconnected" << endl;
             return FALSE;
         }
         // if (bytesReceived == -1) {
-        //     int error = errno;
-        //     if (error == EAGAIN) {
-        //         continue;
-        //     } 
-        //     else {
-        //         cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
-        //         _exit(-1);
-        //     }
+    //         cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
+    //         _exit(-1);
         // }
         if (server->getClient(clientSocket) != NULL && checkEndOfLine(finalBuf))
             break;
