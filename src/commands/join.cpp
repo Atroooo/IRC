@@ -124,7 +124,7 @@ bool createChannel(Client *client, Server *server, string name, string password)
     channel.addOperator(*client);
     server->addChannel(channel);
     client->addCmdToSend(JOINCHAN(client->getName(), name));
-    client->addCmdToSend(INFO_JOIN(name, channel.getTopic(), channel.getMembers()));
+    client->addCmdToSend(RPL_NAMREPLY(client->getName(), name, channel.getChannelMembers()));
     return true;
 }
 
