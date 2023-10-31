@@ -27,10 +27,10 @@ void serverLoop(Server * server, char *serverPassword) {
 
         for (size_t socketID = 0; socketID < fds.size(); socketID++) {
 
-            if (fds[socketID].revents & POLLOUT){
-                cout << "SENDING" << endl; 
-                // _exit(0);
+            if (fds[socketID].revents & POLLOUT) {
+                sendInfoClient(server, fds[socketID].fd);
             }
+            
             if (fds[socketID].revents & POLLIN) {
 
                 if (fds[socketID].fd == server->getFd(0)->fd) {
@@ -42,7 +42,11 @@ void serverLoop(Server * server, char *serverPassword) {
                 }
 
                 else {
-                    checkClient(server, serverPassword);
+                    if (checkClient(server, serverPassword) == 0) {
+                        fds.erase(fds.begin() + socketID);
+                        cout << "Client disconnected" << endl;
+                        continue;
+                    }
                     clientAction(fds[socketID].fd, serverPassword, server);
                     fds[socketID].events |= POLLOUT;
                 }
@@ -53,6 +57,21 @@ void serverLoop(Server * server, char *serverPassword) {
 }
 
 /*---------------------------------------- Send Info -------------------------------------------*/
+void sendInfoClient(Server * server, int fd) {
+    Client *client = server->getClient(fd);
+    if (client == NULL) {
+        return ;
+    }
+    list<string> cmdToSend = client->getCmdToSend();
+    if (cmdToSend.size() == 0) {
+        return ;
+    }
+    cout << "Sending..." << endl;
+    for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
+        sendFunction(fd, *it);
+    }
+}
+
 void checkRetSend(int ret) {
     if (ret < 0) {
         cerr << "Error in send(). Quitting" << endl;

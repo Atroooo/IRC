@@ -7,7 +7,6 @@ void	bindToSocket(int listening, int port){
     servAddr.sin_addr.s_addr = INADDR_ANY;
     servAddr.sin_port = htons(port);
     
-    // inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
     if (bind(listening, (sockaddr*)&servAddr, sizeof(servAddr)) < 0) {
 		cerr << "Can't bind to IP/port" << endl;
         _exit(-1);

@@ -15,6 +15,7 @@ bool leaveChannel(Client client, Channel *channel, string message);
 
 void topicCommand(string command, Client client, Server *server);
 bool changeTopic(Client client, Channel *channel);
+string get_time(void);
 
 void modeCommand(string command, Client client, Server *server);
 bool changeMode(Client client, Channel *channel, char mode);
@@ -31,7 +32,6 @@ void sendMessageCommand(string CommandInput, Client client, Server *server);
 bool sendMessage(Channel *channel, string message, Server *server);
 bool sendPrivateMessage(Client sender, Client *receiver, string message, Server *server);
 void sendInfoChannel(Channel channel, string msg, Server *server);
-void sendInfoClient(Client client, string msg);
 
 //DELETE
 void printVector(vector<string> vec);

@@ -2,9 +2,10 @@
 
 /*---------------------------------------- Parsing Command ----------------------------------------*/
 bool checkMask(vector<string> channels, Client client) {
+    (void) client;
     for (size_t i = 0; i < channels.size(); i++) {
         if (channels[i][0] != '#' && channels[i][0] != '&') {
-            sendInfoClient(client, ERR_BADCHANMASK(channels[i].substr(0, channels[i].length() - 1)));
+            //sendInfoClient(client, ERR_BADCHANMASK(channels[i].substr(0, channels[i].length() - 1)));
             return false;
         }
     }
@@ -42,7 +43,7 @@ map<string, string> parseCommand(string Command, Client client) {
         cmd = strtok(NULL, " ");
     }
     if (command.size() < 2) {
-        sendInfoClient(client, ERR_NEEDMOREPARAMS(string("JOIN")));
+        //sendInfoClient(client, ERR_NEEDMOREPARAMS(string("JOIN")));
         return parsedCommand;
     }
 
@@ -50,7 +51,7 @@ map<string, string> parseCommand(string Command, Client client) {
     if (command.size() == 3) {
         keys = split(command[2], ',');
         if (keys.size() > channels.size()) {
-            sendInfoClient(client, "<JOIN> :Too many targets");
+            //sendInfoClient(client, "<JOIN> :Too many targets");
             return parsedCommand;
         }
     }
@@ -121,20 +122,20 @@ bool createChannel(Client client, Server *server, string name, string password) 
 /*---------------------------------------- Join Channel ----------------------------------------*/
 int passCheck(Client client, Channel channel, string password) {
     if (channel.isUser(client)) {
-        sendInfoClient(client, "<" + channel.getName()+  "> : Already in channel");
+        //sendInfoClient(client, "<" + channel.getName()+  "> : Already in channel");
         return false;
     }
     list<char> mode = channel.getMode();
     if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel.getPassword() != password) {
-        sendInfoClient(client, ERR_BADCHANNELKEY(string("#" + channel.getName())));
+        //sendInfoClient(client, ERR_BADCHANNELKEY(string("#" + channel.getName())));
         return false;
     }
     if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel.isInvited(client)) {
-        sendInfoClient(client, ERR_INVITEONLYCHAN(string("#" + channel.getName())));
+        //sendInfoClient(client, ERR_INVITEONLYCHAN(string("#" + channel.getName())));
         return false;
     }
     if (channel.getClients().size() >= (size_t)channel.getMaxUsers()) {
-        sendInfoClient(client, ERR_CHANNELISFULL(string("#" + channel.getName())));
+        //sendInfoClient(client, ERR_CHANNELISFULL(string("#" + channel.getName())));
         return false;
     }
     return true;

@@ -58,8 +58,10 @@ bool sendPrivateMessage(Client sender, Client *receiver , string message, Server
 bool sendMessage(Channel *channel, string message, Server *server) {
     if (channel == NULL)
         return false;
+    (void) server;
+    (void) message;
     // sendInfoChannel(*channel, PRIVMSGCHAN(channel->getName(), message));
-    sendInfoChannel(*channel, PRIVMSGCHAN(channel->getName(), message), server);
+    // sendInfoChannel(*channel, PRIVMSGCHAN(channel->getName(), message), server);
     return true;
 }
 
@@ -75,7 +77,3 @@ void sendInfoChannel(Channel channel, string msg, Server *server) {
     }
 }
 
-void sendInfoClient(Client client, string msg) {
-    int ret = send(client.getFd(), msg.c_str(), strlen(msg.c_str()), 0);
-    checkRetSend(ret);
-}
