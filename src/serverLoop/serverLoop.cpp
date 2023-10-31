@@ -7,14 +7,14 @@ bool	stopSignal = false;
 static void	shutdown(int) { stopSignal = true; }
 
 void serverLoop(Server * server, char *serverPassword) {
-    int             pollReturn;
-    vector<struct pollfd> fds = server->getFdsVector();
-    struct pollfd   newFd;
+    vector<struct pollfd>   fds = server->getFdsVector();
+    struct pollfd           newFd;
+    int                     pollReturn;
 
-    signal(SIGINT, shutdown); 
+    signal(SIGINT, shutdown);
+
     while (stopSignal == false) {
-        // vector<struct pollfd> fds = server->getFdsVector();
-
+        
         pollReturn = poll(fds.data(), fds.size(), -1);
         if (pollReturn < 0) {
             herror("poll");
@@ -24,33 +24,30 @@ void serverLoop(Server * server, char *serverPassword) {
 			std::cerr << "Error: poll() timed out" << std::endl;
 			break ;
 		}
-        // server->setVector(fds);
+
         for (size_t socketID = 0; socketID < fds.size(); socketID++) {
-            std::cout << "===> " << fds[socketID].revents << std::endl;
+
             if (fds[socketID].revents & POLLOUT){
                 cout << "SENDING" << endl; 
                 // _exit(0);
             }
             if (fds[socketID].revents & POLLIN) {
-                cerr << "RECEIVING" << endl;
+
                 if (fds[socketID].fd == server->getFd(0)->fd) {
-                    int clientSocket = waitClientConnection(fds[socketID].fd);
-                    // Set the socket to be non-blocking (the sockets created after will inherit)
-                    int flags = fcntl(clientSocket, F_GETFL, 0);
-                    flags |= O_NONBLOCK;
-                    fcntl(clientSocket, F_SETFL, flags);
+                    //Create a new socket for the client
+                    int clientSocket = accept(fds[socketID].fd, NULL, NULL);
                     newFd.fd = clientSocket;
                     newFd.events = POLLIN;
                     fds.push_back(newFd);
-                    // server->addToFds(newFd);
                 }
+
                 else {
-                    cout << "client action" << endl;
-                    // checkClient(server, serverPassword);
-                    // clientAction(fds[socketID].fd, serverPassword, server);
+                    checkClient(server, serverPassword);
+                    clientAction(fds[socketID].fd, serverPassword, server);
                     fds[socketID].events |= POLLOUT;
                 }
             }
+        server->setVector(fds);
         }
     }
 }
