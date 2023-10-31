@@ -1,59 +1,55 @@
 #include "../../header/Commands.hpp"
 
-void topicCommand(string commandInput, Client client, Server *server) {
+void topicCommand(string commandInput, Client *client, Server *server) {
 
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
-        // sendInfoClient(client, ERR_NEEDMOREPARAMS(string("TOPIC")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""),string("TOPIC")));
         return ;
     }
-    if (channelMask(command) == false) {
-        // sendInfoClient(client, ERR_BADCHANMASK(command[1].substr(1)));
+    if (channelMask(command, client) == false) {
+        client->addCmdToSend(ERR_BADCHANMASK(command[1].substr(1)));
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
-        // sendInfoClient(client, ERR_NOSUCHCHANNEL(client.getName(), command[1].substr(1)));
+        client->addCmdToSend(ERR_NOSUCHCHANNEL(client->getName(), command[1].substr(1)));
         return ;
     }
     if (commandInput.find(':') == string::npos) {
         if (channel->getTopic() == "No topic") {
-            // sendInfoClient(client, RPL_NOTOPIC(channel->getName(), client.getName()));
+            client->addCmdToSend(RPL_NOTOPIC(channel->getName(), client->getName()));
             return ;
         }
-        // sendInfoClient(client, RPL_TOPIC(channel->getName(), client.getName(), channel->getTopic()));
+        client->addCmdToSend(RPL_TOPIC(channel->getName(), client->getName(), channel->getTopic()));
         return ;
     }
     if (!changeTopic(client, channel)) {
         return ;
     }
     channel->setTopic(commandInput.substr(commandInput.find(':') + 1));
-    //sendInfoChannel(*channel, RPL_TOPICWHOTIME(channel->getName(), client.getName(), get_time()));
-    //sendInfoChannel(*channel, RPL_TOPIC(channel->getName(), client.getName(), channel->getTopic()));
+    sendInfoChannel(channel, RPL_TOPICWHOTIME(channel->getName(), client->getName(), get_time()), server);
+    sendInfoChannel(channel, RPL_TOPIC(channel->getName(), client->getName(), channel->getTopic()), server);
 }
 
-bool changeTopic(Client client, Channel *channel) {
-    if (!channel->isUser(client)) {
-        // sendInfoClient(client, ERR_NOTONCHANNEL(channel->getName(), client.getName()));
+bool changeTopic(Client *client, Channel *channel) {
+    if (!channel->isUser(*client)) {
+        client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
         return false;
     }
-    if (!channel->isOperator(client)) {
-        // sendInfoCl, serverient(client, ERR_CHANOPRIVSNEEDED(channel->getName(), client.getName()));
+    if (!channel->isOperator(*client)) {
+        client->addCmdToSend(ERR_CHANOPRIVSNEEDED(channel->getName(), client->getName()));
         return false;
     }
-
     return true;
 }
 
 string get_time(void) {
-    time_t rawtime;
-    struct tm * timeinfo;
-    char buffer[80];
 
-    time (&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
-    string str(buffer);
-    return str;
+    struct timeval now;
+	std::ostringstream oss;
+	
+	gettimeofday(&now, 0);
+	oss << now.tv_sec;
+	return oss.str();
 }

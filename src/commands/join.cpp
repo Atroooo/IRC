@@ -1,11 +1,10 @@
 #include "../../header/Commands.hpp"
 
 /*---------------------------------------- Parsing Command ----------------------------------------*/
-bool checkMask(vector<string> channels, Client client) {
-    (void) client;
+bool checkMask(vector<string> channels, Client *client) {
     for (size_t i = 0; i < channels.size(); i++) {
         if (channels[i][0] != '#' && channels[i][0] != '&') {
-            //sendInfoClient(client, ERR_BADCHANMASK(channels[i].substr(0, channels[i].length() - 1)));
+            client->addCmdToSend(ERR_BADCHANMASK(channels[i].substr(0, channels[i].length() - 1)));
             return false;
         }
     }
@@ -28,7 +27,7 @@ vector<string> split(string str, char delimiter) {
     return result;
 }
 
-map<string, string> parseCommand(string Command, Client client) {
+map<string, string> parseCommand(string Command, Client *client) {
     map<string, string> parsedCommand;
     vector<string> command;
     vector<string> channels;
@@ -43,7 +42,7 @@ map<string, string> parseCommand(string Command, Client client) {
         cmd = strtok(NULL, " ");
     }
     if (command.size() < 2) {
-        //sendInfoClient(client, ERR_NEEDMOREPARAMS(string("JOIN")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
         return parsedCommand;
     }
 
@@ -51,7 +50,7 @@ map<string, string> parseCommand(string Command, Client client) {
     if (command.size() == 3) {
         keys = split(command[2], ',');
         if (keys.size() > channels.size()) {
-            //sendInfoClient(client, "<JOIN> :Too many targets");
+            client->addCmdToSend("<JOIN> :Too many targets");
             return parsedCommand;
         }
     }
@@ -83,17 +82,30 @@ string getName(string name) {
     return retName;
 }
 
+string getPassword(string password) {
+    string retPassword = "";
+    int i = 0;
+
+    while (password[i] && password[i] != '\r' && password[i] != '\n') {
+        if (password[i] >= 31 && password[i] <= 126)
+            retPassword += password[i];
+        i++;
+    }
+    return retPassword;
+}
+
 /*---------------------------------------- Join and Create Command ---------------------------------*/
 void joinCommand(string commandInput, Client *client, Server *server) {
     if (commandInput == "JOIN 0") {
         //leave all channels
         return ;
     }
-    map<string, string> command = parseCommand(commandInput, *client);
+    map<string, string> command = parseCommand(commandInput, client);
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
+        string password = getPassword(it->second);
         string name = getName(it->first);
-        if (joinChannel(client, server->getChannel(name), it->second) != -1) {
+        if (joinChannel(client, server->getChannel(name), password, server) != -1) {
             continue;
         }
         else if (!createChannel(client, server, name, it->second)) {
@@ -111,42 +123,42 @@ bool createChannel(Client *client, Server *server, string name, string password)
     channel.addUser(*client);
     channel.addOperator(*client);
     server->addChannel(channel);
-    client->setCmdToSend(JOINCHAN(client->getName(), name));
-    client->setCmdToSend(RPL_NAMREPLY(client->getName(), name, channel.getChannelMembers()));
+    client->addCmdToSend(JOINCHAN(client->getName(), name));
+    client->addCmdToSend(INFO_JOIN(name, channel.getTopic(), channel.getMembers()));
     return true;
 }
 
 /*---------------------------------------- Join Channel ----------------------------------------*/
-int passCheck(Client client, Channel channel, string password) {
-    if (channel.isUser(client)) {
-        client.setCmdToSend(channel.getName()+  " : Already in channel");
+int passCheck(Client *client, Channel channel, string password) {
+    if (channel.isUser(*client)) {
+        client->addCmdToSend(channel.getName()+  ": Already in channel");
         return false;
     }
     list<char> mode = channel.getMode();
     if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel.getPassword() != password) {
-        //sendInfoClient(client, ERR_BADCHANNELKEY(string("#" + channel.getName())));
+        client->addCmdToSend(ERR_BADCHANNELKEY(string("#" + channel.getName())));
         return false;
     }
-    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel.isInvited(client)) {
-        //sendInfoClient(client, ERR_INVITEONLYCHAN(string("#" + channel.getName())));
+    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel.isInvited(*client)) {
+        client->addCmdToSend(ERR_INVITEONLYCHAN(string("#" + channel.getName())));
         return false;
     }
     if (channel.getClients().size() >= (size_t)channel.getMaxUsers()) {
-        //sendInfoClient(client, ERR_CHANNELISFULL(string("#" + channel.getName())));
+        client->addCmdToSend(ERR_CHANNELISFULL(string("#" + channel.getName())));
         return false;
     }
     return true;
 }
 
-int joinChannel(Client *client, Channel *channel, string password) {
+int joinChannel(Client *client, Channel *channel, string password, Server *server) {
     if (channel == NULL) {
         return -1;
     }
-    if (passCheck(*client, *channel, password) == false) { return false; }    
+    if (passCheck(client, *channel, password) == false) { return false; }    
     channel->addUser(*client);
-    client->setCmdToSend(JOINCHAN(client->getName(), channel->getName()));
-    client->setCmdToSend(INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
-    client->setCmdToSend(RPL_NAMREPLY(client->getName(), channel->getName(), channel->getChannelMembers()));
-    getCmdChannel(*channel, JOINCHAN(client->getName(), channel->getName()));
+    client->addCmdToSend(JOINCHAN(client->getName(), channel->getName()));
+    client->addCmdToSend(INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
+    sendInfoChannel(channel, JOINCHAN(client->getName(), channel->getName()), server);
+    client->addCmdToSend(RPL_NAMREPLY(client->getName(), channel->getName(), channel->getChannelMembers()));
     return true;
 }

@@ -63,10 +63,10 @@ void sendInfoClient(Server * server, int fd) {
         return ;
     }
     list<string> cmdToSend = client->getCmdToSend();
-    if (cmdToSend.size() == 0) {
+    if (cmdToSend.size() == 0) {  
         return ;
     }
-    cout << "Sending..." << endl;
+    cout << client->getName() << " is Sending..." << endl;
     for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
         sendFunction(fd, *it);
     }
@@ -76,7 +76,7 @@ void sendInfoClient(Server * server, int fd) {
 void checkRetSend(int ret) {
     if (ret < 0) {
         cerr << "Error in send(). Quitting" << endl;
-        //NEED EXIT
+        _exit(-1);
     }
 }
 
@@ -85,9 +85,10 @@ void sendFunction(int fd, string msg) {
     checkRetSend(ret);
 }
 
-void getCmdChannel(Channel channel, string msg) {
-    map<string, Client> members = channel.getClients();
+void sendInfoChannel(Channel * channel, string msg, Server *server) {
+    map<string, Client> members = channel->getClients();
     for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
-        it->second.setCmdToSend(msg);
+        Client *client = server->getClient(it->second.getFd());
+        client->addCmdToSend(msg);
     }
 }

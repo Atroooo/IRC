@@ -8,9 +8,14 @@ Channel::Channel(string name, string password) {
     if (!password.empty())
         this->_mode.push_back('k');
     this->_maxUsers = 10;
+    _creationTime = get_time();
 }
 
 Channel::~Channel(void) { }
+
+string Channel::getCreationTime(void) const {
+    return this->_creationTime;
+}
 
 string Channel::getName(void) const {
     return this->_name;
@@ -34,6 +39,10 @@ map<string, Client> Channel::getClients(void) const {
 
 int Channel::getMaxUsers(void) const {
     return this->_maxUsers; 
+}
+
+void Channel::setMaxUsers(int maxUsers) { 
+    this->_maxUsers = maxUsers; 
 }
 
 Client *Channel::getClient(string name) {
@@ -103,6 +112,12 @@ void Channel::removeOperator(Client client) {
     }
 }
 
+void Channel::unsetMode(char mode) {
+    list<char>::iterator it = find(this->_mode.begin(), this->_mode.end(), mode);
+    if (it != this->_mode.end())
+        this->_mode.erase(it);
+}
+
 bool Channel::isUser(Client client) {
     map<string, Client>::iterator it = this->_clients.find(client.getName());
     if (it != this->_clients.end())
@@ -123,5 +138,12 @@ bool Channel::isInvited(Client client) {
         if ((*i).getName() == client.getName())
             return true;
     }
+    return false;
+}
+
+bool Channel::isModeSet(char mode) {
+    list<char>::iterator it = find(this->_mode.begin(), this->_mode.end(), mode);
+    if (it != this->_mode.end())
+        return true;
     return false;
 }

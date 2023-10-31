@@ -23,5 +23,5 @@ bool    checkPassword(char *buf, char *serverPassword);
 int     clientAction(int clientSocket, char *serverPassword, Server *server);
 
 void    sendInfoClient(Server * server, int fd);
-void    getCmdChannel(Channel channel, string msg);
+void    sendInfoChannel(Channel * channel, string msg, Server * server);
 void    sendFunction(int fd, string msg);

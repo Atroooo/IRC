@@ -1,10 +1,11 @@
 #include "../../header/Commands.hpp"
 
-void printVector(vector<string> vec) {
-    for (size_t i = 0; i < vec.size(); i++) {
-        cout << vec[i] << " ";
+void printVector(vector<string> command) {
+    for (size_t i = 0; i < command.size(); i++) {
+        cout << command[i] << endl;
     }
 }
+
 /*---------------------------------------- Parsing Command ----------------------------------------*/
 bool checkIfChannel(string channel) {
     if (channel[0] != '#') {
@@ -24,7 +25,7 @@ string concatMsg(vector<string> command) {
 }
 
 /*---------------------------------------- PRIVMSG Command ----------------------------------------*/
-void sendMessageCommand(string CommandInput, Client client, Server *server) {
+void sendMessageCommand(string CommandInput, Client * client, Server *server) {
     vector<string> command = initCommand(CommandInput);
     printVector(command);
     if (command.size() < 2) {
@@ -44,7 +45,7 @@ void sendMessageCommand(string CommandInput, Client client, Server *server) {
 }
 
 /*---------------------------------------- Send Message ------------------------------------------*/
-bool sendPrivateMessage(Client sender, Client *receiver , string message, Server *server) {
+bool sendPrivateMessage(Client *sender, Client *receiver , string message, Server *server) {
     if (receiver == NULL)
         return false;
     (void) sender;
@@ -60,8 +61,8 @@ bool sendMessage(Channel *channel, string message, Server *server) {
         return false;
     (void) server;
     (void) message;
-    // sendInfoChannel(*channel, PRIVMSGCHAN(channel->getName(), message));
-    // sendInfoChannel(*channel, PRIVMSGCHAN(channel->getName(), message), server);
+    // sendInfoChannel(channel, PRIVMSGCHAN(channel->getName(), message));
+    // sendInfoChannel(channel, PRIVMSGCHAN(channel->getName(), message), server);
     return true;
 }
 

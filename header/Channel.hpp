@@ -12,6 +12,7 @@ class Channel {
         string                  _name;
         string                  _password;
         string                  _topic;
+        string                  _creationTime;
         list<char>              _mode;
         map<string, Client>     _clients;
         list<Client>            _operators;
@@ -23,6 +24,7 @@ class Channel {
         Channel(string name, string password);
         ~Channel(void);
 
+        string                  getCreationTime(void) const;
         string                  getName(void) const;
         string                  getPassword(void) const;
         string                  getTopic(void) const;
@@ -31,18 +33,20 @@ class Channel {
         int                     getMaxUsers(void) const;
         Client                  *getClient(string name);
         string                  getMembers(void) const;
-        string                  getChannelMembers(void); 
-
+        string                  getChannelMembers(void);
+         
         void                    setTopic(string topic);
         void                    setMode(char mode);
+        void                    setMaxUsers(int maxUsers);
+        bool                    isModeSet(char mode);
         void                    setPassword(string password);
         void                    addUser(Client client);
         void                    addOperator(Client client);
         void                    addInvited(Client client);
         void                    removeUser(Client client);
         void                    removeOperator(Client client);
-        void                    setMaxUsers(int maxUsers);
-
+        void                    unsetMode(char mode);
+    
         bool                    isUser(Client client);
         bool                    isOperator(Client client);
         bool                    isInvited(Client client);

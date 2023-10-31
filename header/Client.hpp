@@ -23,6 +23,6 @@ class Client {
 
         void setName(std::string name);
         void setFd(int fd);
-        void setCmdToSend(string cmd) { this->_cmdToSend.push_back(cmd); };
+        void addCmdToSend(string cmd) { this->_cmdToSend.push_back(cmd); };
         void clearCmdToSend(void) { this->_cmdToSend.clear(); };
 };

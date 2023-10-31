@@ -9,27 +9,27 @@ void commandHub(string commandInput, Client *client, Server *server) {
         return ;
     }
     if (key == "PART") {
-        leaveCommand(commandInput, *client, server);
+        leaveCommand(commandInput, client, server);
         return ;
     }
     if (key == "TOPIC") {
-        topicCommand(commandInput, *client, server);
+        topicCommand(commandInput, client, server);
         return ;
     }
     if (key == "MODE") {
-        modeCommand(commandInput, *client, server);
+        modeCommand(commandInput, client, server);
         return ;
     }
     if (key == "INVITE") {
-        inviteCommand(commandInput, *client, server);
+        inviteCommand(commandInput, client, server);
         return ;
     }
     if (key == "KICK") {
-        kickCommand(commandInput, *client, server);
+        kickCommand(commandInput, client, server);
         return ;
     }
     if (key == "PRIVMSG" || key == "NOTICE") {
-        sendMessageCommand(commandInput, *client, server);
+        sendMessageCommand(commandInput, client, server);
         return ;
     }
 }
@@ -45,9 +45,9 @@ vector<string> initCommand(string commandInput) {
     return commandVector;
 }
 
-bool channelMask(vector<string> command) {
+bool channelMask(vector<string> command, Client *client) {
     if (command[1][0] != '#' && command[1][0] != '&') {
-        cout << "<" << command[1].substr(1, command[1].length()) << "> :Bad Channel Mask" << endl;
+        client->addCmdToSend(ERR_BADCHANMASK(command[1].substr(1, command[1].length())));
         return false;
     }
     return true;

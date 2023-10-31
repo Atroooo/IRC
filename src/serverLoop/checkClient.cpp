@@ -58,11 +58,21 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         char buf[1028];
         memset(buf, 0, 1028);
         bytesReceived = recv(clientSocket, buf, 1027, MSG_DONTWAIT);
-        finalBuf += buf;   
+        finalBuf += buf;
         if (bytesReceived == 0){
             cerr << "Client disconnected" << endl;
             return FALSE;
         }
+        // if (bytesReceived == -1) {
+        //     int error = errno;
+        //     if (error == EAGAIN) {
+        //         continue;
+        //     } 
+        //     else {
+        //         cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
+        //         _exit(-1);
+        //     }
+        // }
         if (server->getClient(clientSocket) != NULL && checkEndOfLine(finalBuf))
             break;
         else{
@@ -75,11 +85,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         cout << "Client disconnected " << endl;
         return (FALSE);
     }
-    // if (bytesReceived == -1){
-    //     cerr << "Error in recv(). Quitting" << endl;
-    //     exit(1);
-    // }
-    cout << "BUF = " << finalBuf << endl;
+    // cout << "BUF = " << finalBuf << endl;
     commandHub(finalBuf.c_str(), server->getClient(clientSocket), server);
     return (TRUE);
 }
