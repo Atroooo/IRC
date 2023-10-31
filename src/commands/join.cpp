@@ -93,36 +93,33 @@ void joinCommand(string commandInput, Client *client, Server *server) {
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
         string name = getName(it->first);
-        if (joinChannel(*client, server->getChannel(name), it->second, server) != -1) {
+        if (joinChannel(client, server->getChannel(name), it->second) != -1) {
             continue;
         }
-        else if (!createChannel(*client, server, name, it->second)) {
+        else if (!createChannel(client, server, name, it->second)) {
             break ;
         }
     }
 }
 
 /*---------------------------------------- Create Channel ----------------------------------------*/
-//ADD MODE AND TOPIC USING SENDINFOCHANNEL
-bool createChannel(Client client, Server *server, string name, string password) {
+bool createChannel(Client *client, Server *server, string name, string password) {
     if (server->getChannel(name.substr(1)) != NULL) {
         return false;
     }
     Channel channel(name, password);
-    channel.addUser(client);
-    channel.addOperator(client);
-    // server->addChannel(channel);
-    // server->setCommandsToSend(client.getFd(), JOINCHAN(client.getName(), name));
-    // server->setCommandsToSend(client.getFd(), RPL_NAMREPLY(client.getName(), name, channel.getChannelMembers()));
-    // sendInfoClient(client, JOINCHAN(client.getName(), name));
-    // sendInfoClient(client, RPL_NAMREPLY(client.getName(), name, channel.getChannelMembers()));
+    channel.addUser(*client);
+    channel.addOperator(*client);
+    server->addChannel(channel);
+    client->setCmdToSend(JOINCHAN(client->getName(), name));
+    client->setCmdToSend(RPL_NAMREPLY(client->getName(), name, channel.getChannelMembers()));
     return true;
 }
 
 /*---------------------------------------- Join Channel ----------------------------------------*/
 int passCheck(Client client, Channel channel, string password) {
     if (channel.isUser(client)) {
-        //sendInfoClient(client, "<" + channel.getName()+  "> : Already in channel");
+        client.setCmdToSend(channel.getName()+  " : Already in channel");
         return false;
     }
     list<char> mode = channel.getMode();
@@ -141,20 +138,15 @@ int passCheck(Client client, Channel channel, string password) {
     return true;
 }
 
-int joinChannel(Client client, Channel *channel, string password, Server *server) {
+int joinChannel(Client *client, Channel *channel, string password) {
     if (channel == NULL) {
         return -1;
     }
-    if (passCheck(client, *channel, password) == false) { return false; }    
-    channel->addUser(client);
-    (void)  server;
-    // server->setCommandsToSend(client.getFd(), JOINCHAN(client.getName(), channel->getName()));
-    // server->setCommandsToSend(client.getFd(), INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
-    // server->setCommandsToSend(client.getFd(), RPL_NAMREPLY(client.getName(), channel->getName(), channel->getChannelMembers()));
-    // sendInfoChannel(*channel, JOINCHAN(client.getName(), channel->getName()), server);
-    // sendInfoClient(client, JOINCHAN(client.getName(), channel->getName()));
-    // sendInfoClient(client, INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
-    // sendInfoChannel(*channel, JOINCHAN(client.getName(), channel->getName()));
-    // sendInfoClient(client, RPL_NAMREPLY(client.getName(), channel->getName(), channel->getChannelMembers()));
+    if (passCheck(*client, *channel, password) == false) { return false; }    
+    channel->addUser(*client);
+    client->setCmdToSend(JOINCHAN(client->getName(), channel->getName()));
+    client->setCmdToSend(INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
+    client->setCmdToSend(RPL_NAMREPLY(client->getName(), channel->getName(), channel->getChannelMembers()));
+    getCmdChannel(*channel, JOINCHAN(client->getName(), channel->getName()));
     return true;
 }

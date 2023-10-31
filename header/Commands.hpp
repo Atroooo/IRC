@@ -7,8 +7,8 @@ vector<string> initCommand(string commandInput);
 bool channelMask (vector<string> command);
 
 void joinCommand(string command, Client *client, Server *server);
-bool createChannel(Client client, Server *server, string name, string password);
-int  joinChannel(Client client, Channel *channel, string password, Server *server);
+bool createChannel(Client *client, Server *server, string name, string password);
+int  joinChannel(Client *client, Channel *channel, string password);
 
 void leaveCommand(string command, Client client, Server *server);
 bool leaveChannel(Client client, Channel *channel, string message);

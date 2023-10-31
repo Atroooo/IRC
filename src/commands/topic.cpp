@@ -38,7 +38,7 @@ bool changeTopic(Client client, Channel *channel) {
         return false;
     }
     if (!channel->isOperator(client)) {
-        // sendInfoClient(client, ERR_CHANOPRIVSNEEDED(channel->getName(), client.getName()));
+        // sendInfoCl, serverient(client, ERR_CHANOPRIVSNEEDED(channel->getName(), client.getName()));
         return false;
     }
 

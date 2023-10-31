@@ -30,7 +30,7 @@ void serverLoop(Server * server, char *serverPassword) {
             if (fds[socketID].revents & POLLOUT) {
                 sendInfoClient(server, fds[socketID].fd);
             }
-            
+
             if (fds[socketID].revents & POLLIN) {
 
                 if (fds[socketID].fd == server->getFd(0)->fd) {
@@ -39,6 +39,8 @@ void serverLoop(Server * server, char *serverPassword) {
                     newFd.fd = clientSocket;
                     newFd.events = POLLIN;
                     fds.push_back(newFd);
+                    server->setVector(fds);
+                    cout << "New client connected" << endl;
                 }
 
                 else {
@@ -47,11 +49,9 @@ void serverLoop(Server * server, char *serverPassword) {
                         cout << "Client disconnected" << endl;
                         continue;
                     }
-                    clientAction(fds[socketID].fd, serverPassword, server);
                     fds[socketID].events |= POLLOUT;
                 }
             }
-        server->setVector(fds);
         }
     }
 }
@@ -70,6 +70,7 @@ void sendInfoClient(Server * server, int fd) {
     for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
         sendFunction(fd, *it);
     }
+    client->clearCmdToSend();
 }
 
 void checkRetSend(int ret) {
@@ -82,4 +83,11 @@ void checkRetSend(int ret) {
 void sendFunction(int fd, string msg) {
     int ret = send(fd, msg.c_str(), strlen(msg.c_str()), 0);
     checkRetSend(ret);
+}
+
+void getCmdChannel(Channel channel, string msg) {
+    map<string, Client> members = channel.getClients();
+    for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
+        it->second.setCmdToSend(msg);
+    }
 }

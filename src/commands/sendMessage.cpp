@@ -65,15 +65,3 @@ bool sendMessage(Channel *channel, string message, Server *server) {
     return true;
 }
 
-/*---------------------------------------- Send Info -------------------------------------------*/
-void sendInfoChannel(Channel channel, string msg, Server *server) {
-    (void) server;
-    (void) msg;
-    map<string, Client> members = channel.getClients();
-    for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
-        cout << "osef" << endl;
-        // server->setCommandsToSend(it->second.getFd(), msg);
-        // sendInfoClient(it->second, msg);
-    }
-}
-

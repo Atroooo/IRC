@@ -39,21 +39,22 @@ int checkPassAndNick(string bufStr, int clientSocket, Server *server, char *serv
         return ( WRONG_LOGIN_DATA);
     if (bufStr.find("USER") == string::npos)
         return NOT_ALL_DATA;
-    if (bufStr.find("\r\n") == string::npos)
-            return false;
+    // if (bufStr.find("\r\n") == string::npos)
+    //         return false;
     return GOT_ALL_DATA;
 }
 
 bool checkEndOfLine(string bufStr){
-    if (bufStr.find("\r\n") == string::npos)
-            return false;
+    (void)bufStr;
+    // if (bufStr.find("\r\n") == string::npos)
+    //         return false;
     return true;
 }
 
 int clientAction(int clientSocket, char *serverPassword, Server *server){
     string finalBuf;
     int bytesReceived;
-    while (true){
+    while (true) {
         char buf[1028];
         memset(buf, 0, 1028);
         bytesReceived = recv(clientSocket, buf, 1027, MSG_DONTWAIT);
@@ -74,13 +75,12 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         cout << "Client disconnected " << endl;
         return (FALSE);
     }
-    if (bytesReceived == -1){
-        cerr << "Error in recv(). Quitting" << endl;
-        exit(1);
-    }
+    // if (bytesReceived == -1){
+    //     cerr << "Error in recv(). Quitting" << endl;
+    //     exit(1);
+    // }
     cout << "BUF = " << finalBuf << endl;
     commandHub(finalBuf.c_str(), server->getClient(clientSocket), server);
-    //botAction(buf, clientSocket, x);
     return (TRUE);
 }
 
