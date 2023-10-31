@@ -22,6 +22,7 @@ void modeCommand(string command, Client client, Server *server);
 bool changeMode(Client client, Channel *channel);
 bool promoteClient(Client sender, Client *receiver, Channel *channel);
 bool demoteClient(Client sender, Client *receiver, Channel *channel);
+string toString(int number);
 
 void inviteCommand(string command, Client client, Server *server);
 bool inviteClient(Client sender, Client receiver, Channel *channel);

@@ -82,6 +82,18 @@ string getName(string name) {
     return retName;
 }
 
+string getPassword(string password) {
+    string retPassword = "";
+    int i = 0;
+
+    while (password[i] && password[i] != '\r' && password[i] != '\n') {
+        if (password[i] >= 31 && password[i] <= 126)
+            retPassword += password[i];
+        i++;
+    }
+    return retPassword;
+}
+
 /*---------------------------------------- Join and Create Command ---------------------------------*/
 void joinCommand(string commandInput, Client *client, Server *server) {
     if (commandInput == "JOIN 0") {
@@ -91,8 +103,9 @@ void joinCommand(string commandInput, Client *client, Server *server) {
     map<string, string> command = parseCommand(commandInput, *client);
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
+        string password = getPassword(it->second);
         string name = getName(it->first);
-        if (joinChannel(*client, server->getChannel(name), it->second) != -1) {
+        if (joinChannel(*client, server->getChannel(name), password) != -1) {
             continue;
         }
         else if (!createChannel(*client, server, name, it->second)) {

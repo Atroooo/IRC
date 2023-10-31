@@ -41,6 +41,10 @@ int Channel::getMaxUsers(void) const {
     return this->_maxUsers; 
 }
 
+void Channel::setMaxUsers(int maxUsers) { 
+    this->_maxUsers = maxUsers; 
+}
+
 Client *Channel::getClient(string name) {
     map<string, Client>::iterator it = this->_clients.find(name);
     if (it != this->_clients.end())
@@ -106,6 +110,12 @@ void Channel::removeOperator(Client client) {
             return ;
         }
     }
+}
+
+void Channel::unsetMode(char mode) {
+    list<char>::iterator it = find(this->_mode.begin(), this->_mode.end(), mode);
+    if (it != this->_mode.end())
+        this->_mode.erase(it);
 }
 
 bool Channel::isUser(Client client) {

@@ -34,9 +34,9 @@ class Channel {
         Client                  *getClient(string name);
         string                  getMembers(void) const;
         string                  getChannelMembers(void); 
-
         void                    setTopic(string topic);
         void                    setMode(char mode);
+        void                    setMaxUsers(int maxUsers);
         bool                    isModeSet(char mode);
         void                    setPassword(string password);
         void                    addUser(Client client);
@@ -44,8 +44,8 @@ class Channel {
         void                    addInvited(Client client);
         void                    removeUser(Client client);
         void                    removeOperator(Client client);
-        void                    setMaxUsers(int maxUsers);
-
+        void                    unsetMode(char mode);
+    
         bool                    isUser(Client client);
         bool                    isOperator(Client client);
         bool                    isInvited(Client client);

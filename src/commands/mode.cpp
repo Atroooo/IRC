@@ -2,6 +2,10 @@
 
 void modeCommand(string commandInput, Client client, Server *server) {
     vector<string> command = initCommand(commandInput);
+    vector<string> commandParameters;
+    if (command.size() > 2 && !command[3].empty()) {
+        commandParameters = initCommand(command[3]);
+    }
     Channel *channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
         sendInfoClient(client, ERR_NOSUCHCHANNEL(client.getName(), command[1].substr(1)));
@@ -26,20 +30,61 @@ void modeCommand(string commandInput, Client client, Server *server) {
         return ;
     }
     size_t i = 1;
-    while (i < command[2].size()){
+    while (i < command[2].size()) {
         char mode = command[2][i];
         if (mode != 'i' && mode != 'k' && mode != 'l' && mode != 't' && mode != 'o' ) {
             sendInfoClient(client, ERR_UNKNOWNMODE(channel->getName(), client.getName(), mode));
         }
         else {
             if (mode == 'o') {
-                if (command[3].empty()) {
-                    sendInfoClient(client, ERR_NEEDMOREPARAMS(string(""), string("MODE")));
+                if (commandParameters.size() == 0) {
+                    sendInfoClient(client, ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
                 }
-                else if (AddOrRemove == '+')
+                else if (AddOrRemove == '+') {
                     promoteClient(client, server->getClient(command[3]), channel);
-                else
+                    commandParameters.erase(command    cout << password << endl;
+rameters.begin());
+                }
+                else {
                     demoteClient(client, server->getClient(command[3]), channel);
+                    commandParameters.erase(commandParameters.begin());
+                }
+            }
+            else if (mode == 'k') {
+                if (commandParameters.size() == 0) {
+                    sendInfoClient(client, ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                }
+                else if (AddOrRemove == '+') {
+                    if (!channel->isModeSet(mode)){
+                        channel->setMode(mode);
+                    }
+                    channel->setPassword(commandParameters[0]);
+                    commandParameters.erase(commandParameters.begin());
+                    sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " +" + mode + " " + channel->getPassword() + "\r\n");
+                }
+                else {
+                    if (channel->isModeSet(mode)){
+                        channel->unsetMode(mode);
+                    }
+                    channel->setPassword("");
+                    commandParameters.erase(commandParameters.begin());
+                    sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " -" + mode + " " + channel->getPassword() + "\r\n");
+                }
+            }
+            else if (mode == 'l') {
+                if (commandParameters.size() == 0) {
+                    sendInfoClient(client, ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                }
+                else if (AddOrRemove == '+') {
+                    channel->setMaxUsers(atoi(commandParameters[0].c_str()));
+                    commandParameters.erase(commandParameters.begin());
+                    sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n");
+                }
+                else {
+                    channel->setMaxUsers(10);
+                    commandParameters.erase(commandParameters.begin());
+                    sendInfoChannel(*channel, ":" + client.getName() + " MODE #" + channel->getName() + " -" + mode + " " + toString(channel->getMaxUsers()) + "\r\n");
+                }
             }
             else {
                 if (!channel->isModeSet(mode)){
@@ -112,4 +157,10 @@ bool demoteClient(Client sender, Client *receiver, Channel *channel) {
     channel->removeOperator(*receiver);
     sendInfoChannel(*channel, ":" + sender.getName() + " MODE #" + channel->getName() + " -o " + receiver->getName() + "\r\n");
     return true;
+}
+
+string toString(int number) {
+    stringstream ss;
+    ss << number;
+    return ss.str();
 }
