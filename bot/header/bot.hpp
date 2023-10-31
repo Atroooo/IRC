@@ -1,6 +1,5 @@
 #pragma once
 
-using namespace std;
 
 #include <iostream>
 #include <unistd.h>
@@ -17,6 +16,8 @@ using namespace std;
 # include <stdlib.h>
 #include <poll.h>
 #include <algorithm>
+
+using namespace std;
 
 struct ServerArgument {
 public:
