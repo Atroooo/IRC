@@ -1,10 +1,12 @@
 #include "../../header/Commands.hpp"
 
 void modeCommand(string commandInput, Client *client, Server *server) {
+
     vector<string> command = initCommand(commandInput);
     vector<string> commandParameters;
-    if (command.size() > 2 && !command[3].empty()) {
-        commandParameters = initCommand(command[3]);
+    for (size_t i = 3; i < command.size(); i++) {
+        if (command.size() > 2 && !command[i].empty())
+            commandParameters.push_back(command[i]);
     }
     Channel *channel = server->getChannel(command[1].substr(1));
     if (channel == NULL) {
