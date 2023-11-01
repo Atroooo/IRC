@@ -77,7 +77,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
                 }
                 else if (AddOrRemove == '+') {
-                    channel->setMaxUsers(atoi(commandParameters[0].c_str()));
+                    channel->setMaxUsers(atof(commandParameters[0].c_str()));
                     commandParameters.erase(commandParameters.begin());
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
                 }

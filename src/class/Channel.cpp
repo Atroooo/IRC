@@ -41,8 +41,13 @@ int Channel::getMaxUsers(void) const {
     return this->_maxUsers; 
 }
 
-void Channel::setMaxUsers(int maxUsers) { 
-    this->_maxUsers = maxUsers; 
+void Channel::setMaxUsers(int maxUsers) {
+    if (maxUsers < 0)
+        this->_maxUsers = 0;
+    else if (maxUsers > 4095)
+        this->_maxUsers = 10;
+    else
+        this->_maxUsers = maxUsers;
 }
 
 Client *Channel::getClient(string name) {
