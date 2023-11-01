@@ -1,4 +1,5 @@
 #include "../header/bot.hpp"
+#include <sys/socket.h>
 #include <unistd.h>
 #include <csignal>
 
@@ -30,11 +31,17 @@ void getServerMessage(int socketId){
 	char buffer[1024];
 	signal(SIGINT, shutdown);
 	while (stopSignal == false) {
-		int bytesRead = recv(socketId, buffer, sizeof(buffer) - 1, 0);
-		if (bytesRead < 0) {
-			perror("Error receiving data");
-			break;
-		}
+		int bytesRead = recv(socketId, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);
+		if (bytesRead == -1) {
+            int error = errno;
+            if (error == EAGAIN || error == EWOULDBLOCK) {
+                continue;
+            }
+            else {
+                cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
+                _exit(-1);
+            }
+        }
 		if (bytesRead == 0) {
 			std::cout << "Connection closed by server." << std::endl;
 			break;

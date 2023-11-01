@@ -16,6 +16,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
         if (bytesReceived == -1) {
             int error = errno;
             if (error == EAGAIN || error == EWOULDBLOCK) {
+                cout << buf << endl;
                 break;
             }
             else {
@@ -37,6 +38,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     }
     if (!finalBuf.empty())
         commandHub(finalBuf.c_str(), client, server);
+    
     return (TRUE);
 }
 
