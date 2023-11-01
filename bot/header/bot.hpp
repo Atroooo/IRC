@@ -27,3 +27,4 @@ public:
 
 ServerArgument parsingArgument(int argc, char *argv[]);
 int setUpSocket(int port);
+void botAction(string buf, int socketId);

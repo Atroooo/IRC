@@ -3,15 +3,18 @@
 #include <sys/socket.h>
 
 void	bindToSocket(int socketId, int port){
-	sockaddr_in hint;
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(port);
-    inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
-    if (bind(socketId, (sockaddr*)&hint, sizeof(hint)) == -1){
-		std::cerr << "Can't bind to IP/port" << std::endl;
-        _exit(-1);
-	}
-    if (connect(socketId, (sockaddr*)&hint, sizeof(hint)) == -1)
+	sockaddr_in serverAddress;
+    char *serverName = (char *)"127.0.0.1";
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(port);
+    
+    struct hostent *host = gethostbyname(serverName);
+		if (host == NULL) {
+			std::cerr << "Error during the resolution of server address" << std::endl;
+			_exit(-1);
+		}
+	memcpy(&serverAddress.sin_addr.s_addr, host->h_addr, host->h_length);
+    if (connect(socketId, (sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
     {
         cerr << "Can't listen! Quitting" << endl;
         _exit(-1);
@@ -24,12 +27,6 @@ int setUpSocket(int port){
     {
         cerr << "Can't create a socket! Quitting" << endl;
         _exit(-1);
-    }
-    int opt = 1;
-    if (setsockopt(socketId, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) < 0)
-    {
-        perror("Erreur lors de la configuration de SO_REUSEADDR");
-        exit(1);
     }
 	bindToSocket(socketId, port);
 	return socketId;
