@@ -33,7 +33,7 @@ map<string, string> parseCommand(string Command, Client *client) {
     vector<string> channels;
     vector<string> keys;
 
-    if (Command.empty())
+    if (Command.empty() || Command.size() <= 8)
         return parsedCommand;
 
     char *cmd = strtok((char *)Command.c_str(), " ");
