@@ -7,6 +7,7 @@ Client::Client(string name, int fd) {
 }
 
 Client::Client(int fd) {
+    this->_name = "";
     this->_fd = fd;
     this->_passCheck = false;
 }

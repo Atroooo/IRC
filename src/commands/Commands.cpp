@@ -3,6 +3,12 @@
 void commandHub(string commandInput, Client *client, Server *server) {
     if (client == NULL)
         return ;
+    if (client->getPassCheck() == false) {
+        return ;
+    }
+    if (client->getName() == "") {
+        return ;
+    }
     stringstream ss(commandInput);
     string key;
     ss >> key;
