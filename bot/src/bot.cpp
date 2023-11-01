@@ -1,5 +1,6 @@
 #include "../header/bot.hpp"
 #include <unistd.h>
+#include <csignal>
 
 void connectionServer(char *password, int socketId){
 	string buf;
@@ -27,6 +28,7 @@ static void	shutdown(int)
 
 void getServerMessage(int socketId){
 	char buffer[1024];
+	signal(SIGINT, shutdown);
 	while (stopSignal == false) {
 		int bytesRead = recv(socketId, buffer, sizeof(buffer) - 1, 0);
 		if (bytesRead < 0) {
