@@ -34,10 +34,10 @@ int setUpSocket(int port) {
         exit(1);
     }
 
-    if (ioctl(socketFd, FIONBIO, (char *)&opt) < 0) {
-		cerr << "Error: ioctl() failed" << endl;
-		exit(1);
-	}
+    if (fcntl(socketFd, F_SETFL, O_NONBLOCK) < 0) {
+        cerr << "Error: fcntl() failed" << endl;
+        exit(1);
+    }
 
 	bindToSocket(socketFd, port);
     listenSocket(socketFd);
