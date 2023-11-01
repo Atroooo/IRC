@@ -37,7 +37,8 @@ bool changeTopic(Client *client, Channel *channel) {
         client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
         return false;
     }
-    if (!channel->isOperator(*client)) {
+    list<char> mode = channel->getMode();
+    if (find(mode.begin(), mode.end(), 't') != mode.end() && !channel->isOperator(*client)) {
         client->addCmdToSend(ERR_CHANOPRIVSNEEDED(channel->getName(), client->getName()));
         return false;
     }
