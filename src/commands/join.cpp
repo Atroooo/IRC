@@ -154,11 +154,12 @@ int joinChannel(Client *client, Channel *channel, string password, Server *serve
     if (channel == NULL) {
         return -1;
     }
+(void) server;
     if (passCheck(client, *channel, password) == false) { return false; }    
     channel->addUser(*client);
     client->addCmdToSend(JOINCHAN(client->getName(), channel->getName()));
     client->addCmdToSend(INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
-    sendInfoChannel(channel, JOINCHAN(client->getName(), channel->getName()), server);
+    sendInfoChannelOtherUsers(channel, JOINCHAN(client->getName(), channel->getName()), server, client);
     client->addCmdToSend(RPL_NAMREPLY(client->getName(), channel->getName(), channel->getChannelMembers()));
     return true;
 }

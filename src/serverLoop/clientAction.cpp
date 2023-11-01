@@ -16,7 +16,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
         if (bytesReceived == -1) {
             int error = errno;
             if (error == EAGAIN || error == EWOULDBLOCK) {
-                cout << buf << endl;
                 break;
             }
             else {
