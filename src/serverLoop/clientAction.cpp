@@ -27,15 +27,8 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
         if (client != NULL && checkEndOfLine(finalBuf))
             break;
     }
-    if (checkPassClient(client, finalBuf, serverPassword, server) == false) {
+    if (passAllCheck(client, finalBuf, serverPassword, server) == FALSE)
         return (FALSE);
-    }
-    if (checkNickClient(client, finalBuf, server) == false){
-        return (FALSE);
-    }
-    if (strncmp(finalBuf.c_str(), "QUIT", 4) == 0){
-        return (FALSE);
-    }
     if (!finalBuf.empty())
         commandHub(finalBuf.c_str(), client, server);
     

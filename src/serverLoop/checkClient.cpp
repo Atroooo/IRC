@@ -17,24 +17,20 @@ int getLenSubStr(char *buf){
     return i;
 }
 
-char * getSubStrBuffer(char *buf, char *name){
+string getSubStrBuffer(char *buf, char *name){
     int indexBeginning = getIndexBeginningSubStr(buf, name);
-    int lenPassword = getLenSubStr(&buf[indexBeginning]);
-    char *subStrName = new char[lenPassword + 1];
-    strncpy(subStrName, &buf[indexBeginning],  lenPassword);
-    subStrName[lenPassword] = '\0';
-    return subStrName;
+    int indexEnd = getLenSubStr(&buf[indexBeginning]);
+    string subStr = string(buf).substr(indexBeginning, indexEnd);
+    return subStr;
 }
 
 bool checkPassword(char *buf, char *serverPassword){
-    char *passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
+    string passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
 
-    if (strcmp(passwordClient, serverPassword) != 0){
+    if (strcmp(passwordClient.c_str(), serverPassword) != 0){
         cout << "Wrong password. " << endl;
-        delete[] passwordClient;
         return (FALSE);
     }
-    delete[] passwordClient;
     return true;
 }
 
@@ -81,4 +77,17 @@ bool checkEndOfLine(string bufStr) {
     if (bufStr.find("\r\n") == string::npos)
         return false;
     return true;
+}
+
+bool passAllCheck(Client *client, string bufStr, char *serverPassword, Server * server) {
+    if (checkPassClient(client, bufStr, serverPassword, server) == false) {
+        return (FALSE);
+    }
+    if (checkNickClient(client, bufStr, server) == false){
+        return (FALSE);
+    }
+    if (strncmp(bufStr.c_str(), "QUIT", 4) == 0){
+        return (FALSE);
+    }
+    return (TRUE);
 }
