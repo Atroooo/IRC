@@ -18,7 +18,7 @@ void    serverLoop(Server * server, char *serverPassword);
 /*--------------- Client functions ---------------*/
 bool    checkIfIn(char *buf, char *substr);
 int     checkClient(Server *server, char *serverPassword);
-bool    checkPassClient(Client *client, string bufStr, char *serverPassword, Server * server);
+bool    checkPassClient(Client *client, string bufStr, char *serverPassword);
 bool    checkNickClient(Client *client, string bufStr, Server *server);
 bool    checkEndOfLine(string bufStr);
 bool    passAllCheck(Client *client, string bufStr, char *serverPassword, Server * server);

@@ -50,8 +50,9 @@ void serverLoop(Server * server, char *serverPassword) {
                     if (checkClient(server, serverPassword) == 0) {
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
+                        //If we close user connection then reconnect, still in channel ???
                         leaveAllChannels(server->getClient(fds[socketID].fd), server);
-                        server->removeClient(client->getFd());
+                        server->removeClient(server->getClient(fds[socketID].fd)->getFd());
                         cout << "Client disconnected" << endl;
                         continue;
                     }

@@ -57,7 +57,7 @@ bool checkNickClient(Client *client, string bufStr, Server *server) {
     return true;
 }
 
-bool checkPassClient(Client *client, string bufStr, char *serverPassword, Server * server) {
+bool checkPassClient(Client *client, string bufStr, char *serverPassword) {
     if (client->getPassCheck() == false) {
         if (bufStr.find("PASS") != string::npos) {
             if (checkPassword((char *)bufStr.c_str(), serverPassword) == false) {
@@ -78,7 +78,7 @@ bool checkEndOfLine(string bufStr) {
 }
 
 bool passAllCheck(Client *client, string bufStr, char *serverPassword, Server * server) {
-    if (checkPassClient(client, bufStr, serverPassword, server) == false) {
+    if (checkPassClient(client, bufStr, serverPassword) == false) {
         return (FALSE);
     }
     if (checkNickClient(client, bufStr, server) == false){
