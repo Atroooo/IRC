@@ -3,6 +3,12 @@
 Client::Client(string name, int fd) {
     this->_name = name;
     this->_fd = fd;
+    this->_passCheck = false;
+}
+
+Client::Client(int fd) {
+    this->_fd = fd;
+    this->_passCheck = false;
 }
 
 Client::~Client() { }

@@ -66,3 +66,21 @@ void Server::printClients(){
         cout << it->getName() << endl;
     }
 }
+
+void Server::removeClient(int fd) {
+    for (list<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+        if (it->getFd() == fd) {
+            this->_clients.erase(it);
+            break;
+        }
+    }
+}
+
+void Server::removeChannel(string name) {
+    for (list<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++) {
+        if (it->getName() == name) {
+            this->_channels.erase(it);
+            break;
+        }
+    }
+}

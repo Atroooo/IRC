@@ -33,6 +33,9 @@ class Server {
         void addClient(Client & client);
         void addChannel(Channel & channel);
         void printClients();
+
+        void removeClient(int fd);
+        void removeChannel(string name);
 };
 
 void sendInfoToClient(Server *server, struct pollfd newFd, char *serverPassword);
