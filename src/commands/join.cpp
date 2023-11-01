@@ -82,7 +82,7 @@ string getName(string name) {
     return retName;
 }
 
-string getPassword(string password) {
+string removeEndofLine(string password) {
     string retPassword = "";
     int i = 0;
 
@@ -96,14 +96,14 @@ string getPassword(string password) {
 
 /*---------------------------------------- Join and Create Command ---------------------------------*/
 void joinCommand(string commandInput, Client *client, Server *server) {
-    if (commandInput == "JOIN 0") {
-        //leave all channels
+    if (removeEndofLine(commandInput) == "JOIN 0") {
+        leaveAllChannels(client, server);
         return ;
     }
     map<string, string> command = parseCommand(commandInput, client);
     if (command.size() < 1) { return ; }
     for (map<string, string>::iterator it = command.begin(); it != command.end(); it++) {
-        string password = getPassword(it->second);
+        string password = removeEndofLine(it->second);
         string name = getName(it->first);
         if (joinChannel(client, server->getChannel(name), password, server) != -1) {
             continue;

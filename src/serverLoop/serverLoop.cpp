@@ -56,6 +56,7 @@ void serverLoop(Server * server, char *serverPassword) {
                 }
             }
         }
+        removeEmptyChannel(server);
     }
 }
 
@@ -113,6 +114,15 @@ void sendInfoChannelOperator(Channel * channel, string msg, Server *server, Clie
         if (channel->isOperator(it->second) && it->second.getName() != sender->getName()) {
             Client *client = server->getClient(it->second.getFd());
             client->addCmdToSend(msg);
+        }
+    }
+}
+
+void removeEmptyChannel(Server *server) {
+    list<Channel> channels = server->getChannel();
+    for (list<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
+        if (it->getClients().size() == 0) {
+            server->removeChannel(it->getName());
         }
     }
 }

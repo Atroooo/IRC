@@ -1,6 +1,44 @@
 #include "../../header/includes.hpp"
+#include "../../header/typedef.hpp"
 
-bool checkIfNickNameAvailable(Server *server, string nickname){
+int getIndexBeginningSubStr(char *buf, char *name){
+    int i = 0;
+    while (strncmp(&buf[i], name, 5) != 0 && buf[i]) {
+        i++;
+    }
+    return i + 5;
+}
+
+int getLenSubStr(char *buf){
+    int i = 0;
+    while (buf[i] && buf[i + 1] &&buf[i + 1] != '\n') {
+        i++;
+    }
+    return i;
+}
+
+char * getSubStrBuffer(char *buf, char *name){
+    int indexBeginning = getIndexBeginningSubStr(buf, name);
+    int lenPassword = getLenSubStr(&buf[indexBeginning]);
+    char *subStrName = new char[lenPassword + 1];
+    strncpy(subStrName, &buf[indexBeginning],  lenPassword);
+    subStrName[lenPassword] = '\0';
+    return subStrName;
+}
+
+bool checkPassword(char *buf, char *serverPassword){
+    char *passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
+
+    if (strcmp(passwordClient, serverPassword) != 0){
+        cout << "Wrong password. " << endl;
+        delete[] passwordClient;
+        return (FALSE);
+    }
+    delete[] passwordClient;
+    return true;
+}
+
+bool checkIfNickNameAvailable(Server *server, string nickname) {
     if (server->getClient(nickname)){
         cout << "Nickname already used" << endl;
         return false;
@@ -39,63 +77,8 @@ bool checkPassClient(Client *client, string bufStr, char *serverPassword, Server
     return true;
 }
 
-bool checkEndOfLine(string bufStr){
+bool checkEndOfLine(string bufStr) {
     if (bufStr.find("\r\n") == string::npos)
         return false;
     return true;
-}
-
-
-int clientAction(int clientSocket, char *serverPassword, Server *server) {
-    char buf[1028];
-    string finalBuf;
-    int bytesReceived;
-    
-    Client *client = server->getClient(clientSocket);
-    while (true) {
-        memset(buf, 0, sizeof(buf));
-        bytesReceived = recv(clientSocket, buf, sizeof(buf), MSG_DONTWAIT);
-        finalBuf += buf;
-        if (bytesReceived == 0){
-            return FALSE;
-        }
-        if (bytesReceived == -1) {
-            int error = errno;
-            if (error == EAGAIN || error == EWOULDBLOCK) {
-                break;
-            }
-            else {
-                cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
-                _exit(-1);
-            }
-        }
-        if (client != NULL && checkEndOfLine(finalBuf))
-            break;
-    }
-    // cout << "Received: " << finalBuf << endl;
-    if (checkPassClient(client, finalBuf, serverPassword, server) == false) {
-        return (FALSE);
-    }
-    if (checkNickClient(client, finalBuf, server) == false){
-        return (FALSE);
-    }
-    if (strncmp(finalBuf.c_str(), "QUIT", 4) == 0){
-        return (FALSE);
-    }
-    if (!finalBuf.empty())
-        commandHub(finalBuf.c_str(), client, server);
-    return (TRUE);
-}
-
-int checkClient(Server *server, char *serverPassword) {
-    if (server->getFdsVector().size() == 1) {
-        return (TRUE);
-    }
-    for (size_t i = 1; i < server->getFdsVector().size(); i++) {
-        if (clientAction(server->getFd(i)->fd, serverPassword, server) == FALSE) {
-            close(server->getFd(i)->fd);
-            return (FALSE);
-        }
-	}
-    return (TRUE);
 }

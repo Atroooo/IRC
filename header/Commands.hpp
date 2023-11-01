@@ -12,6 +12,7 @@ int  joinChannel(Client *client, Channel *channel, string password, Server *serv
 
 void leaveCommand(string command, Client *client, Server *server);
 bool leaveChannel(Client *client, Channel *channel, string message, Server *server);
+void leaveAllChannels(Client *client, Server *server);
 vector<string> split(string str, char delimiter, vector<string> &result);
 
 void topicCommand(string command, Client *client, Server *server);
