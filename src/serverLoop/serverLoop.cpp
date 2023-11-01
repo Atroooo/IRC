@@ -92,3 +92,24 @@ void sendInfoChannel(Channel * channel, string msg, Server *server) {
         client->addCmdToSend(msg);
     }
 }
+
+void sendInfoChannelOtherUsers(Channel * channel, string msg, Server *server, Client *sender) {
+    map<string, Client> members = channel->getClients();
+    for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
+        if (it->second.getName() == sender->getName()) {
+            continue;
+        }
+        Client *client = server->getClient(it->second.getFd());
+        client->addCmdToSend(msg);
+    }
+}
+
+void sendInfoChannelOperator(Channel * channel, string msg, Server *server, Client *sender) {
+    map<string, Client> members = channel->getClients();
+    for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
+        if (channel->isOperator(it->second) && it->second.getName() != sender->getName()) {
+            Client *client = server->getClient(it->second.getFd());
+            client->addCmdToSend(msg);
+        }
+    }
+}

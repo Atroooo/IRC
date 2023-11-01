@@ -45,9 +45,9 @@ int checkPassAndNick(string bufStr, int clientSocket, Server *server, char *serv
 }
 
 bool checkEndOfLine(string bufStr){
-    // (void)bufStr;
-    if (bufStr.find("\r\n") == string::npos)
-            return false;
+    (void)bufStr;
+    // if (bufStr.find("\r\n") == string::npos)
+    //         return false;
     return true;
 }
 
@@ -64,14 +64,14 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
             cerr << "Client disconnected" << endl;
             return FALSE;
         }
-        if (bytesReceived == -1 && bytesReceived != EAGAIN && bytesReceived != EWOULDBLOCK) {
-            int error = errno;
-            if (error != 11) {
-                cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
-                _exit(-1);
-            }
+        // if (bytesReceived == -1 && bytesReceived != EAGAIN && bytesReceived != EWOULDBLOCK) {
+        //     int error = errno;
+        //     if (error != 11) {
+        //         cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
+        //         _exit(-1);
+        //     }
 
-        }
+        // }
         if (server->getClient(clientSocket) != NULL && checkEndOfLine(finalBuf))
             break;
         else{

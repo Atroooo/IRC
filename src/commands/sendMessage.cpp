@@ -1,4 +1,5 @@
 #include "../../header/Commands.hpp"
+#include "../../header/Channel.hpp"
 
 void printVector(vector<string> command) {
     for (size_t i = 0; i < command.size(); i++) {
@@ -24,45 +25,66 @@ string concatMsg(vector<string> command) {
     return msg;
 }
 
+int toChanOperator(string channel) {
+    for (size_t i = 0; i < channel.size(); i++) {
+        if (channel[i] == '@' || channel[i] == '%')
+            i++;
+        if (i > 3)
+            return 0;
+        if (channel[i] == '#')
+            return i;
+    }
+    return 0;
+}
+
+int chanIndex(string channel, int ope) {
+    if (channel[ope] == '#') {
+        return ope + 1;
+    }
+    return 0;
+}
+
 /*---------------------------------------- PRIVMSG Command ----------------------------------------*/
-void sendMessageCommand(string CommandInput, Client * client, Server *server) {
-    vector<string> command = initCommand(CommandInput);
-    printVector(command);
+void sendMessageCommand(string commandInput, Client * client, Server *server) {
+    vector<string> command = initCommand(commandInput);
     if (command.size() < 2) {
-        // server->setCommandsToSend(client.getFd(), ERR_NEEDMOREPARAMS(string("PRIVMSG")));
-        // sendInfoClient(client, ERR_NEEDMOREPARAMS(string("PRIVMSG")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("PRIVMSG")));
         return ;
     }
-    string message = concatMsg(command);
-    if (checkIfChannel(command[1])) {
-        sendMessage(server->getChannel(command[1].substr(1)), message, server);
+    int ope = toChanOperator(command[1]);
+    int x = chanIndex(command[1], ope);
+    if (x == 0)
+        x += 1;
+    Channel *channel = server->getChannel(command[1].substr(x));
+    Client *receiver = server->getClient(command[1]);
+    if (channel == NULL && receiver == NULL) {
+        client->addCmdToSend(ERR_NOSUCHNICK(command[1]));
+        return ;
+    }
+    string msg = commandInput.substr(commandInput.find(':') + 1);
+    if (channel != NULL) {
+        if (ope == 0)
+            sendMessage(server->getChannel(command[1].substr(1)), msg, server, client);
+        else
+            sendInfoChannelOperator(channel, PRIVMSGCHAN(client->getName(), channel->getName(), msg), server, client);
         return ;
     }
     else {
-        sendPrivateMessage(client, server->getClient(command[1]), message, server);
+        sendPrivateMessage(client, server->getClient(command[1]), msg);
         return ;
     }
 }
 
 /*---------------------------------------- Send Message ------------------------------------------*/
-bool sendPrivateMessage(Client *sender, Client *receiver , string message, Server *server) {
+bool sendPrivateMessage(Client *sender, Client *receiver , string message) {
     if (receiver == NULL)
         return false;
-    (void) sender;
-    (void) server;
-    cout << "PV " << message << endl;
-    // server->setCommandsToSend(receiver->getFd(), PRIVMSGUSER(sender.getName(), receiver->getName(), message));
-    // sendInfoClient(*receiver, PRIVMSGUSER(sender.getName(), receiver->getName(), message));
+    receiver->addCmdToSend(PRIVMSGUSER(sender->getName(), sender->getName(), message));
     return true;
 }
 
-bool sendMessage(Channel *channel, string message, Server *server) {
-    if (channel == NULL)
-        return false;
-    (void) server;
-    (void) message;
-    // sendInfoChannel(channel, PRIVMSGCHAN(channel->getName(), message));
-    // sendInfoChannel(channel, PRIVMSGCHAN(channel->getName(), message), server);
+bool sendMessage(Channel *channel, string message, Server *server, Client *client) {
+    sendInfoChannelOtherUsers(channel, PRIVMSGCHAN(client->getName(), channel->getName(), message), server, client);
     return true;
 }
 

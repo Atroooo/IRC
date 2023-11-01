@@ -23,8 +23,8 @@ typedef struct sockaddr SOCKADDR;
 #define RPL_NAMREPLY(client, channel, members) ": 353 " + client + " = #" + channel + " :" + members + "\r\n" //353
 
 /*------ PRIVMSG ------*/
-#define PRIVMSGCHAN(receiver, message) ": PRIVMSG #" + receiver + ":" + message + "\r\n"
-#define PRIVMSGUSER(sender, receiver, message) ":" + sender + " PRIVMSG " + receiver + ":" + message + "\r\n"
+#define PRIVMSGCHAN(sender, channel, message) ":" + sender + " PRIVMSG #" + channel + " " + message + "\r\n"
+#define PRIVMSGUSER(sender, receiver, message) ":" + sender +  " PRIVMSG " + receiver + " :" + message + "\r\n"
 
 /*------- INVITE ------*/
 #define RPL_INVITING(client, receiver, channel) ":IRC 341 " + client + " " + receiver + " #" + channel + "\r\n" //341

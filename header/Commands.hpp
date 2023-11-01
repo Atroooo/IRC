@@ -31,5 +31,5 @@ void kickCommand(string command, Client *client, Server *server);
 bool kickClient(Client *sender, Client receiver, Channel *channel);
 
 void sendMessageCommand(string CommandInput, Client * client, Server *server);
-bool sendMessage(Channel *channel, string message, Server *server);
-bool sendPrivateMessage(Client *sender, Client *receiver, string message, Server *server);
+bool sendMessage(Channel *channel, string message, Server *server, Client *sender);
+bool sendPrivateMessage(Client *sender, Client *receiver, string message);
