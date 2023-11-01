@@ -19,14 +19,14 @@ void kickCommand(string commandInput, Client *client, Server *server) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("KICK")));
         return ;
     }
-    if (!kickClient(client, *receiver, channel, server)) {
+    if (!kickClient(client, *receiver, channel)) {
         return ;
     }
     sendInfoChannel(channel, ":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n", server);
     receiver->addCmdToSend(":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n");
 }
 
-bool kickClient(Client *sender, Client receiver, Channel *channel, Server * server) {
+bool kickClient(Client *sender, Client receiver, Channel *channel) {
     if (!channel->isUser(*sender)) {
         sender->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), sender->getName()));
         return false;
@@ -39,6 +39,6 @@ bool kickClient(Client *sender, Client receiver, Channel *channel, Server * serv
         sender->addCmdToSend(ERR_CHANOPRIVSNEEDED(channel->getName(), sender->getName()));
         return false;
     }
-    leaveChannel(&receiver, channel, "Kicked by " + sender->getName(), server);
+    channel->removeUser(receiver);
     return true;
 }

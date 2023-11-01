@@ -29,7 +29,7 @@ void inviteCommand(string command, Client *client, Server *server);
 bool inviteClient(Client *sender, Client receiver, Channel *channel);
 
 void kickCommand(string command, Client *client, Server *server);
-bool kickClient(Client *sender, Client receiver, Channel *channel, Server * server);
+bool kickClient(Client *sender, Client receiver, Channel *channel);
 
 void sendMessageCommand(string CommandInput, Client * client, Server *server);
 bool sendMessage(Channel *channel, string message, Server *server, Client *sender);
