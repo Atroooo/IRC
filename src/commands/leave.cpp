@@ -36,6 +36,15 @@ bool leaveChannel(Client *client, Channel *channel, string msg, Server * server)
     return true;
 }
 
+void leaveAllChannels(Client *client, Server *server) {
+    list<Channel> channels = server->getChannel();
+    for (list<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
+        if (it->isUser(*client)) {
+            leaveChannel(client, &(*it), "Leaving all channels", server);
+        }
+    }
+}
+
 vector<string> split(string str, char delimiter, vector<string> &result) {
     stringstream ss(str);
     string token;
