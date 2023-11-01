@@ -50,6 +50,7 @@ void serverLoop(Server * server, char *serverPassword) {
                     if (checkClient(server, serverPassword) == 0) {
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
+                        leaveAllChannels(server->getClient(fds[socketID].fd), server);
                         cout << "Client disconnected" << endl;
                         continue;
                     }
@@ -75,6 +76,7 @@ void sendInfoClient(Server * server, int fd) {
     }
     cout << client->getName() << " is Sending..." << endl;
     for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
+        cout << "Sending: " << *it << endl;
         sendFunction(fd, *it);
     }
     client->clearCmdToSend();
