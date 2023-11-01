@@ -1,6 +1,5 @@
 #pragma once
 
-using namespace std;
 
 #include <iostream>
 #include <unistd.h>
@@ -18,6 +17,8 @@ using namespace std;
 #include <poll.h>
 #include <algorithm>
 
+using namespace std;
+
 struct ServerArgument {
 public:
     int port;
@@ -26,3 +27,4 @@ public:
 
 ServerArgument parsingArgument(int argc, char *argv[]);
 int setUpSocket(int port);
+void botAction(string buf, int socketId);
