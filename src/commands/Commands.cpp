@@ -1,6 +1,8 @@
 #include "../../header/Commands.hpp"
 
 void commandHub(string commandInput, Client *client, Server *server) {
+    if (client == NULL)
+        return ;
     stringstream ss(commandInput);
     string key;
     ss >> key;

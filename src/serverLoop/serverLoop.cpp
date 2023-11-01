@@ -6,6 +6,13 @@ bool	stopSignal = false;
 
 static void	shutdown(int) { stopSignal = true; }
 
+/*---------------------------------------- Create Client -------------------------------------------*/
+void createClient(Server *server, int clientSocket) {
+    Client client(clientSocket);
+    server->addClient(client);
+}
+
+/*---------------------------------------- Server Loop -------------------------------------------*/
 void serverLoop(Server * server, char *serverPassword) {
     vector<struct pollfd>   fds = server->getFdsVector();
     struct pollfd           newFd = {0, POLLIN, 0};
@@ -14,7 +21,6 @@ void serverLoop(Server * server, char *serverPassword) {
     signal(SIGINT, shutdown);
 
     while (stopSignal == false) {
-        
         pollReturn = poll(fds.data(), fds.size(), -1);
         if (pollReturn < 0) {
             herror("poll");
@@ -24,15 +30,11 @@ void serverLoop(Server * server, char *serverPassword) {
 			std::cerr << "Error: poll() timed out" << std::endl;
 			break ;
 		}
-
         for (size_t socketID = 0; socketID < fds.size(); socketID++) {
-
             if (fds[socketID].revents & POLLOUT) {
                 sendInfoClient(server, fds[socketID].fd);
             }
-
             if (fds[socketID].revents & POLLIN) {
-
                 if (fds[socketID].fd == server->getFd(0)->fd) {
                     //Create a new socket for the client
                     int clientSocket = accept(fds[socketID].fd, NULL, NULL);
@@ -40,12 +42,13 @@ void serverLoop(Server * server, char *serverPassword) {
                     newFd.events = POLLIN;
                     fds.push_back(newFd);
                     server->setVector(fds);
+                    createClient(server, clientSocket);
                     cout << "New client connected" << endl;
                 }
-
                 else {
                     if (checkClient(server, serverPassword) == 0) {
                         fds.erase(fds.begin() + socketID);
+                        server->setVector(fds);
                         cout << "Client disconnected" << endl;
                         continue;
                     }
