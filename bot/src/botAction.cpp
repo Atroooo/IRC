@@ -1,7 +1,7 @@
 #include "../header/bot.hpp"
 #include <unistd.h>
 
-void greetings(string buf, int socketId){
+void greetings(int socketId){
 	char *str = (char *)"PRIVMSG #BOT :Bienvenue sur le channel de BOTAndre \r\n";
 	usleep(1000);
 	send(socketId, str, strlen(str), 0);
@@ -10,7 +10,7 @@ void greetings(string buf, int socketId){
 
 void botAction(string buf, int socketId){
 	if (buf.find("JOIN") != string::npos){
-		greetings(buf, socketId);
+		greetings(socketId);
 		return;
 	}
 	if (buf.find("quoi") != string::npos || buf.find("Quoi") != string::npos){
