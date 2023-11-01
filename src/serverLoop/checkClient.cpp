@@ -79,8 +79,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server){
         exit(1);
     }
     cout << "BUF = " << finalBuf << endl;
-    commandHub(finalBuf.c_str(), server->getClient(clientSocket), server);
-    //botAction(buf, clientSocket, x);
+    commandHub(finalBuf, server->getClient(clientSocket), server);
     return (TRUE);
 }
 
