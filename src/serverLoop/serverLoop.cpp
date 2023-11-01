@@ -31,12 +31,13 @@ void serverLoop(Server * server, char *serverPassword) {
 			break ;
 		}
         for (size_t socketID = 0; socketID < fds.size(); socketID++) {
+            
             if (fds[socketID].revents & POLLOUT) {
                 sendInfoClient(server, fds[socketID].fd);
             }
+
             if (fds[socketID].revents & POLLIN) {
                 if (fds[socketID].fd == server->getFd(0)->fd) {
-                    //Create a new socket for the client
                     int clientSocket = accept(fds[socketID].fd, NULL, NULL);
                     newFd.fd = clientSocket;
                     newFd.events = POLLIN;
@@ -58,6 +59,8 @@ void serverLoop(Server * server, char *serverPassword) {
         }
         removeEmptyChannel(server);
     }
+    closeAllFds(server);
+    cout << "Server closed" << endl;
 }
 
 /*---------------------------------------- Send Info -------------------------------------------*/
@@ -118,11 +121,20 @@ void sendInfoChannelOperator(Channel * channel, string msg, Server *server, Clie
     }
 }
 
+/*---------------------------------------- Remove Empty Channel -------------------------------------------*/
 void removeEmptyChannel(Server *server) {
     list<Channel> channels = server->getChannel();
     for (list<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
         if (it->getClients().size() == 0) {
             server->removeChannel(it->getName());
         }
+    }
+}
+
+/*---------------------------------------- Close All Fds -------------------------------------------*/
+void closeAllFds(Server *server) {
+    vector<struct pollfd> fds = server->getFdsVector();
+    for (size_t i = 0; i < fds.size(); i++) {
+        close(fds[i].fd);
     }
 }
