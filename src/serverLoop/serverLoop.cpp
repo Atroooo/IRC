@@ -8,7 +8,7 @@ static void	shutdown(int) { stopSignal = true; }
 
 void serverLoop(Server * server, char *serverPassword) {
     vector<struct pollfd>   fds = server->getFdsVector();
-    struct pollfd           newFd;
+    struct pollfd           newFd = {0, POLLIN, 0};
     int                     pollReturn;
 
     signal(SIGINT, shutdown);
