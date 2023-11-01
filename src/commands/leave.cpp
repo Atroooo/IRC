@@ -33,6 +33,8 @@ bool leaveChannel(Client *client, Channel *channel, string msg, Server * server)
     }
     sendInfoChannel(channel, ":" + client->getName() + " PART #" + channel->getName() + " :" + msg + "\r\n", server);
     channel->removeUser(*client);
+    if (channel->isOperator(*client))
+        channel->removeOperator(*client);
     return true;
 }
 

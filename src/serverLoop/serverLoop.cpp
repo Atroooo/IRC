@@ -51,6 +51,7 @@ void serverLoop(Server * server, char *serverPassword) {
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
                         leaveAllChannels(server->getClient(fds[socketID].fd), server);
+                        server->removeClient(client->getFd());
                         cout << "Client disconnected" << endl;
                         continue;
                     }
