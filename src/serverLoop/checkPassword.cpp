@@ -28,6 +28,7 @@ char * getSubStrBuffer(char *buf, char *name){
 
 bool checkPassword(char *buf, char *serverPassword){
     char *passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
+
     if (strcmp(passwordClient, serverPassword) != 0){
         cout << "Wrong password. " << endl;
         delete[] passwordClient;
