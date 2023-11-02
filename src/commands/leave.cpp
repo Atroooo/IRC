@@ -37,6 +37,7 @@ bool leaveChannel(Client *client, Channel *channel, string msg, Server * server)
         return false;
     }
     sendInfoChannel(channel, ":" + client->getName() + " PART #" + channel->getName() + " :" + msg + "\r\n", server);
+    serverLog("Leave ", client->getName() + " left " + channel->getName(), GREEN);
     channel->removeUser(*client);
     if (channel->isOperator(*client))
         channel->removeOperator(*client);

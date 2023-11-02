@@ -51,9 +51,9 @@ void serverLoop(Server * server, char *serverPassword) {
                         Client *cli = server->getClient(fds[socketID].fd);
                         if (cli == NULL)
                             continue;
+                        serverLog("Client disconnected", "",RED);
                         leaveAllChannels(cli, server);
                         server->removeClient(cli->getFd());
-                        serverLog("Client ", cli->getName() + " disconnected", RED);
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
                         continue;
