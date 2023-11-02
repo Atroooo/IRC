@@ -48,12 +48,15 @@ void serverLoop(Server * server, char *serverPassword) {
                 }
                 else {
                     if (checkClient(server, serverPassword) == 0) {
+                        Client *cli = server->getClient(fds[socketID].fd);
+                        if (cli == NULL)
+                            continue;
+                        //If we close user connection then reconnect, still in channel ???
+                        leaveAllChannels(cli, server);
+                        server->removeClient(cli->getFd());
+                        cout << "Client disconnected: " << fds[socketID].fd << " " << cli->getName() << endl;
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
-                        //If we close user connection then reconnect, still in channel ???
-                        leaveAllChannels(server->getClient(fds[socketID].fd), server);
-                        server->removeClient(server->getClient(fds[socketID].fd)->getFd());
-                        cout << "Client disconnected" << endl;
                         continue;
                     }
                     fds[socketID].events |= POLLOUT;
@@ -100,6 +103,9 @@ void sendInfoChannel(Channel * channel, string msg, Server *server) {
     map<string, Client> members = channel->getClients();
     for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
         Client *client = server->getClient(it->second.getFd());
+        if (client == NULL) {
+            continue;
+        }
         client->addCmdToSend(msg);
     }
 }
@@ -111,6 +117,9 @@ void sendInfoChannelOtherUsers(Channel * channel, string msg, Server *server, Cl
             continue;
         }
         Client *client = server->getClient(it->second.getFd());
+        if (client == NULL) {
+            continue;
+        }
         client->addCmdToSend(msg);
     }
 }
@@ -120,6 +129,9 @@ void sendInfoChannelOperator(Channel * channel, string msg, Server *server, Clie
     for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
         if (channel->isOperator(it->second) && it->second.getName() != sender->getName()) {
             Client *client = server->getClient(it->second.getFd());
+            if (client == NULL) {
+                continue;
+            }
             client->addCmdToSend(msg);
         }
     }

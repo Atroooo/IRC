@@ -29,6 +29,9 @@ void leaveCommand(string commandInput, Client *client, Server *server) {
 }
 
 bool leaveChannel(Client *client, Channel *channel, string msg, Server * server) {
+    if (client == NULL) {
+        return false;
+    }
     if (!channel->isUser(*client)) {
         client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
         return false;
@@ -41,6 +44,9 @@ bool leaveChannel(Client *client, Channel *channel, string msg, Server * server)
 }
 
 void leaveAllChannels(Client *client, Server *server) {
+    if (client == NULL) {
+        return ;
+    }
     list<Channel> channels = server->getChannel();
     for (list<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
         if (it->isUser(*client)) {
