@@ -14,7 +14,7 @@ Client::Client(int fd) {
 
 Client::~Client() { }
 
-string Client::getName() const { 
+string Client::getName() const {
     return this->_name; 
 }
 

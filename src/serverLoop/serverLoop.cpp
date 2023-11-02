@@ -54,7 +54,7 @@ void serverLoop(Server * server, char *serverPassword) {
                         //If we close user connection then reconnect, still in channel ???
                         leaveAllChannels(cli, server);
                         server->removeClient(cli->getFd());
-                        cout << "Client disconnected: " << fds[socketID].fd << " " << cli->getName() << endl;
+                        cout << "Client disconnected" << endl;
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
                         continue;
@@ -81,7 +81,7 @@ void sendInfoClient(Server * server, int fd) {
     }
     cout << client->getName() << " is Sending..." << endl;
     for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
-        cout << "Sending: " << *it << endl;
+        cout << "Sending: " << *it;
         sendFunction(fd, *it);
     }
     client->clearCmdToSend();
