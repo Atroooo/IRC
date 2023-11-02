@@ -26,6 +26,7 @@ void kickCommand(string commandInput, Client *client, Server *server) {
     }
     sendInfoChannel(channel, ":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n", server);
     receiver->addCmdToSend(":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n");
+    serverLog("Kick ", receiver->getName() + " kicked from " + channel->getName() + " by " + client->getName(), GREEN);
 }
 
 bool kickClient(Client *sender, Client receiver, Channel *channel) {

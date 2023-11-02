@@ -32,6 +32,7 @@ void topicCommand(string commandInput, Client *client, Server *server) {
     channel->setTopic(commandInput.substr(commandInput.find(':') + 1));
     sendInfoChannel(channel, RPL_TOPICWHOTIME(channel->getName(), client->getName(), get_time()), server);
     sendInfoChannel(channel, RPL_TOPIC(channel->getName(), client->getName(), channel->getTopic()), server);
+    serverLog("Topic ", channel->getName() + " changed by " + client->getName(), GREEN);
 }
 
 bool changeTopic(Client *client, Channel *channel) {

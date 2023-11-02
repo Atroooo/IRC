@@ -27,6 +27,7 @@ void inviteCommand(string commandInput, Client *client, Server *server) {
     }
     client->addCmdToSend(RPL_INVITING(client->getName(), receiver->getName(), channel->getName()));
     receiver->addCmdToSend(":" + client->getName() + " INVITE " + receiver->getName() + " #" + channel->getName() + "\r\n");
+    serverLog("Invite ", receiver->getName() + " invited to " + channel->getName() + " by " + client->getName(), GREEN);
 }
 
 bool inviteClient(Client *sender, Client receiver, Channel *channel) {

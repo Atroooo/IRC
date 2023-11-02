@@ -52,4 +52,5 @@ class Channel {
         bool                    isInvited(Client client);
 
 
+        void                    clearClients(void);
 };

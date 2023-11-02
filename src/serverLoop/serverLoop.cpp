@@ -27,7 +27,7 @@ void serverLoop(Server * server, char *serverPassword) {
             _exit(-1);
         } 
         if (pollReturn == 0) {
-			std::cerr << "Error: poll() timed out" << std::endl;
+			serverLog("Poll ", "Timeout", RED);
 			break ;
 		}
         for (size_t socketID = 0; socketID < fds.size(); socketID++) {
@@ -44,17 +44,16 @@ void serverLoop(Server * server, char *serverPassword) {
                     fds.push_back(newFd);
                     server->setVector(fds);
                     createClient(server, clientSocket);
-                    cout << "New client connected" << endl;
+                    serverLog("Client ", "Connected", GREEN);
                 }
                 else {
                     if (checkClient(server, serverPassword) == 0) {
                         Client *cli = server->getClient(fds[socketID].fd);
                         if (cli == NULL)
                             continue;
-                        //If we close user connection then reconnect, still in channel ???
+                        serverLog("Client disconnected", "",RED);
                         leaveAllChannels(cli, server);
                         server->removeClient(cli->getFd());
-                        cout << "Client disconnected" << endl;
                         fds.erase(fds.begin() + socketID);
                         server->setVector(fds);
                         continue;
@@ -66,7 +65,7 @@ void serverLoop(Server * server, char *serverPassword) {
         removeEmptyChannel(server);
     }
     closeAllFds(server);
-    cout << "Server closed" << endl;
+    serverLog("Server ", "Closed", RED);
 }
 
 /*---------------------------------------- Send Info -------------------------------------------*/
@@ -79,9 +78,13 @@ void sendInfoClient(Server * server, int fd) {
     if (cmdToSend.size() == 0) {  
         return ;
     }
-    cout << client->getName() << " is Sending..." << endl;
+    serverLog("Send ", "Info to " + client->getName(), GREEN);
     for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
+<<<<<<< HEAD
         cout << "Sending: " << *it;
+=======
+        serverLog("Send ", *it, GREEN);
+>>>>>>> b34343b5f0ae74ca5da08361855022fa9952ab12
         sendFunction(fd, *it);
     }
     client->clearCmdToSend();
@@ -89,7 +92,7 @@ void sendInfoClient(Server * server, int fd) {
 
 void checkRetSend(int ret) {
     if (ret < 0) {
-        cerr << "Error in send(). Quitting" << endl;
+        serverLog("Send ", "Error", RED);
         _exit(-1);
     }
 }
@@ -153,4 +156,10 @@ void closeAllFds(Server *server) {
     for (size_t i = 0; i < fds.size(); i++) {
         close(fds[i].fd);
     }
+}
+
+/*----------------------------------------- Logs ---------------------------------------------------*/
+void serverLog(string cmd, string msg, string color) {
+
+    cout << color << cmd << RESET << msg << endl;
 }

@@ -11,11 +11,11 @@ bool isAllDigits(const std::string& str) {
 
 void checkPortError(int port){
 	if (port == 0){
-		cerr << "Usage: Port number can't be less than 1" << endl;
+		serverLog("Port ", "Port can't be 0", BLUE);
 		_exit(-1);
 	}
 	if (port > 65535 || port <= -1){
-		cerr << "Usage: Port number can't be more than 65535" << endl;
+		serverLog("Port ", "Port must be between 1 and 65535", BLUE);
 		_exit(-1);
 	}
 }
@@ -23,11 +23,11 @@ void checkPortError(int port){
 void argumentCheckError(int argc, char *argv[]){
 	if (argc != 3)
     {
-        cerr << "Usage: ./ircserv <port> <password>" << endl;
+        serverLog("Usage ", "./ircserv [port] [password]", BLUE);
         _exit(-1);
     }
     if (isAllDigits(argv[1]) == false){
-        cerr << "Usage: Port must contain only digit" << endl;
+        serverLog("Port ", "Port must be a number", BLUE);
         _exit(-1);
     }
 }

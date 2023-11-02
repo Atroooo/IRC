@@ -128,6 +128,7 @@ bool createChannel(Client *client, Server *server, string name, string password)
     server->addChannel(channel);
     client->addCmdToSend(JOINCHAN(client->getName(), name));
     client->addCmdToSend(RPL_NAMREPLY(client->getName(), name, channel.getChannelMembers()));
+    serverLog("Channel ", name + " created by " + client->getName(), GREEN);
     return true;
 }
 
@@ -159,5 +160,6 @@ int joinChannel(Client *client, Channel *channel, string password, Server *serve
     client->addCmdToSend(INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));
     sendInfoChannelOtherUsers(channel, JOINCHAN(client->getName(), channel->getName()), server, client);
     client->addCmdToSend(RPL_NAMREPLY(client->getName(), channel->getName(), channel->getChannelMembers()));
+    serverLog("Channel ", channel->getName() + " joined by " + client->getName(), GREEN);
     return true;
 }
