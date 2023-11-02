@@ -43,7 +43,7 @@ bool checkIfNickNameAvailable(Server *server, string nickname) {
 }
 
 bool checkNickClient(Client *client, string bufStr, Server *server) {
-    if (client->getName().empty()) {
+    if (client != NULL && client->getName() == "") {
         if (bufStr.find("NICK") != string::npos) {
             string nickname = getSubStrBuffer((char *)bufStr.c_str(), (char *)"NICK ");
             if (checkIfNickNameAvailable(server, nickname) == false) {
@@ -58,7 +58,7 @@ bool checkNickClient(Client *client, string bufStr, Server *server) {
 }
 
 bool checkPassClient(Client *client, string bufStr, char *serverPassword) {
-    if (client->getPassCheck() == false) {
+    if (client != NULL && client->getPassCheck() == false) {
         if (bufStr.find("PASS") != string::npos) {
             if (checkPassword((char *)bufStr.c_str(), serverPassword) == false) {
                 return false;
