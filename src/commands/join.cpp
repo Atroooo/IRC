@@ -96,6 +96,9 @@ string removeEndofLine(string password) {
 
 /*---------------------------------------- Join and Create Command ---------------------------------*/
 void joinCommand(string commandInput, Client *client, Server *server) {
+    if (client == NULL) {
+        return ;
+    }
     if (removeEndofLine(commandInput) == "JOIN 0") {
         leaveAllChannels(client, server);
         return ;
