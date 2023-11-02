@@ -36,6 +36,8 @@ class Server {
 
         void removeClient(int fd);
         void removeChannel(string name);
+
+        bool isClient(int fd);
 };
 
 void sendInfoToClient(Server *server, struct pollfd newFd, char *serverPassword);

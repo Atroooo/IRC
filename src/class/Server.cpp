@@ -79,10 +79,18 @@ void Server::removeClient(int fd) {
 void Server::removeChannel(string name) {
     for (list<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++) {
         if (it->getName() == name) {
-            cout << "Channel " << name << " deleted" << endl;
             it->clearClients();
             this->_channels.erase(it);
             break;
         }
     }
+}
+
+bool Server::isClient(int fd) {
+    for (list<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+        if (it->getFd() == fd) {
+            return true;
+        }
+    }
+    return false;
 }

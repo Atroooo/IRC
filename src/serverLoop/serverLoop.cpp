@@ -80,11 +80,7 @@ void sendInfoClient(Server * server, int fd) {
     }
     serverLog("Send ", "Info to " + client->getName(), GREEN);
     for (list<string>::iterator it = cmdToSend.begin(); it != cmdToSend.end(); it++) {
-<<<<<<< HEAD
-        cout << "Sending: " << *it;
-=======
         serverLog("Send ", *it, GREEN);
->>>>>>> b34343b5f0ae74ca5da08361855022fa9952ab12
         sendFunction(fd, *it);
     }
     client->clearCmdToSend();
@@ -141,11 +137,22 @@ void sendInfoChannelOperator(Channel * channel, string msg, Server *server, Clie
 }
 
 /*---------------------------------------- Remove Empty Channel -------------------------------------------*/
+void checkIfClientIsStillConnected(Server * server, Channel *channel) {
+    map<string, Client> members = channel->getClients();
+    for (map<string, Client>::iterator it = members.begin(); it != members.end(); it++) {
+        if (server->isClient(it->second.getFd()) == false) {
+            channel->removeUser(it->second);
+        }
+    }
+}
+
 void removeEmptyChannel(Server *server) {
     list<Channel> channels = server->getChannel();
     for (list<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
+        checkIfClientIsStillConnected(server, &(*it));
         if (it->getClients().size() == 0) {
             server->removeChannel(it->getName());
+            serverLog("Channel", " deleted", RED);
         }
     }
 }
@@ -160,6 +167,5 @@ void closeAllFds(Server *server) {
 
 /*----------------------------------------- Logs ---------------------------------------------------*/
 void serverLog(string cmd, string msg, string color) {
-
     cout << color << cmd << RESET << msg << endl;
 }
