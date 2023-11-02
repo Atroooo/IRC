@@ -1,6 +1,5 @@
 #include "../../header/Commands.hpp"
 
-//Gerer les cas ou l utilisateur n existe pas
 Channel::Channel(string name, string password) {
     this->_name = name;
     this->_password = password;
@@ -151,4 +150,11 @@ bool Channel::isModeSet(char mode) {
     if (it != this->_mode.end())
         return true;
     return false;
+}
+
+void Channel::clearClients(void) {
+    this->_clients.clear();
+    this->_operators.clear();
+    this->_isInvited.clear();
+    this->_mode.clear();
 }
