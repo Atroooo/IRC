@@ -28,7 +28,7 @@ bool checkPassword(char *buf, char *serverPassword){
     string passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
 
     if (strcmp(passwordClient.c_str(), serverPassword) != 0){
-        cout << "Wrong password. " << endl;
+        serverLog("Password ", "Wrong password", RED);
         return (FALSE);
     }
     return true;
@@ -36,7 +36,7 @@ bool checkPassword(char *buf, char *serverPassword){
 
 bool checkIfNickNameAvailable(Server *server, string nickname) {
     if (server->getClient(nickname)){
-        cout << "Nickname already used" << endl;
+        serverLog("Nickname ", "Nickname already taken", RED);
         return false;
     }
     return true;

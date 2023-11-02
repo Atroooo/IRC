@@ -48,10 +48,12 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                 else if (AddOrRemove == '+') {
                     promoteClient(client, server->getClient(command[3]), channel, server);
                     commandParameters.erase(commandParameters.begin());
+                    serverLog("Mode ", client->getName() + " promoted " + command[3] + " to operator in " + channel->getName(), GREEN);
                 }
                 else {
                     demoteClient(client, server->getClient(command[3]), channel, server);
                     commandParameters.erase(commandParameters.begin());
+                    serverLog("Mode ", client->getName() + " demoted " + command[3] + " in " + channel->getName(), RED);
                 }
             }
             else if (mode == 'k') {
@@ -65,6 +67,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     channel->setPassword(commandParameters[0]);
                     commandParameters.erase(commandParameters.begin());
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + channel->getPassword() + "\r\n", server);
+                    serverLog("Mode ", client->getName() + " set password " + channel->getPassword() + " in " + channel->getName(), GREEN);
                 }
                 else {
                     if (channel->isModeSet(mode)){
@@ -73,6 +76,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     channel->setPassword("");
                     commandParameters.erase(commandParameters.begin());
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " -" + mode + " " + channel->getPassword() + "\r\n", server);
+                    serverLog("Mode ", client->getName() + " removed password in " + channel->getName(), RED);
                 }
             }
             else if (mode == 'l') {
@@ -83,11 +87,13 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     channel->setMaxUsers(atof(commandParameters[0].c_str()));
                     commandParameters.erase(commandParameters.begin());
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
+                    serverLog("Mode ", client->getName() + " set max users to " + toString(channel->getMaxUsers()) + " in " + channel->getName(), GREEN);
                 }
                 else {
                     channel->setMaxUsers(10);
                     commandParameters.erase(commandParameters.begin());
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " -" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
+                    serverLog("Mode ", client->getName() + " removed max users in " + channel->getName(), RED);
                 }
             }
             else {
@@ -95,12 +101,14 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     if (!channel->isModeSet(mode)){
                         channel->setMode(mode);
                         sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + "\r\n", server);
+                        serverLog("Mode ", client->getName() + " set mode " + mode + " in " + channel->getName(), GREEN);
                     }
                 }
                 else {
                     if (channel->isModeSet(mode)){
                         channel->unsetMode(mode);
                         sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " -" + mode + "\r\n", server);
+                        serverLog("Mode ", client->getName() + " removed mode " + mode + " in " + channel->getName(), RED);
                     }
                 }
             }

@@ -33,3 +33,4 @@ void    sendInfoChannelOperator(Channel * channel, string msg, Server *server, C
 
 void    removeEmptyChannel(Server *server);
 void    closeAllFds(Server *server);
+void    serverLog(string cmd, string msg, string color);

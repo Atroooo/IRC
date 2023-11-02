@@ -22,9 +22,9 @@ void leaveCommand(string commandInput, Client *client, Server *server) {
             client->addCmdToSend(ERR_NOSUCHCHANNEL(client->getName(), (*it).substr(1)));
             continue ;
         }
-        if (!leaveChannel(client, channel, commandInput.substr(commandInput.find(':') + 1), server)) {
+        if (!leaveChannel(client, channel, commandInput.substr(commandInput.find(':') + 1), server))
             continue ;
-        }
+        serverLog("Leave ", client->getName() + " left " + channel->getName(), GREEN);
     }
 }
 
@@ -53,6 +53,7 @@ void leaveAllChannels(Client *client, Server *server) {
             leaveChannel(client, &(*it), "Leaving all channels", server);
         }
     }
+    serverLog("Leave ", client->getName() + " left all channels", GREEN);
 }
 
 vector<string> split(string str, char delimiter, vector<string> &result) {
