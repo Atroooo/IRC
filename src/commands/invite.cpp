@@ -1,6 +1,9 @@
 #include "../../header/Commands.hpp"
 
 void inviteCommand(string commandInput, Client *client, Server *server) {
+    if (client == NULL) {
+        return ;
+    }
     vector<string> command = initCommand(commandInput);
     if (command.size() > 3) {
         return ;

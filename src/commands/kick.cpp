@@ -1,7 +1,9 @@
 #include "../../header/Commands.hpp"
 
 void kickCommand(string commandInput, Client *client, Server *server) {
-
+    if (client == NULL) {
+        return ;
+    }
     vector<string> command = initCommand(commandInput);
     if (channelMask(command, client) == false || command.size() >= 3) {
         return ;

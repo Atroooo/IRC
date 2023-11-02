@@ -1,7 +1,9 @@
 #include "../../header/Commands.hpp"
 
 void leaveCommand(string commandInput, Client *client, Server *server) {
-    
+    if (client == NULL) {
+        return ;
+    }
     vector<string> command = initCommand(commandInput);
     if (command.size() < 1) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("PART")));
