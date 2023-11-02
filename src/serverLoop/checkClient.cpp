@@ -11,7 +11,7 @@ int getIndexBeginningSubStr(char *buf, char *name){
 
 int getLenSubStr(char *buf){
     int i = 0;
-    while (buf[i] && buf[i + 1] &&buf[i + 1] != '\n') {
+    while (buf[i] && (buf[i] != '\n' && buf[i] != '\r')) {
         i++;
     }
     return i;
@@ -27,6 +27,7 @@ string getSubStrBuffer(char *buf, char *name){
 bool checkPassword(char *buf, char *serverPassword){
     string passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
 
+    cout <<"pass client " <<passwordClient.c_str() << endl;
     if (strcmp(passwordClient.c_str(), serverPassword) != 0){
         serverLog("Password ", "Wrong password", RED);
         return (FALSE);
@@ -72,8 +73,10 @@ bool checkPassClient(Client *client, string bufStr, char *serverPassword) {
 }
 
 bool checkEndOfLine(string bufStr) {
-    if (bufStr.find("\r\n") == string::npos)
+    if (bufStr.find("\n") == string::npos)
         return false;
+    //if (bufStr.find("\n") == bufStr.size() - 1)
+    //    return false;
     return true;
 }
 

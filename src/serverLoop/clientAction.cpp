@@ -23,6 +23,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     }
     if (passAllCheck(client, finalBuf, serverPassword, server) == FALSE)
         return (FALSE);
+    finalBuf = removeEndofLine(finalBuf);
     if (!finalBuf.empty())
         commandHub(finalBuf.c_str(), client, server);
     
