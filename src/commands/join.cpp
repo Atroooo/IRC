@@ -132,22 +132,22 @@ bool createChannel(Client *client, Server *server, string name, string password)
 }
 
 /*---------------------------------------- Join Channel ----------------------------------------*/
-int passCheck(Client *client, Channel channel, string password) {
-    if (channel.isUser(*client)) {
-        client->addCmdToSend(channel.getName()+  ": Already in channel");
+int passCheck(Client *client, Channel *channel, string password) {
+    if (channel->isUser(*client)) {
+        client->addCmdToSend(channel->getName()+  ": Already in channel");
         return false;
     }
-    list<char> mode = channel.getMode();
-    if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel.getPassword() != password) {
-        client->addCmdToSend(ERR_BADCHANNELKEY(string("#" + channel.getName())));
+    list<char> mode = channel->getMode();
+    if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel->getPassword() != password) {
+        client->addCmdToSend(ERR_BADCHANNELKEY(string("#" + channel->getName())));
         return false;
     }
-    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel.isInvited(*client)) {
-        client->addCmdToSend(ERR_INVITEONLYCHAN(string("#" + channel.getName())));
+    if (find(mode.begin(), mode.end(), 'i') != mode.end() && !channel->isInvited(*client)) {
+        client->addCmdToSend(ERR_INVITEONLYCHAN(string("#" + channel->getName())));
         return false;
     }
-    if (channel.getClients().size() >= (size_t)channel.getMaxUsers()) {
-        client->addCmdToSend(ERR_CHANNELISFULL(string("#" + channel.getName())));
+    if (channel->getClients().size() >= (size_t)channel->getMaxUsers()) {
+        client->addCmdToSend(ERR_CHANNELISFULL(string("#" + channel->getName())));
         return false;
     }
     return true;
@@ -157,8 +157,7 @@ int joinChannel(Client *client, Channel *channel, string password, Server *serve
     if (channel == NULL) {
         return -1;
     }
-(void) server;
-    if (passCheck(client, *channel, password) == false) { return false; }    
+    if (passCheck(client, channel, password) == false) { return false; }    
     channel->addUser(*client);
     client->addCmdToSend(JOINCHAN(client->getName(), channel->getName()));
     client->addCmdToSend(INFO_JOIN(channel->getName(), channel->getTopic(), channel->getMembers()));

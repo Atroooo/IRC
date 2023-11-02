@@ -9,20 +9,12 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     while (true) {
         memset(buf, 0, sizeof(buf));
         bytesReceived = recv(clientSocket, buf, sizeof(buf), MSG_DONTWAIT);
-        finalBuf += buf;
+        if (bytesReceived == -1)
+            return TRUE;
         if (bytesReceived == 0){
             return FALSE;
         }
-        if (bytesReceived == -1) {
-            int error = errno;
-            if (error == EAGAIN || error == EWOULDBLOCK) {
-                break;
-            }
-            else {
-                cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
-                _exit(-1);
-            }
-        }
+        finalBuf += buf;
         if (client != NULL && checkEndOfLine(finalBuf))
             break;
     }
