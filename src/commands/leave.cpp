@@ -39,8 +39,13 @@ bool leaveChannel(Client *client, Channel *channel, string msg, Server * server)
     sendInfoChannel(channel, ":" + client->getName() + " PART #" + channel->getName() + " :" + msg + "\r\n", server);
     serverLog("Leave ", client->getName() + " left " + channel->getName(), GREEN);
     channel->removeUser(*client);
-    if (channel->isOperator(*client))
+    if (channel->isOperator(*client)) {
+        if (channel->getOperators().size() == 1) {
+            // channel->addOperator(getNextClient(channel->getClients(), *client));
+            cout << "promote operator" << endl;
+        }
         channel->removeOperator(*client);
+    }
     return true;
 }
 

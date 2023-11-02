@@ -5,7 +5,7 @@ void kickCommand(string commandInput, Client *client, Server *server) {
         return ;
     }
     vector<string> command = initCommand(commandInput);
-    if (channelMask(command, client) == false || command.size() >= 3) {
+    if (channelMask(command, client) == false || command.size() > 3) {
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
