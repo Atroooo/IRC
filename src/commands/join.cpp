@@ -133,10 +133,6 @@ bool createChannel(Client *client, Server *server, string name, string password)
 
 /*---------------------------------------- Join Channel ----------------------------------------*/
 int passCheck(Client *client, Channel *channel, string password) {
-    if (channel->isUser(*client)) {
-        client->addCmdToSend(channel->getName()+  ": Already in channel");
-        return false;
-    }
     list<char> mode = channel->getMode();
     if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel->getPassword() != password) {
         client->addCmdToSend(ERR_BADCHANNELKEY(string("#" + channel->getName())));

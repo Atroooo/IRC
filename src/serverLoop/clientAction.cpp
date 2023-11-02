@@ -6,12 +6,15 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     int bytesReceived;
     
     Client *client = server->getClient(clientSocket);
+    if (client == NULL)
+        return (FALSE);
     while (true) {
         memset(buf, 0, sizeof(buf));
         bytesReceived = recv(clientSocket, buf, sizeof(buf), MSG_DONTWAIT);
         if (bytesReceived == -1)
             return TRUE;
         if (bytesReceived == 0){
+            client->addCmdToSend(": QUIT :Leaving\n");
             return FALSE;
         }
         finalBuf += buf;
