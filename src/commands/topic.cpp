@@ -11,7 +11,6 @@ void topicCommand(string commandInput, Client *client, Server *server) {
         return ;
     }
     if (channelMask(command, client) == false) {
-        client->addCmdToSend(ERR_BADCHANMASK(command[1].substr(1)));
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
