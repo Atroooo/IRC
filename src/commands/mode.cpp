@@ -17,6 +17,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
     }
     if (command.size() == 2) {
         list<char> mode = channel->getMode();
+        mode.sort();
         stringstream ss;
         ss << "+";
         for (list<char>::iterator it = mode.begin(); it != mode.end(); it++) {
