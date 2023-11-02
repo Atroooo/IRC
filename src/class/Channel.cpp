@@ -41,6 +41,8 @@ int Channel::getMaxUsers(void) const {
 }
 
 void Channel::setMaxUsers(int maxUsers) {
+    if (maxUsers < static_cast<int>(_clients.size()))
+        return ;
     if (maxUsers < 0)
         this->_maxUsers = 0;
     else if (maxUsers > 4095)
