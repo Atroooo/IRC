@@ -78,6 +78,8 @@ bool checkEndOfLine(string bufStr) {
 }
 
 bool passAllCheck(Client *client, string bufStr, char *serverPassword, Server * server) {
+    if (client == NULL)
+        return (FALSE);
     if (checkPassClient(client, bufStr, serverPassword) == false) {
         return (FALSE);
     }
