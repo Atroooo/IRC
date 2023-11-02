@@ -30,6 +30,7 @@ class Channel {
         string                  getTopic(void) const;
         list<char>              getMode(void) const;
         map<string, Client>     getClients(void) const;
+        list<Client>            getOperators(void) const;
         int                     getMaxUsers(void) const;
         Client                  *getClient(string name);
         string                  getMembers(void) const;

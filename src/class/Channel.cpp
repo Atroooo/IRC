@@ -81,6 +81,10 @@ string Channel::getChannelMembers(void) {
     return members;
 }
 
+list<Client> Channel::getOperators(void) const {
+    return this->_operators;
+}
+
 void Channel::setTopic(string topic) { 
     this->_topic = topic; 
 }
