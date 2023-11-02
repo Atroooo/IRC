@@ -36,8 +36,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
     }
     size_t i = 1;
     while (i < command[2].size()) {
-        char mode = command[2]
-[i];
+        char mode = command[2][i];
         if (mode != 'i' && mode != 'k' && mode != 'l' && mode != 't' && mode != 'o' ) {
             client->addCmdToSend(ERR_UNKNOWNMODE(channel->getName(), client->getName(), mode));
         }

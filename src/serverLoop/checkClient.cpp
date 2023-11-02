@@ -57,6 +57,19 @@ bool checkNickClient(Client *client, string bufStr, Server *server) {
     return true;
 }
 
+bool checkUserClient(Client *client, string bufStr) {
+    if (client != NULL && client->getUsername() == "") {
+        if (bufStr.find("USER") != string::npos) {
+            string nickname = getSubStrBuffer((char *)bufStr.c_str(), (char *)"USER ");
+            client->setUsername(nickname);
+            return true;
+        }
+        return true;
+    }
+    return true;
+}
+
+
 bool checkPassClient(Client *client, string bufStr, char *serverPassword) {
     if (client != NULL && client->getPassCheck() == false) {
         if (bufStr.find("PASS") != string::npos) {
@@ -83,7 +96,10 @@ bool passAllCheck(Client *client, string bufStr, char *serverPassword, Server * 
     if (checkPassClient(client, bufStr, serverPassword) == false) {
         return (FALSE);
     }
-    if (checkNickClient(client, bufStr, server) == false){
+    if (checkNickClient(client, bufStr, server) == false) {
+        return (FALSE);
+    }
+    if (checkUserClient(client, bufStr) == false) {
         return (FALSE);
     }
     if (strncmp(bufStr.c_str(), "QUIT", 4) == 0){

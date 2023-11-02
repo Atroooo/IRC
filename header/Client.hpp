@@ -11,6 +11,7 @@ class Client {
     private:
         int                         _fd;
         string                      _name;
+        string                      _username;
         bool                        _passCheck;
         list<string>                _cmdToSend;
 
@@ -21,12 +22,14 @@ class Client {
 
         string getName(void) const;
         int getFd(void) const;
-        bool getPassCheck(void) const { return this->_passCheck; };
-        list<string> getCmdToSend(void) const { return this->_cmdToSend; };
+        bool getPassCheck(void) const;
+        list<string> getCmdToSend(void) const;
+        string getUsername(void) const;
 
         void setName(std::string name);
         void setFd(int fd);
-        void addCmdToSend(string cmd) { this->_cmdToSend.push_back(cmd); };
-        void clearCmdToSend(void) { this->_cmdToSend.clear(); };
-        void setPassCheck(bool passCheck) { this->_passCheck = passCheck; };
+        void setUsername(std::string username);
+        void addCmdToSend(string cmd);
+        void clearCmdToSend(void);
+        void setPassCheck(bool passCheck);
 };
