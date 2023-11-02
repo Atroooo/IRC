@@ -3,10 +3,7 @@
 void commandHub(string commandInput, Client *client, Server *server) {
     if (client == NULL)
         return ;
-    if (client->getPassCheck() == false) {
-        return ;
-    }
-    if (client->getName() == "") {
+    if (client->getPassCheck() == false || client->getName() == "" || client->getUsername() == "") {
         return ;
     }
     stringstream ss(commandInput);
