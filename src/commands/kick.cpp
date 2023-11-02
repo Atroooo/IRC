@@ -1,11 +1,13 @@
 #include "../../header/Commands.hpp"
 
 void kickCommand(string commandInput, Client *client, Server *server) {
+
     if (client == NULL) {
+        cout << "Client is NULL" << endl;
         return ;
     }
     vector<string> command = initCommand(commandInput);
-    if (channelMask(command, client) == false || command.size() >= 3) {
+    if (channelMask(command, client) == false) {
         return ;
     }
     Channel *channel = server->getChannel(command[1].substr(1));
@@ -24,8 +26,15 @@ void kickCommand(string commandInput, Client *client, Server *server) {
     if (!kickClient(client, *receiver, channel)) {
         return ;
     }
-    sendInfoChannel(channel, ":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n", server);
-    receiver->addCmdToSend(":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n");
+    if (commandInput.find(':') != string::npos) {
+        string msg = commandInput.substr(commandInput.find(':') + 1);
+        sendInfoChannel(channel, ":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() +  " " + msg + "\r\n", server);
+        receiver->addCmdToSend(":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + " " + msg + "\r\n");
+    }
+    else {
+        sendInfoChannel(channel, ":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n", server);
+        receiver->addCmdToSend(":" + client->getName() + " KICK #" + channel->getName() + " " + receiver->getName() + " " + client->getName() + "\r\n");
+    }
     serverLog("Kick ", receiver->getName() + " kicked from " + channel->getName() + " by " + client->getName(), GREEN);
 }
 

@@ -57,10 +57,10 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                 }
             }
             else if (mode == 'k') {
-                if (commandParameters.size() == 0) {
-                    client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
-                }
-                else if (AddOrRemove == '+') {
+                if (AddOrRemove == '+') {
+                    if (commandParameters.size() == 0) {
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                    }
                     if (!channel->isModeSet(mode)){
                         channel->setMode(mode);
                     }
@@ -80,10 +80,10 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                 }
             }
             else if (mode == 'l') {
-                if (commandParameters.size() == 0) {
-                    client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
-                }
-                else if (AddOrRemove == '+') {
+                if (AddOrRemove == '+') {
+                    if (commandParameters.size() == 0) {
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                    }
                     channel->setMaxUsers(atof(commandParameters[0].c_str()));
                     commandParameters.erase(commandParameters.begin());
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);

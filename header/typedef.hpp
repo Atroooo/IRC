@@ -51,7 +51,7 @@ typedef struct sockaddr SOCKADDR;
 #define RPL_CREATIONTIME(channel, client, time) ":IRC 329 " + client + " #" + channel + " " + time + "\r\n" //329
 
 /*------- Errors ------*/
-#define ERR_NEEDMOREPARAMS(channel, cmd) ":IRC 461 "  + channel + " " + cmd + " :Not enough parameters\r\n" //461
+#define ERR_NEEDMOREPARAMS(channel, cmd) ":IRC 461 "  + channel + " #" + channel + " " + cmd + " :Not enough parameters\r\n" //461
 #define ERR_BADCHANMASK(channel) ":IRC 476 " + channel + " #"+ channel + " :Bad Channel Mask\r\n" //476
 #define ERR_NOSUCHNICK(client) ":IRC 401 " + client + " " + client  + " :No such nick\r\n" //401
 #define ERR_NOSUCHCHANNEL(client, channel) ":IRC 403 " + client + " #" + channel + " :No such channel\r\n" //403
