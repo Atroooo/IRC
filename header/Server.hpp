@@ -12,6 +12,7 @@ class Server {
         size_t                  _serverFdsCount;
         list<Client>            _clients;
         list<Channel>           _channels;
+        string                  _buffer;
     
     public:
         Server(vector<struct pollfd>& fds);
@@ -24,6 +25,7 @@ class Server {
         list<Client> getClient(void) const;
         Client *getClient(string name);
         Client *getClient(int fd);
+        string& getBuffer() { return this->_buffer; };
         list<Channel> getChannel(void) const;
         Channel *getChannel(const string & name);
 
@@ -32,6 +34,8 @@ class Server {
         void addToFds(const struct pollfd& fd) { this->_fds.push_back(fd); };
         void addClient(Client & client);
         void addChannel(Channel & channel);
+        void setBuffer(string buffer) { this->_buffer = buffer; };
+        void addToBuffer(string buffer) { this->_buffer += buffer; };
         void printClients();
 
         void removeClient(int fd);

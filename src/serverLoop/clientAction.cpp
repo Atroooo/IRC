@@ -1,5 +1,11 @@
 #include "../../header/includes.hpp"
 
+bool hasEndOfLine(string buffer) {
+    if (buffer.find("\n") != string::npos)
+        return TRUE;
+    return FALSE;
+}
+
 int clientAction(int clientSocket, char *serverPassword, Server *server) {
     char buf[1028];
     string finalBuf;
@@ -11,21 +17,28 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     while (true) {
         memset(buf, 0, sizeof(buf));
         bytesReceived = recv(clientSocket, buf, sizeof(buf), MSG_DONTWAIT);
-        if (bytesReceived == -1)
+        if (bytesReceived == -1) {
             return TRUE;
+        }
         if (bytesReceived == 0){
             client->addCmdToSend(": QUIT :Leaving\n");
             return FALSE;
         }
         finalBuf += buf;
+        if (hasEndOfLine(buf) == FALSE) {
+            server->addToBuffer(buf);
+        }
         if (client != NULL && checkEndOfLine(finalBuf))
             break;
     }
-    if (passAllCheck(client, finalBuf, serverPassword, server) == FALSE)
+    string commandInput = server->getBuffer();
+    server->setBuffer("");
+    commandInput.append(finalBuf);
+    if (passAllCheck(client, commandInput, serverPassword, server) == FALSE)
         return (FALSE);
-    finalBuf = removeEndofLine(finalBuf);
-    if (!finalBuf.empty())
-        commandHub(finalBuf.c_str(), client, server);
+    commandInput = removeEndofLine(commandInput);
+    if (!commandInput.empty())
+        commandHub(commandInput.c_str(), client, server);
     
     return (TRUE);
 }
