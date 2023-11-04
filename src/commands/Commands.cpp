@@ -4,6 +4,7 @@ void commandHub(string commandInput, Client *client, Server *server) {
     if (client == NULL)
         return ;
     if (client->getPassCheck() == false || client->getName() == "" || client->getUsername() == "") {
+        serverLog("Client", " not registered", RED);
         return ;
     }
     stringstream ss(commandInput);
