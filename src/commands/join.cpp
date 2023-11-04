@@ -33,7 +33,7 @@ map<string, string> parseCommand(string Command, Client *client) {
     vector<string> channels;
     vector<string> keys;
 
-    if (Command.empty() || Command.size() <= 8)
+    if (Command.empty())
         return parsedCommand;
 
     char *cmd = strtok((char *)Command.c_str(), " ");
@@ -45,8 +45,15 @@ map<string, string> parseCommand(string Command, Client *client) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
         return parsedCommand;
     }
-
+    if (command[1].size() == 1) {
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
+        return parsedCommand;
+    }
     channels = split(command[1], ',');
+    if (channels.size() < 1) {
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
+        return parsedCommand;
+    }
     if (command.size() == 3) {
         keys = split(command[2], ',');
         if (keys.size() > channels.size()) {
