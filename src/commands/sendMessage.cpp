@@ -57,6 +57,10 @@ void sendMessageCommand(string commandInput, Client * client, Server *server) {
     if (x == 0)
         x += 1;
     Channel *channel = server->getChannel(command[1].substr(x));
+    if (!channel->isUser(*client)) {
+        client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
+        return ;
+    }
     Client *receiver = server->getClient(command[1]);
     if (channel == NULL && receiver == NULL) {
         client->addCmdToSend(ERR_NOSUCHNICK(command[1]));
