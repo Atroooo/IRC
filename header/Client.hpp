@@ -28,9 +28,9 @@ class Client {
         string getUsername(void) const;
         string& getBuffer() { return this->_buffer; };
 
-
         void setName(std::string name);
         void setFd(int fd);
+        void setBuffer(string buffer) { this->_buffer = buffer; };
         void setUsername(std::string username);
         void addCmdToSend(string cmd);
         void clearCmdToSend(void);
