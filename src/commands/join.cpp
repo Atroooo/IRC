@@ -45,8 +45,8 @@ map<string, string> parseCommand(string Command, Client *client) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
         return parsedCommand;
     }
-    if (command[1].size() == 1) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
+    if (command[1].size() == 1 && command[1][0] == '#') {
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("JOIN")));
         return parsedCommand;
     }
     channels = split(command[1], ',');
@@ -141,7 +141,6 @@ bool createChannel(Client *client, Server *server, string name, string password)
 
 /*---------------------------------------- Join Channel ----------------------------------------*/
 int passCheck(Client *client, Channel *channel, string password) {
-    cout << "|" << password << "|" << channel->getPassword() << "|" << endl;
     list<char> mode = channel->getMode();
     if (find(mode.begin(), mode.end(), 'k') != mode.end() && channel->getPassword() != password) {
         client->addCmdToSend(ERR_BADCHANNELKEY(string("#" + channel->getName())));

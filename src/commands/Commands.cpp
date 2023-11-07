@@ -7,6 +7,8 @@ void commandHub(string commandInput, Client *client, Server *server) {
         serverLog("Client", " not registered", RED);
         return ;
     }
+    else
+        serverLog("Client " + client->getName(), " is registered.", GREEN);
     stringstream ss(commandInput);
     string key;
     ss >> key;

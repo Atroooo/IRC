@@ -3,7 +3,6 @@
 void kickCommand(string commandInput, Client *client, Server *server) {
 
     if (client == NULL) {
-        cout << "Client is NULL" << endl;
         return ;
     }
     vector<string> command = initCommand(commandInput);

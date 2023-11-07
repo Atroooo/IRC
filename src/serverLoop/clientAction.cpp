@@ -31,6 +31,7 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
         if (client != NULL && checkEndOfLine(finalBuf))
             break;
     }
+    server->getBuffer() = removeEndofLine(server->getBuffer());
     string commandInput = server->getBuffer();
     server->setBuffer("");
     commandInput.append(finalBuf);

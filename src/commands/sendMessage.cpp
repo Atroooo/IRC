@@ -20,7 +20,6 @@ string concatMsg(vector<string> command) {
     msg += command[2].substr(1) + " ";
     for (size_t i = 3; i < command.size(); i++) {
         msg += command[i] + " ";
-        cout << "concat "<< command[i] << endl;
     }
     return msg;
 }
