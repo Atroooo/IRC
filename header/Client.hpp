@@ -30,7 +30,6 @@ class Client {
 
         void setName(std::string name);
         void setFd(int fd);
-        void setBuffer(string buffer) { this->_buffer = buffer; };
         void setUsername(std::string username);
         void addCmdToSend(string cmd);
         void clearCmdToSend(void);

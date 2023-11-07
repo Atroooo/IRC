@@ -57,10 +57,6 @@ void sendMessageCommand(string commandInput, Client * client, Server *server) {
     if (x == 0)
         x += 1;
     Channel *channel = server->getChannel(command[1].substr(x));
-    if (!channel->isUser(*client)) {
-        client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
-        return ;
-    }
     Client *receiver = server->getClient(command[1]);
     if (channel == NULL && receiver == NULL) {
         client->addCmdToSend(ERR_NOSUCHNICK(command[1]));
@@ -68,6 +64,10 @@ void sendMessageCommand(string commandInput, Client * client, Server *server) {
     }
     string msg = commandInput.substr(commandInput.find(':') + 1);
     if (channel != NULL) {
+        if (!channel->isUser(*client)) {
+            client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
+            return ;
+        }
         if (ope == 0)
             sendMessage(server->getChannel(command[1].substr(1)), msg, server, client);
         else
@@ -75,6 +75,8 @@ void sendMessageCommand(string commandInput, Client * client, Server *server) {
         return ;
     }
     else {
+        if (client->getName() == receiver->getName())
+            return ;
         sendPrivateMessage(client, server->getClient(command[1]), msg);
         return ;
     }
