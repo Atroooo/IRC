@@ -26,14 +26,14 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
         }
         finalBuf += buf;
         if (hasEndOfLine(buf) == FALSE) {
-            server->addToBuffer(buf);
+            client->addToBuffer(buf);
         }
         if (client != NULL && checkEndOfLine(finalBuf))
             break;
     }
-    server->getBuffer() = removeEndofLine(server->getBuffer());
-    string commandInput = server->getBuffer();
-    server->setBuffer("");
+    client->getBuffer() = removeEndofLine(client->getBuffer());
+    string commandInput = client->getBuffer();
+    client->setBuffer("");
     commandInput.append(finalBuf);
     if (passAllCheck(client, commandInput, serverPassword, server) == FALSE)
         return (FALSE);

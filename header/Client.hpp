@@ -14,6 +14,7 @@ class Client {
         string                      _username;
         bool                        _passCheck;
         list<string>                _cmdToSend;
+        string                      _buffer;
 
     public:
         Client(string name, int fd);
@@ -25,9 +26,12 @@ class Client {
         bool getPassCheck(void) const;
         list<string> getCmdToSend(void) const;
         string getUsername(void) const;
+        string& getBuffer() { return this->_buffer; };
+        void addToBuffer(string buffer) { this->_buffer += buffer; };
 
         void setName(std::string name);
         void setFd(int fd);
+        void setBuffer(string buffer) { this->_buffer = buffer; };
         void setUsername(std::string username);
         void addCmdToSend(string cmd);
         void clearCmdToSend(void);
