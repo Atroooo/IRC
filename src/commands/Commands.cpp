@@ -36,7 +36,7 @@ void commandHub(string commandInput, Client *client, Server *server) {
         kickCommand(commandInput, client, server);
         return ;
     }
-    if (key == "PRIVMSG" || key == "NOTICE") {
+    if (key == "PRIVMSG") {
         sendMessageCommand(commandInput, client, server);
         return ;
     }

@@ -45,11 +45,10 @@ int chanIndex(string channel, int ope) {
 
 /*---------------------------------------- PRIVMSG Command ----------------------------------------*/
 void sendMessageCommand(string commandInput, Client * client, Server *server) {
-
     if (client == NULL)
         return ;
     vector<string> command = initCommand(commandInput);
-    if (command.size() < 2) {
+    if (command.size() < 2 || commandInput.find(':') == string::npos) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("PRIVMSG")));
         return ;
     }
