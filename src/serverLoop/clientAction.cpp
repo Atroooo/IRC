@@ -41,7 +41,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     commandInput = removeEndofLine(commandInput);
     if (!commandInput.empty())
         commandHub(commandInput.c_str(), client, server);
-    
     return (TRUE);
 }
 

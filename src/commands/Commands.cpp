@@ -7,8 +7,10 @@ void commandHub(string commandInput, Client *client, Server *server) {
         serverLog("Client", " not registered", RED);
         return ;
     }
-    else
+    else if (client->getIsRegistered() == false) {
         serverLog("Client " + client->getName(), " is registered.", GREEN);
+        client->setIsRegistered(true);
+    }
     stringstream ss(commandInput);
     string key;
     ss >> key;
@@ -36,7 +38,7 @@ void commandHub(string commandInput, Client *client, Server *server) {
         kickCommand(commandInput, client, server);
         return ;
     }
-    if (key == "PRIVMSG" || key == "NOTICE") {
+    if (key == "PRIVMSG") {
         sendMessageCommand(commandInput, client, server);
         return ;
     }
