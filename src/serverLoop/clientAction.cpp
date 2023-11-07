@@ -38,7 +38,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     if (passAllCheck(client, commandInput, serverPassword, server) == FALSE)
         return (FALSE);
     commandInput = removeEndofLine(commandInput);
-    cout << commandInput << endl;
     if (!commandInput.empty())
         commandHub(commandInput.c_str(), client, server);
     return (TRUE);
