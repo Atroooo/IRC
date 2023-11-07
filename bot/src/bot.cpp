@@ -7,10 +7,11 @@ void connectionServer(char *password, int socketId){
 	string buf;
 	buf += "PASS ";
 	buf += password;
-	buf += " \n";
-	buf += " NICK BOTAndre\n";
-	buf += " USER BOTAndre\n";
 	buf += "\r\n";
+	send(socketId, buf.c_str(), strlen(buf.c_str()), 0);
+	buf = " NICK BOTAndre\r\n";
+	send(socketId, buf.c_str(), strlen(buf.c_str()), 0);
+	buf += " USER BOTAndre\r\n";
 	send(socketId, buf.c_str(), strlen(buf.c_str()), 0);
 }
 
