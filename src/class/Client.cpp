@@ -5,6 +5,7 @@ Client::Client(string name, int fd) {
     this->_username = "";
     this->_fd = fd;
     this->_passCheck = false;
+    this->_isRegistered = false;
 }
 
 Client::Client(int fd) {
@@ -12,6 +13,7 @@ Client::Client(int fd) {
     this->_username = "";
     this->_fd = fd;
     this->_passCheck = false;
+    this->_isRegistered = false;
 }
 
 Client::~Client() { }
