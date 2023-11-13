@@ -17,7 +17,6 @@ int clientAction(int clientSocket, char *serverPassword, Server *server) {
     while (true) {
         memset(buf, 0, sizeof(buf));
         bytesReceived = recv(clientSocket, buf, sizeof(buf), MSG_DONTWAIT);
-        cout << buf << endl;
         if (bytesReceived == -1) {
             return TRUE;
         }
