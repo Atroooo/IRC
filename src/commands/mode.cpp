@@ -42,13 +42,15 @@ void modeCommand(string commandInput, Client *client, Server *server) {
         }
         else {
             if (mode == 'o') {
-                if (commandParameters.size() == 0) {
-                    client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
-                }
-                else if (AddOrRemove == '+') {
-                    promoteClient(client, server->getClient(command[3]), channel, server);
-                    commandParameters.erase(commandParameters.begin());
-                    serverLog("Mode ", client->getName() + " promoted " + command[3] + " to operator in " + channel->getName(), GREEN);
+                if (AddOrRemove == '+') {
+                    if (commandParameters.size() == 0) {
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                    }
+                    else {
+                        promoteClient(client, server->getClient(command[3]), channel, server);
+                        commandParameters.erase(commandParameters.begin());
+                        serverLog("Mode ", client->getName() + " promoted " + command[3] + " to operator in " + channel->getName(), GREEN);
+                    }
                 }
                 else {
                     demoteClient(client, server->getClient(command[3]), channel, server);
@@ -60,13 +62,15 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     if (commandParameters.size() == 0) {
                         client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
                     }
-                    if (!channel->isModeSet(mode)){
+                    else if (!channel->isModeSet(mode)){
                         channel->setMode(mode);
                     }
-                    channel->setPassword(commandParameters[0]);
-                    commandParameters.erase(commandParameters.begin());
-                    sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + channel->getPassword() + "\r\n", server);
-                    serverLog("Mode ", client->getName() + " set password " + channel->getPassword() + " in " + channel->getName(), GREEN);
+                    else {
+                        channel->setPassword(commandParameters[0]);
+                        commandParameters.erase(commandParameters.begin());
+                        sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + channel->getPassword() + "\r\n", server);
+                        serverLog("Mode ", client->getName() + " set password " + channel->getPassword() + " in " + channel->getName(), GREEN);
+                    }
                 }
                 else {
                     if (channel->isModeSet(mode)){
@@ -82,10 +86,12 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     if (commandParameters.size() == 0) {
                         client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
                     }
-                    channel->setMaxUsers(atof(commandParameters[0].c_str()));
-                    commandParameters.erase(commandParameters.begin());
-                    sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
-                    serverLog("Mode ", client->getName() + " set max users to " + toString(channel->getMaxUsers()) + " in " + channel->getName(), GREEN);
+                    else {
+                        channel->setMaxUsers(atof(commandParameters[0].c_str()));
+                        commandParameters.erase(commandParameters.begin());
+                        sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
+                        serverLog("Mode ", client->getName() + " set max users to " + toString(channel->getMaxUsers()) + " in " + channel->getName(), GREEN);
+                    }
                 }
                 else {
                     channel->setMaxUsers(10);
