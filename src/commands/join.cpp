@@ -45,7 +45,7 @@ map<string, string> parseCommand(string Command, Client *client) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
         return parsedCommand;
     }
-    if (command[1].size() == 1 && command[1][0] == '#') {
+    if (command[1].size() == 1 && (command[1][0] == '#' || command[1][0] == '&')) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("JOIN")));
         return parsedCommand;
     }
@@ -126,6 +126,9 @@ void joinCommand(string commandInput, Client *client, Server *server) {
 
 /*---------------------------------------- Create Channel ----------------------------------------*/
 bool createChannel(Client *client, Server *server, string name, string password) {
+    if (name.size() < 1) {
+        return false;
+    }
     if (server->getChannel(name.substr(1)) != NULL) {
         return false;
     }
