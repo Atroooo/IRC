@@ -49,7 +49,7 @@ void sendMessageCommand(string commandInput, Client * client, Server *server) {
         return ;
     vector<string> command = initCommand(commandInput);
     if (command.size() < 2 || commandInput.find(':') == string::npos) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("PRIVMSG")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), string(""), string("PRIVMSG")));
         return ;
     }
     int ope = toChanOperator(command[1]);
@@ -59,7 +59,7 @@ void sendMessageCommand(string commandInput, Client * client, Server *server) {
     Channel *channel = server->getChannel(command[1].substr(x));
     Client *receiver = server->getClient(command[1]);
     if (channel == NULL && receiver == NULL) {
-        client->addCmdToSend(ERR_NOSUCHNICK(command[1]));
+        client->addCmdToSend(ERR_NOSUCHNICK(command[1], string("NoChan")));
         return ;
     }
     string msg = commandInput.substr(commandInput.find(':') + 1);

@@ -42,16 +42,16 @@ map<string, string> parseCommand(string Command, Client *client) {
         cmd = strtok(NULL, " ");
     }
     if (command.size() < 2) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), command[1], string("JOIN")));
         return parsedCommand;
     }
     if (command[1].size() == 1 && (command[1][0] == '#' || command[1][0] == '&')) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("JOIN")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), string(""), string("JOIN")));
         return parsedCommand;
     }
     channels = split(command[1], ',');
     if (channels.size() < 1) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(command[1], string("JOIN")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), command[1], string("JOIN")));
         return parsedCommand;
     }
     if (command.size() == 3) {

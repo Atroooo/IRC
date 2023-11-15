@@ -9,7 +9,7 @@ void inviteCommand(string commandInput, Client *client, Server *server) {
         return ;
     }
     if (command.size() < 3) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("INVITE")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), string(""), string("INVITE")));
         return ;
     }
     Channel *channel = server->getChannel(command[2].substr(1));
@@ -19,7 +19,7 @@ void inviteCommand(string commandInput, Client *client, Server *server) {
     }
     Client *receiver = server->getClient(command[1]);
     if (receiver == NULL) {
-        client->addCmdToSend(ERR_NOSUCHNICK(command[1]));
+        client->addCmdToSend(ERR_NOSUCHNICK(command[1], channel->getName()));
         return ;
     }
     if (!inviteClient(client, *receiver, channel)) {

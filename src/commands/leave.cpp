@@ -6,7 +6,7 @@ void leaveCommand(string commandInput, Client *client, Server *server) {
     }
     vector<string> command = initCommand(commandInput);
     if (command.size() < 1) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(string(""), string("PART")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), string(""), string("PART")));
         return ;
     }
     vector<string> channelToLeave;

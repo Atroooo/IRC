@@ -44,7 +44,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
             if (mode == 'o') {
                 if (AddOrRemove == '+') {
                     if (commandParameters.size() == 0) {
-                        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
                     }
                     else {
                         promoteClient(client, server->getClient(command[3]), channel, server);
@@ -60,7 +60,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
             else if (mode == 'k') {
                 if (AddOrRemove == '+') {
                     if (commandParameters.size() == 0) {
-                        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
                     }
                     else if (!channel->isModeSet(mode)){
                         channel->setMode(mode);
@@ -84,7 +84,7 @@ void modeCommand(string commandInput, Client *client, Server *server) {
             else if (mode == 'l') {
                 if (AddOrRemove == '+') {
                     if (commandParameters.size() == 0) {
-                        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("MODE")));
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
                     }
                     else {
                         channel->setMaxUsers(atof(commandParameters[0].c_str()));
@@ -134,7 +134,7 @@ bool changeMode(Client * client, Channel *channel) {
 
 bool promoteClient(Client *sender, Client *receiver, Channel *channel, Server *server) {
     if (receiver == NULL) {
-        sender->addCmdToSend(ERR_NOSUCHNICK(sender->getName()));
+        sender->addCmdToSend(ERR_NOSUCHNICK(sender->getName(), channel->getName()));
         return false;
     }
     if (!channel->isUser(*sender)) {
@@ -159,7 +159,7 @@ bool promoteClient(Client *sender, Client *receiver, Channel *channel, Server *s
 
 bool demoteClient(Client *sender, Client *receiver, Channel *channel, Server *server) {
     if (receiver == NULL) {
-        sender->addCmdToSend(ERR_NOSUCHNICK(sender->getName()));
+        sender->addCmdToSend(ERR_NOSUCHNICK(sender->getName(), channel->getName()));
         return false;
     }
     if (!channel->isUser(*sender)) {

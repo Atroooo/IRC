@@ -15,11 +15,11 @@ void kickCommand(string commandInput, Client *client, Server *server) {
     }
     Client *receiver = server->getClient(command[2]);
     if (receiver == NULL) {
-        client->addCmdToSend(ERR_NOSUCHNICK(command[1].substr(1)));
+        client->addCmdToSend(ERR_NOSUCHNICK(command[1].substr(1), channel->getName()));
         return ;
     }
     if (command.size() < 3) {
-        client->addCmdToSend(ERR_NEEDMOREPARAMS(channel->getName(), string("KICK")));
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("KICK")));
         return ;
     }
     if (!kickClient(client, *receiver, channel)) {
