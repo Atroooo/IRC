@@ -1,5 +1,10 @@
 #include "../../header/Commands.hpp"
 
+string stringToUpper(string strToConvert) {
+    transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), ::toupper);
+    return strToConvert;
+}
+
 void commandHub(string commandInput, Client *client, Server *server) {
     if (client == NULL)
         return ;
@@ -14,6 +19,7 @@ void commandHub(string commandInput, Client *client, Server *server) {
     stringstream ss(commandInput);
     string key;
     ss >> key;
+    key = stringToUpper(key);
     if (key == "JOIN") {
         joinCommand(commandInput, client, server);
         return ;
