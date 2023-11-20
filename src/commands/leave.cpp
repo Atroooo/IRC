@@ -5,7 +5,7 @@ void leaveCommand(string commandInput, Client *client, Server *server) {
         return ;
     }
     vector<string> command = initCommand(commandInput);
-    if (command.size() < 1) {
+    if (command.size() < 2) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), string(""), string("PART")));
         return ;
     }

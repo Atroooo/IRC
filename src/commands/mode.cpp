@@ -5,6 +5,10 @@ void modeCommand(string commandInput, Client *client, Server *server) {
     if (client == NULL)
         return ;
     vector<string> command = initCommand(commandInput);
+    if (command.size() < 2) {
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), command[0], string("")));
+        return ;
+    }
     vector<string> commandParameters;
     for (size_t i = 3; i < command.size(); i++) {
         if (command.size() > 2 && !command[i].empty())
