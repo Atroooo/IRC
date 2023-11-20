@@ -41,6 +41,10 @@ map<string, string> parseCommand(string Command, Client *client) {
         command.push_back(cmd);
         cmd = strtok(NULL, " ");
     }
+    if (command.size() == 1) {
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), string(""), string("JOIN")));
+        return parsedCommand;
+    }
     if (command.size() < 2) {
         client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), command[1], string("JOIN")));
         return parsedCommand;
