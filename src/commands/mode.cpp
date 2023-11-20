@@ -62,10 +62,10 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     if (commandParameters.size() == 0) {
                         client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
                     }
-                    else if (!channel->isModeSet(mode)){
-                        channel->setMode(mode);
-                    }
                     else {
+                        if (!channel->isModeSet(mode)){
+                            channel->setMode(mode);
+                        }
                         channel->setPassword(commandParameters[0]);
                         commandParameters.erase(commandParameters.begin());
                         sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + channel->getPassword() + "\r\n", server);

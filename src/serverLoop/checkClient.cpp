@@ -27,7 +27,6 @@ string getSubStrBuffer(char *buf, char *name){
 bool checkPassword(char *buf, char *serverPassword){
     string passwordClient = getSubStrBuffer(buf, (char *)"PASS ");
     if (strcmp(passwordClient.c_str(), serverPassword) != 0){
-        cout << "pass " << (int)passwordClient[3] << endl;
         serverLog("Password ", "Wrong password", RED);
         return (FALSE);
     }
