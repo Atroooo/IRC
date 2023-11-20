@@ -6,6 +6,10 @@ void kickCommand(string commandInput, Client *client, Server *server) {
         return ;
     }
     vector<string> command = initCommand(commandInput);
+    if (command.size() < 2) {
+        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), command[0], string("")));
+        return ;
+    }
     if (channelMask(command, client) == false) {
         return ;
     }
