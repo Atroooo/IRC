@@ -32,6 +32,10 @@ bool leaveChannel(Client *client, Channel *channel, string msg, Server * server)
     if (client == NULL) {
         return false;
     }
+    if (channel == NULL) {
+        client->addCmdToSend(ERR_NOSUCHCHANNEL(client->getName(), channel->getName()));
+        return false;
+    }
     if (!channel->isUser(*client)) {
         client->addCmdToSend(ERR_NOTONCHANNEL(channel->getName(), client->getName()));
         return false;
