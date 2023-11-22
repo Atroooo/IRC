@@ -52,7 +52,8 @@ void leaveAllChannels(Client *client, Server *server) {
     list<Channel> channels = server->getChannel();
     for (list<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
         if (it->isUser(*client)) {
-            leaveChannel(client, &(*it), "Leaving all channels", server);
+            Channel *channel = server->getChannel(it->getName());
+            leaveChannel(client, channel, "Leaving all channels", server);
         }
     }
     serverLog("Leave ", client->getName() + " left all channels", GREEN);
