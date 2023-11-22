@@ -91,6 +91,8 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                         client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
                     }
                     else {
+                        if (!channel->isModeSet(mode))
+                            channel->setMode(mode);
                         channel->setMaxUsers(atof(commandParameters[0].c_str()));
                         commandParameters.erase(commandParameters.begin());
                         sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " +" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
@@ -98,6 +100,8 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                     }
                 }
                 else {
+                    if (channel->isModeSet(mode))
+                        channel->unsetMode(mode);
                     channel->setMaxUsers(10);
                     sendInfoChannel(channel, ":" + client->getName() + " MODE #" + channel->getName() + " -" + mode + " " + toString(channel->getMaxUsers()) + "\r\n", server);
                     serverLog("Mode ", client->getName() + " removed max users in " + channel->getName(), RED);
