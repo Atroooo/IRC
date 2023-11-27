@@ -24,7 +24,7 @@ void serverLoop(Server * server, char *serverPassword) {
         pollReturn = poll(fds.data(), fds.size(), -1);
         if (pollReturn < 0) {
             herror("poll");
-            _exit(-1);
+            break ;
         } 
         if (pollReturn == 0) {
 			serverLog("Poll ", "Timeout", RED);

@@ -51,14 +51,19 @@ void modeCommand(string commandInput, Client *client, Server *server) {
                         client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
                     }
                     else {
-                        promoteClient(client, server->getClient(command[3]), channel, server);
+                        promoteClient(client, server->getClient(*commandParameters.begin()), channel, server);
                         commandParameters.erase(commandParameters.begin());
-                        serverLog("Mode ", client->getName() + " promoted " + command[3] + " to operator in " + channel->getName(), GREEN);
+                        serverLog("Mode ", client->getName() + " promoted " + *commandParameters.begin() + " to operator in " + channel->getName(), GREEN);
                     }
                 }
                 else {
-                    demoteClient(client, server->getClient(command[3]), channel, server);
-                    serverLog("Mode ", client->getName() + " demoted " + command[3] + " in " + channel->getName(), RED);
+                    if (commandParameters.size() == 0) {
+                        client->addCmdToSend(ERR_NEEDMOREPARAMS(client->getName(), channel->getName(), string("MODE")));
+                    }
+                    else {
+                        demoteClient(client, server->getClient(*commandParameters.begin()), channel, server);
+                        serverLog("Mode ", client->getName() + " demoted " + *commandParameters.begin() + " in " + channel->getName(), RED);
+                    }
                 }
             }
             else if (mode == 'k') {
