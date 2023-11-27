@@ -34,14 +34,7 @@ void getServerMessage(int socketId){
 	while (stopSignal == false) {
 		int bytesRead = recv(socketId, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);
 		if (bytesRead == -1) {
-            int error = errno;
-            if (error == EAGAIN || error == EWOULDBLOCK) {
-                continue;
-            }
-            else {
-                cerr << "Error in recv(): " << strerror(error) << " (Error code: " << error << ")" << endl;
-                _exit(-1);
-            }
+			continue;
         }
 		if (bytesRead == 0) {
 			std::cout << "Connection closed by server." << std::endl;
@@ -52,6 +45,7 @@ void getServerMessage(int socketId){
 	}
 	usleep(1000);
 	send(socketId, "QUIT\r\n", 7, 0);
+	close(socketId);
 }
 
 int main(int argc, char *argv[]){
